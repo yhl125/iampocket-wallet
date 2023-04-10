@@ -1,12 +1,12 @@
-import axios from "axios";
-import { ethers, BytesLike } from "ethers";
-import { PaymasterAPI, calcPreVerificationGas } from "@account-abstraction/sdk";
-import { UserOperationStruct } from "@account-abstraction/contracts";
-import { toJSON } from "./opUtils";
+import axios from 'axios';
+import { ethers, BytesLike } from 'ethers';
+import { PaymasterAPI, calcPreVerificationGas } from '@account-abstraction/sdk';
+import { UserOperationStruct } from '@account-abstraction/contracts';
+import { toJSON } from './opUtils';
 
 const SIG_SIZE = 65;
 const DUMMY_PAYMASTER_AND_DATA =
-  "0x0101010101010101010101010101010101010101000000000000000000000000000000000000000000000000000001010101010100000000000000000000000000000000000000000000000000000000000000000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101";
+  '0x0101010101010101010101010101010101010101000000000000000000000000000000000000000000000000000001010101010100000000000000000000000000000000000000000000000000000000000000000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101';
 
 interface paymasterResponse {
   jsonrpc: string;
@@ -51,9 +51,9 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
     // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.
     return axios
       .post<paymasterResponse>(this.paymasterUrl, {
-        jsonrpc: "2.0",
+        jsonrpc: '2.0',
         id: 1,
-        method: "pm_sponsorUserOperation",
+        method: 'pm_sponsorUserOperation',
         params: [await toJSON(op), this.entryPoint],
       })
       .then((res) => res.data.result.toString());

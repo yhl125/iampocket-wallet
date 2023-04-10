@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { LoadingSmall } from "@/components/Loading";
-import QrReader from "@/components/QrReader";
-import { web3wallet } from "@/utils/WalletConnectUtil";
-import { Fragment, SetStateAction, useState } from "react";
+import { LoadingSmall } from '@/components/Loading';
+import QrReader from '@/components/QrReader';
+import { web3wallet } from '@/utils/WalletConnectUtil';
+import { Fragment, SetStateAction, useState } from 'react';
 
 export default function WalletConnectPage() {
-  const [uri, setUri] = useState("");
+  const [uri, setUri] = useState('');
   const [loading, setLoading] = useState(false);
 
   async function onConnect(uri: string) {
@@ -16,7 +16,7 @@ export default function WalletConnectPage() {
     } catch (err: unknown) {
       alert(err);
     } finally {
-      setUri("");
+      setUri('');
       setLoading(false);
     }
   }
@@ -44,7 +44,7 @@ export default function WalletConnectPage() {
             disabled={!uri}
             onClick={() => onConnect(uri)}
           >
-            {loading ? <LoadingSmall /> : "Connect"}
+            {loading ? <LoadingSmall /> : 'Connect'}
           </button>
         </div>
       </div>
