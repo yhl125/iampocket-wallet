@@ -1,7 +1,7 @@
 import { getSimpleAccount } from "../../src";
 import { ethers } from "ethers";
 // @ts-ignore
-import config from "../../../../../../erc-4337-examples/config.json";
+import config from "config.json";
 
 export default async function main() {
   const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);

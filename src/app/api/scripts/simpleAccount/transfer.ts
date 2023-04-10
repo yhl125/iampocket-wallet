@@ -7,7 +7,7 @@ import {
   getHttpRpcClient,
 } from "../../src";
 // @ts-ignore
-import config from "../../../../../../erc-4337-examples/config.json";
+import config from "config.json";
 
 export default async function main(t: string, amt: string, withPM: boolean) {
   const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);

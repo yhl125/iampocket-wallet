@@ -8,7 +8,7 @@ import { getSimpleAccount } from "./api/src/getSimpleAccount";
 import { useState } from "react";
 import { formatEther } from "ethers/lib/utils";
 import { useSnapshot } from "valtio";
-import SettingsStore from "./store/SettingsStore";
+import SettingsStore from "@/store/SettingsStore";
 
 export default function Home() {
   // const [address, setAddress] = useState<string>("");
