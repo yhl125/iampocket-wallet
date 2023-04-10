@@ -1,10 +1,10 @@
 // import { EIP155_SIGNING_METHODS } from '@/data/EIP155Data'
-import ModalStore from '@/store/ModalStore'
-import SettingsStore from '@/store/SettingsStore'
-import { web3wallet } from "../utils/WalletConnectUtil";
-import { SignClientTypes } from "@walletconnect/types";
-import { useCallback, useEffect } from "react";
-import { useSnapshot } from "valtio";
+import ModalStore from '@/store/ModalStore';
+import SettingsStore from '@/store/SettingsStore';
+import { web3wallet } from '../utils/WalletConnectUtil';
+import { SignClientTypes } from '@walletconnect/types';
+import { useCallback, useEffect } from 'react';
+import { useSnapshot } from 'valtio';
 
 export default function useWalletConnectEventsManager() {
   const { web3WalletReady } = useSnapshot(SettingsStore.state);
@@ -13,8 +13,8 @@ export default function useWalletConnectEventsManager() {
    * 1. Open session proposal modal for confirmation / rejection
    *****************************************************************************/
   const onSessionProposal = useCallback(
-    (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
-      ModalStore.open("SessionProposalModal", { proposal });
+    (proposal: SignClientTypes.EventArguments['session_proposal']) => {
+      ModalStore.open('SessionProposalModal', { proposal });
     },
     []
   );
@@ -67,16 +67,16 @@ export default function useWalletConnectEventsManager() {
    *****************************************************************************/
   useEffect(() => {
     if (web3WalletReady) {
-      web3wallet.on("session_proposal", onSessionProposal);
+      web3wallet.on('session_proposal', onSessionProposal);
       // web3wallet.on("session_request", onSessionRequest);
-      web3wallet.on("session_delete", (data) => console.log("delete", data));
+      web3wallet.on('session_delete', (data) => console.log('delete', data));
     }
 
     return () => {
       if (web3WalletReady) {
-        web3wallet.off("session_proposal", onSessionProposal);
+        web3wallet.off('session_proposal', onSessionProposal);
         // web3wallet.off("session_request", onSessionRequest);
-        web3wallet.off("session_delete", (data) => console.log("delete", data));
+        web3wallet.off('session_delete', (data) => console.log('delete', data));
       }
     };
   }, [web3WalletReady, onSessionProposal]);

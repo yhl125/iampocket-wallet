@@ -4,7 +4,7 @@ import { ethers } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 import { useEffect, useState } from 'react';
 import { getSimpleAccount } from '../api/src';
-import config from '../../../config.json';
+import config from 'config.json';
 import SettingsStore from '@/store/SettingsStore';
 import { useSnapshot } from 'valtio';
 

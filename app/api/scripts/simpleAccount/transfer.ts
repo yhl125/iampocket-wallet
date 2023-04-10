@@ -1,13 +1,13 @@
-import { ethers } from "ethers";
+import { ethers } from 'ethers';
 import {
   getVerifyingPaymaster,
   getSimpleAccount,
   getGasFee,
   printOp,
   getHttpRpcClient,
-} from "../../src";
+} from '../../src';
 // @ts-ignore
-import config from "config.json";
+import config from 'config.json';
 
 export default async function main(t: string, amt: string, withPM: boolean) {
   const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
@@ -27,7 +27,7 @@ export default async function main(t: string, amt: string, withPM: boolean) {
   const op = await accountAPI.createSignedUserOp({
     target,
     value,
-    data: "0x",
+    data: '0x',
     ...(await getGasFee(provider)),
   });
   console.log(`Signed UserOperation: ${await printOp(op)}`);
@@ -40,7 +40,7 @@ export default async function main(t: string, amt: string, withPM: boolean) {
   const uoHash = await client.sendUserOpToBundler(op);
   console.log(`UserOpHash: ${uoHash}`);
 
-  console.log("Waiting for transaction...");
+  console.log('Waiting for transaction...');
   const txHash = await accountAPI.getUserOpReceipt(uoHash);
   console.log(`Transaction hash: ${txHash}`);
 }

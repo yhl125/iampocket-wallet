@@ -1,21 +1,23 @@
-import { ethers } from "ethers";
+import { ethers } from 'ethers';
 import {
+  ERC20_ABI,
   getVerifyingPaymaster,
   getSimpleAccount,
   getGasFee,
   printOp,
   getHttpRpcClient,
-} from "../../src";
+} from '../../src';
 // @ts-ignore
-import config from "config.json";
+import config from 'config.json';
 
 // This example requires several layers of calls:
 // EntryPoint
 //  ┕> sender.executeBatch
-//    ┕> sender.execute (recipient 1)
+//    ┕> token.transfer (recipient 1)
 //    ⋮
-//    ┕> sender.execute (recipient N)
+//    ┕> token.transfer (recipient N)
 export default async function main(
+  tkn: string,
   t: Array<string>,
   amt: string,
   withPM: boolean
@@ -33,25 +35,34 @@ export default async function main(
   );
   const sender = await accountAPI.getCounterFactualAddress();
 
-  const ac = await accountAPI._getAccountContract();
-  const value = ethers.utils.parseEther(amt);
+  const token = ethers.utils.getAddress(tkn);
+  const erc20 = new ethers.Contract(token, ERC20_ABI, provider);
+  const [symbol, decimals] = await Promise.all([
+    erc20.symbol(),
+    erc20.decimals(),
+  ]);
+  const amount = ethers.utils.parseUnits(amt, decimals);
+
   let dest: Array<string> = [];
   let data: Array<string> = [];
   t.map((addr) => addr.trim()).forEach((addr) => {
-    dest = [...dest, sender];
+    dest = [...dest, erc20.address];
     data = [
       ...data,
-      ac.interface.encodeFunctionData("execute", [
+      erc20.interface.encodeFunctionData('transfer', [
         ethers.utils.getAddress(addr),
-        value,
-        "0x",
+        amount,
       ]),
     ];
   });
+  console.log(
+    `Batch transferring ${amt} ${symbol} to ${dest.length} recipients...`
+  );
 
+  const ac = await accountAPI._getAccountContract();
   const op = await accountAPI.createSignedUserOp({
     target: sender,
-    data: ac.interface.encodeFunctionData("executeBatch", [dest, data]),
+    data: ac.interface.encodeFunctionData('executeBatch', [dest, data]),
     ...(await getGasFee(provider)),
   });
   console.log(`Signed UserOperation: ${await printOp(op)}`);
@@ -64,7 +75,7 @@ export default async function main(
   const uoHash = await client.sendUserOpToBundler(op);
   console.log(`UserOpHash: ${uoHash}`);
 
-  console.log("Waiting for transaction...");
+  console.log('Waiting for transaction...');
   const txHash = await accountAPI.getUserOpReceipt(uoHash);
   console.log(`Transaction hash: ${txHash}`);
 }

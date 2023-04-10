@@ -1,8 +1,8 @@
 // import dynamic from "next/dynamic";
-import Image from "next/image";
-import { Fragment, useState } from "react";
-import { QrReader as ReactQrReader } from "react-qr-reader";
-import { Loading } from "@/components/Loading";
+import Image from 'next/image';
+import { Fragment, useState } from 'react';
+import { QrReader as ReactQrReader } from 'react-qr-reader';
+import { Loading } from '@/components/Loading';
 
 /**
  * You can use normal import if you are not within next / ssr environment
@@ -57,8 +57,8 @@ export default function QrReader({ onConnect }: IProps) {
                   onError;
                 }
               }}
-              videoStyle={{ width: "100%" }}
-              constraints={{ facingMode: "user" }}
+              videoStyle={{ width: '100%' }}
+              constraints={{ facingMode: 'user' }}
             />
           </div>
         </Fragment>
