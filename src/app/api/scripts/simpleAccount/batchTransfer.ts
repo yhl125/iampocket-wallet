@@ -7,7 +7,7 @@ import {
   getHttpRpcClient,
 } from "../../src";
 // @ts-ignore
-import config from "../../../../../../erc-4337-examples/config.json";
+import config from "config.json";
 
 // This example requires several layers of calls:
 // EntryPoint

@@ -7,9 +7,13 @@ import config from "../../config.json";
 import { getSimpleAccount } from "./api/src/getSimpleAccount";
 import { useState } from "react";
 import { formatEther } from "ethers/lib/utils";
+import { useSnapshot } from "valtio";
+import SettingsStore from "@/store/SettingsStore";
+
 export default function Home() {
-  const [address, setAddress] = useState<string>("");
+  // const [address, setAddress] = useState<string>("");
   const [balance, setBalance] = useState<string>();
+  const { erc4337Address } = useSnapshot(SettingsStore.state);
 
   const createAddress = async () => {
     const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
@@ -20,13 +24,14 @@ export default function Home() {
       config.simpleAccountFactory
     );
     const address = await accountAPI.getCounterFactualAddress();
-    setAddress(address);
+    SettingsStore.setERC4337Address(address);
     console.log(`SimpleAccount address: ${address}`);
   };
+
   const getAddressBalance = async () => {
     const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
-    const bigNumberBalance = await provider.getBalance(address);
-    console.log(bigNumberBalance)
+    const bigNumberBalance = await provider.getBalance(erc4337Address);
+    console.log(bigNumberBalance);
     const balance = formatEther(bigNumberBalance);
     setBalance(balance);
   };
@@ -34,7 +39,7 @@ export default function Home() {
     <>
       <div className="wallet">
         <div>
-          <text>Your Address is {address}</text>
+          <text>Your Address is {erc4337Address}</text>
         </div>
         <div>
           <text>Your balance is {balance}</text>
@@ -45,7 +50,7 @@ export default function Home() {
           </button>
         </div>
         <div>
-          <button onClick={()=> getAddressBalance()}>
+          <button onClick={() => getAddressBalance()}>
             <text>Get Goerli Balance</text>
           </button>
         </div>
