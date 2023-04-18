@@ -8,7 +8,7 @@ export let core: InstanceType<typeof Core>;
 export async function createWeb3Wallet() {
   if (!SettingsStore.state.web3WalletReady && typeof window !== 'undefined') {
     core = new Core({
-      projectId: process.env.WALLETCONNECT_PROJECT_ID,
+      projectId: '0d061dbddc6b9e8cad711033d06c516c',
     });
 
     web3wallet = await Web3Wallet.init({
@@ -16,11 +16,12 @@ export async function createWeb3Wallet() {
       metadata: {
         name: 'Demo app',
         description: 'Demo Client as Wallet/Peer',
-        url: 'www.walletconnect.com',
+        url: 'localhost',
         icons: [],
       },
     });
 
     SettingsStore.setWeb3WalletReady(true);
+    console.log('web3wallet created');
   }
 }

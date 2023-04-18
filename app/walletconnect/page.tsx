@@ -1,9 +1,12 @@
 'use client';
 
 import { LoadingSmall } from '@/components/Loading';
+import Modal from '@/components/Modal';
 import QrReader from '@/components/QrReader';
-import { web3wallet } from '@/utils/WalletConnectUtil';
-import { Fragment, SetStateAction, useState } from 'react';
+import useAccounts from '@/hooks/useAccounts';
+import useWalletConnectEventsManager from '@/hooks/useWalletConnectEventsManager';
+import { createWeb3Wallet, web3wallet } from '@/utils/WalletConnectUtil';
+import { Fragment, SetStateAction, useEffect, useState } from 'react';
 
 export default function WalletConnectPage() {
   const [uri, setUri] = useState('');
@@ -20,6 +23,16 @@ export default function WalletConnectPage() {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    createWeb3Wallet();
+  });
+
+  // Step 2 - Initialize wallets
+  useAccounts();
+
+  // Step 3 - Once initialized, set up wallet connect event manager
+  useWalletConnectEventsManager();
 
   return (
     <Fragment>
@@ -48,6 +61,7 @@ export default function WalletConnectPage() {
           </button>
         </div>
       </div>
+      <Modal />
     </Fragment>
   );
 }
