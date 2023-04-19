@@ -22,22 +22,24 @@ export default function AccountSelectCard({
   return (
     <>
       <div
-        className={`card w-96 bg-base-100 shadow-xl ${
+        className={`card card-compact w-full shadow-xl ${
           selected ? 'bg-green-500' : 'bg-gray-500'
         }`}
       >
         <div className="card-body">
-          <input
-            id={`account-${index}-checkbox`}
-            type="checkbox"
-            checked={selected}
-            className="checkbox"
-            onChange={onSelect}
-          />
-          <label
-            htmlFor={`account-${index}-checkbox`}
-            className="text-2xl"
-          >{`${truncate(address, 14)} - Account ${index}`}</label>
+          <div className="flex">
+            <input
+              id={`account-${index}-checkbox`}
+              type="checkbox"
+              checked={selected}
+              className="checkbox-accent checkbox mr-3"
+              onChange={onSelect}
+            />
+            <label
+              htmlFor={`account-${index}-checkbox`}
+              className="text-xl"
+            >{`${truncate(address, 14)} - Account ${index}`}</label>
+          </div>
         </div>
       </div>
     </>
