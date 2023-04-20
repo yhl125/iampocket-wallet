@@ -28,7 +28,6 @@ const state = proxy<State>({
  */
 const SettingsStore = {
   state,
-
   setAccount(value: number) {
     state.account = value;
   },

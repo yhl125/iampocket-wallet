@@ -20,7 +20,7 @@
     "encoding": "^0.1.13",
     "eslint": "8.37.0",
     "eslint-config-next": "13.2.4",
-    "ethers": "^5.7.2",
+    "ethers": "^5",
     "lokijs": "^1.5.12",
     "next": "^13.3.0",
     "pino-pretty": "^10.0.0",
@@ -28,7 +28,8 @@
     "react-dom": "18.2.0",
     "react-qr-reader": "^3.0.0-beta-1",
     "typescript": "5.0.2",
-    "valtio": "^1.10.4"
+    "valtio": "^1.10.4",
+    "wagmi": "^0.12.12"
   },
   "devDependencies": {
     "@walletconnect/types": "^2.6.1",
