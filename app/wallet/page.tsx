@@ -11,44 +11,30 @@ import Link from 'next/link';
 import Image from 'next/image';
 import copyClipboardSVG from '../../public/copyToClipboard.svg';
 import { useRouter } from 'next/navigation';
+import TokenList from './component/tokenList';
+import useAccounts from '@/hooks/useAccounts';
+import TokenStore, { TokenState } from '@/store/TokenStore';
 
 const WalletPage = () => {
   const [balance, setBalance] = useState<string>();
-  const [network, setNetwork] = useState<string>();
   const [symbol, setSymbol] = useState('GoerliETH');
   const { erc4337Address } = useSnapshot(SettingsStore.state);
+  const { provider } = useSnapshot(TokenStore.providerState);
+  const { tokenList } = useSnapshot(TokenStore.tokenListState);
   const router = useRouter();
-
-  const createAddress = async () => {
-    const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
-    const accountAPI = getSimpleAccount(
-      provider,
-      config.signingKey,
-      config.entryPoint,
-      config.simpleAccountFactory
-    );
-    const address = await accountAPI.getCounterFactualAddress();
-    SettingsStore.setERC4337Address(address);
-    getAddressBalance(address, provider);
-    // getNetwork();
-    console.log(`SimpleAccount address: ${address}`);
-  };
-
-  // const getNetwork = async () => {
-  //   const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
-  //   const network = await provider.getNetwork();
-  //   setNetwork(network.name);
-  //   console.log(network.name);
-  // };
+  const initialProvider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
 
   const getAddressBalance = async (
     address: string,
     provider: ethers.providers.JsonRpcProvider
   ) => {
-    const bigNumberBalance = await provider.getBalance(address);
-    console.log(bigNumberBalance);
-    const balance = formatEther(bigNumberBalance);
-    setBalance(balance);
+    if (provider != undefined) {
+      const bigNumberBalance = await provider.getBalance(address);
+      const balance = formatEther(bigNumberBalance);
+      setBalance(balance);
+    } else {
+      alert('Provider is ' + provider)
+    }
   };
   const truncateAddress = (address: String) => {
     return (
@@ -58,9 +44,13 @@ const WalletPage = () => {
     );
   };
 
+  useAccounts(initialProvider);
+
   useEffect(() => {
-    createAddress();
-  }, []);
+    if (erc4337Address == '') return;
+    TokenStore.setProvider(initialProvider);
+    getAddressBalance(erc4337Address, initialProvider);
+  }, [erc4337Address]);
 
   return (
     <>
@@ -134,6 +124,7 @@ const WalletPage = () => {
             </div>
           </div>
           <div className="token-list flex flex-col items-center justify-center overflow-auto p-2">
+            <TokenList tokenList={tokenList as TokenState[]} ethereumBalance={balance as string} />
             <div className="add-token mt-7">
               <button
                 className="btn-ghost btn"
