@@ -10,24 +10,17 @@ import { useSnapshot } from 'valtio';
 import Link from 'next/link';
 import Image from 'next/image';
 import copyClipboardSVG from '../../public/copyToClipboard.svg';
-import TokenStore, { TokenState } from '@/store/TokenStore';
-import TokenList from './component/tokenList';
 import { useRouter } from 'next/navigation';
 
-
-
 const WalletPage = () => {
-
   const [balance, setBalance] = useState<string>();
   const [network, setNetwork] = useState<string>();
   const [symbol, setSymbol] = useState('GoerliETH');
   const { erc4337Address } = useSnapshot(SettingsStore.state);
-  const { tokenList } = useSnapshot(TokenStore.tokenListState);
   const router = useRouter();
 
   const createAddress = async () => {
     const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
-    TokenStore.setProvider(provider);
     const accountAPI = getSimpleAccount(
       provider,
       config.signingKey,
@@ -55,12 +48,6 @@ const WalletPage = () => {
     const bigNumberBalance = await provider.getBalance(address);
     console.log(bigNumberBalance);
     const balance = formatEther(bigNumberBalance);
-    TokenStore.addTokenInfo({
-      name: 'Ethereum',
-      tokenDecimal: 0,
-      tokenSymbol: 'ETH',
-      balance: balance,
-    });
     setBalance(balance);
   };
   const truncateAddress = (address: String) => {
@@ -147,8 +134,6 @@ const WalletPage = () => {
             </div>
           </div>
           <div className="token-list flex flex-col items-center justify-center overflow-auto p-2">
-            <TokenList tokenList={tokenList as TokenState[]}></TokenList>
-
             <div className="add-token mt-7">
               <button
                 className="btn-ghost btn"
