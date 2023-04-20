@@ -1,4 +1,5 @@
 import ModalStore from '@/store/ModalStore';
+import LegacySessionProposalModal from '@/views/LegacySessionProposalModal';
 import SessionProposalModal from '@/views/SessionProposalModal';
 // import SessionSendTransactionModal from '@/views/SessionSendTransactionModal';
 // import SessionRequestModal from '@/views/SessionSignModal';
@@ -29,6 +30,12 @@ export default function Modal() {
         {view === 'SessionUnsuportedMethodModal' && (
           <SessionUnsuportedMethodModal />
         )} */}
+        {view === 'LegacySessionProposalModal' && (
+          <LegacySessionProposalModal />
+        )}
+        {/* {view === 'LegacySessionSignModal' && <LegacySessionSignModal />}
+      {view === 'LegacySessionSignTypedDataModal' && <LegacySessionSignTypedDataModal />}
+      {view === 'LegacySessionSendTransactionModal' && <LegacySessionSendTransactionModal />} */}
       </div>
     </>
   );

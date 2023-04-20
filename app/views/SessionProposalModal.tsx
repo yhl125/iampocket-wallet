@@ -161,7 +161,7 @@ export default function SessionProposalModal() {
       <RequestModalContainer title="Session Proposal">
         <ProjectInfoCard metadata={proposer.metadata} />
 
-        <p className="my-2"></p>
+        <div className="my-2"></div>
 
         {requiredNamespaceKeys.length ? <h4>Required Namespaces</h4> : null}
         {requiredNamespaceKeys.map((chain) => {
@@ -169,7 +169,7 @@ export default function SessionProposalModal() {
             <Fragment key={chain}>
               <p className="mb-5">{`Review ${chain} permissions`}</p>
               {renderAccountSelection(`required:${chain}`)}
-              <p className="my-2"></p>
+              <div className="my-2"></div>
             </Fragment>
           );
         })}
@@ -180,7 +180,7 @@ export default function SessionProposalModal() {
               <Fragment key={chain}>
                 <p className="mb-5">{`Review ${chain} permissions`}</p>
                 {renderAccountSelection(`optional:${chain}`)}
-                <p className="my-2"></p>
+                <div className="my-2"></div>
               </Fragment>
             );
           })}
