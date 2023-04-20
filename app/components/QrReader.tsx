@@ -64,13 +64,6 @@ export default function QrReader({ onConnect }: IProps) {
         </Fragment>
       ) : (
         <div className="qrPlaceholder container">
-          <Image
-            src="/icons/qr-icon.svg"
-            width={100}
-            height={100}
-            alt="qr code icon"
-            className="qrIcon"
-          />
           <button className="btn" onClick={onShowScanner}>
             Scan QR code
           </button>
