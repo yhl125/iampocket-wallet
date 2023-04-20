@@ -7,6 +7,8 @@ import useAccounts from '@/hooks/useAccounts';
 import useWalletConnectEventsManager from '@/hooks/useWalletConnectEventsManager';
 import { createWeb3Wallet, web3wallet } from '@/utils/WalletConnectUtil';
 import { Fragment, SetStateAction, useEffect, useState } from 'react';
+import { parseUri } from '@walletconnect/utils'
+import { createLegacySignClient } from '@/utils/LegacyWalletConnectUtil';
 
 export default function WalletConnectPage() {
   const [uri, setUri] = useState('');
@@ -15,8 +17,14 @@ export default function WalletConnectPage() {
   async function onConnect(uri: string) {
     try {
       setLoading(true);
-      await web3wallet.pair({ uri });
-    } catch (err: unknown) {
+      const { version } = parseUri(uri)
+
+      // Route the provided URI to the v1 SignClient if URI version indicates it, else use v2.
+      if (version === 1) {
+        createLegacySignClient({ uri })
+      } else {
+        await web3wallet.pair({ uri })
+      }    } catch (err: unknown) {
       alert(err);
     } finally {
       setUri('');
