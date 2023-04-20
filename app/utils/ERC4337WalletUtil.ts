@@ -6,8 +6,7 @@ import SettingsStore from '@/store/SettingsStore';
 /**
  * Utilities
  */
-export async function createOrRestoreERC4337Wallet() {
-  const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
+export async function createOrRestoreERC4337Wallet(provider: ethers.providers.JsonRpcProvider) {
   const accountAPI = getSimpleAccount(
     provider,
     config.signingKey,
