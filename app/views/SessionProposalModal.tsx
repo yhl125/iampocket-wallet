@@ -168,7 +168,6 @@ export default function SessionProposalModal() {
           return (
             <Fragment key={chain}>
               <p className="mb-5">{`Review ${chain} permissions`}</p>
-              {/* <SessionProposalChainCard requiredNamespace={requiredNamespaces[chain]} /> */}
               {renderAccountSelection(`required:${chain}`)}
               <p className="my-2"></p>
             </Fragment>
@@ -180,7 +179,6 @@ export default function SessionProposalModal() {
             return (
               <Fragment key={chain}>
                 <p className="mb-5">{`Review ${chain} permissions`}</p>
-                {/* <SessionProposalChainCard requiredNamespace={optionalNamespaces[chain]} /> */}
                 {renderAccountSelection(`optional:${chain}`)}
                 <p className="my-2"></p>
               </Fragment>

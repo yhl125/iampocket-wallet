@@ -15,18 +15,19 @@ export default function ProjectInfoCard({ metadata }: IProps) {
   const { icons, name, url } = metadata;
 
   return (
-    <div className="grid content-center	">
-      <div className="columns-3">
-        <div className="avatar">
-          <div className="w-8 rounded">
-            {/* TODO fix Image with src "" is missing required "width" property */}
-            <Image src={icons[0]} alt="Tailwind-CSS-Avatar-component" />
-          </div>
+    <div className="flex">
+      <div className="avatar mr-4">
+        <div className="w-12 rounded">
+          <Image
+            src={icons[0]}
+            fill
+            alt="Tailwind-CSS-Avatar-component"
+          />
         </div>
       </div>
-      <div className="columns-auto">
-        <h5>{name}</h5>
-        <a className="link" href={url}>
+      <div>
+        <h5 className="whitespace-nowrap">{name}</h5>
+        <a className="link whitespace-nowrap" href={url}>
           {url}
         </a>
       </div>
