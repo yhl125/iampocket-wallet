@@ -1,4 +1,4 @@
-import { truncate } from '@/utils/HelperUtil';
+import { truncateAddress } from '@/utils/HelperUtil';
 
 /**
  * Types
@@ -38,7 +38,7 @@ export default function AccountSelectCard({
             <label
               htmlFor={`account-${index}-checkbox`}
               className="text-xl"
-            >{`${truncate(address, 14)} - Account ${index}`}</label>
+            >{`${truncateAddress(address)} - Account ${index}`}</label>
           </div>
         </div>
       </div>

@@ -2,8 +2,7 @@
 
 import { ethers } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
-import { useEffect, useRef, useState } from 'react';
-import { getSimpleAccount } from '../api/src';
+import { useEffect, useMemo, useState } from 'react';
 import config from 'config.json';
 import SettingsStore from '@/store/SettingsStore';
 import { useSnapshot } from 'valtio';
@@ -13,16 +12,19 @@ import copyClipboardSVG from '../../public/copyToClipboard.svg';
 import { useRouter } from 'next/navigation';
 import TokenList from './component/tokenList';
 import useAccounts from '@/hooks/useAccounts';
-import TokenStore, { TokenState } from '@/store/TokenStore';
+import TokenStore from '@/store/TokenStore';
+import { truncateAddress } from '@/utils/HelperUtil';
 
 const WalletPage = () => {
-  const [balance, setBalance] = useState<string>();
+  const [balance, setBalance] = useState<string>('0');
   const [symbol, setSymbol] = useState('GoerliETH');
   const { erc4337Address } = useSnapshot(SettingsStore.state);
-  const { provider } = useSnapshot(TokenStore.providerState);
   const { tokenList } = useSnapshot(TokenStore.tokenListState);
   const router = useRouter();
-  const initialProvider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
+  const initialProvider = useMemo(
+    () => new ethers.providers.JsonRpcProvider(config.rpcUrl),
+    []
+  );
 
   const getAddressBalance = async (
     address: string,
@@ -33,24 +35,16 @@ const WalletPage = () => {
       const balance = formatEther(bigNumberBalance);
       setBalance(balance);
     } else {
-      alert('Provider is ' + provider)
+      alert('Provider is ' + provider);
     }
-  };
-  const truncateAddress = (address: String) => {
-    return (
-      address.substring(0, 7) +
-      '...' +
-      address.substring(address.length - 7, address.length)
-    );
   };
 
   useAccounts(initialProvider);
 
   useEffect(() => {
     if (erc4337Address == '') return;
-    TokenStore.setProvider(initialProvider);
     getAddressBalance(erc4337Address, initialProvider);
-  }, [erc4337Address]);
+  }, [erc4337Address, initialProvider]);
 
   return (
     <>
@@ -99,7 +93,7 @@ const WalletPage = () => {
             </label>
             <ul
               tabIndex={0}
-              className="dropdown-content menu rounded-box mt-7 mt-7 w-52 bg-base-300 p-2 shadow"
+              className="dropdown-content menu rounded-box mt-7 w-52 bg-base-300 p-2 shadow"
             >
               <li>
                 <Link href={'/walletconnect'}>Connect Wallet</Link>
@@ -124,7 +118,7 @@ const WalletPage = () => {
             </div>
           </div>
           <div className="token-list flex flex-col items-center justify-center overflow-auto p-2">
-            <TokenList tokenList={tokenList as TokenState[]} ethereumBalance={balance as string} />
+            <TokenList tokenList={tokenList} ethereumBalance={balance} />
             <div className="add-token mt-7">
               <button
                 className="btn-ghost btn"
