@@ -2,7 +2,7 @@ import { TokenState } from '@/store/TokenStore';
 import Image from 'next/image';
 import ethereumSVG from '../../../public/ethereum-eth-logo.svg';
 interface Iprops {
-  tokenList: TokenState[];
+  tokenList: readonly TokenState[];
   ethereumBalance: string;
 }
 const TokenList = ({ tokenList, ethereumBalance }: Iprops) => {

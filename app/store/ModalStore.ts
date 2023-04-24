@@ -31,7 +31,8 @@ interface State {
     | 'LegacySessionProposalModal'
     | 'LegacySessionSignModal'
     | 'LegacySessionSignTypedDataModal'
-    | 'LegacySessionSendTransactionModal';
+    | 'LegacySessionSendTransactionModal'
+    | 'LegacySwitchNetworkModal';
   data?: ModalData;
 }
 

@@ -21,6 +21,10 @@ export function truncate(value: string, length: number) {
   );
 }
 
+export function truncateAddress(address: string) {
+  return truncate(address, 14);
+}
+
 /**
  * Converts hex to utf8 string if it is valid bytes
  */

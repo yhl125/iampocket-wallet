@@ -1,4 +1,5 @@
 import { EIP155_SIGNING_METHODS } from '@/data/EIP155Data'
+import { EIP3326 } from '@/data/EIPInterfaceData'
 import ModalStore from '@/store/ModalStore'
 import LegacySignClient from '@walletconnect/client'
 import { IWalletConnectSession } from '@walletconnect/legacy-types'
@@ -65,6 +66,12 @@ const onCallRequest = async (payload: { id: number; method: string; params: any[
     case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
     case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
       return ModalStore.open('LegacySessionSendTransactionModal', {
+        legacyCallRequestEvent: payload,
+        legacyRequestSession: legacySignClient.session
+      })
+
+    case EIP3326:
+      return ModalStore.open('LegacySwitchNetworkModal', {
         legacyCallRequestEvent: payload,
         legacyRequestSession: legacySignClient.session
       })
