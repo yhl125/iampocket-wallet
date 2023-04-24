@@ -19,3 +19,14 @@ export async function createOrRestoreERC4337Wallet(provider: ethers.providers.Js
 
   return address;
 }
+
+export function getERC4337Wallet() {
+  const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
+  const accountAPI = getSimpleAccount(
+    provider,
+    config.signingKey,
+    config.entryPoint,
+    config.simpleAccountFactory
+  );
+  return accountAPI;
+}

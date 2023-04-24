@@ -1,12 +1,10 @@
 import ProjectInfoCard from '@/components/ProjectInfoCard';
 import ProposalSelectSection from '@/components/ProposalSelectSection';
 import RequestModalContainer from '@/components/RequestModalContainer';
-// import SessionProposalChainCard from '@/components/SessionProposalChainCard'
 import ModalStore from '@/store/ModalStore';
 import SettingsStore from '@/store/SettingsStore';
 import { isEIP155Chain } from '@/utils/HelperUtil';
 import { web3wallet } from '@/utils/WalletConnectUtil';
-// import { Button, Divider, Modal, Text } from '@nextui-org/react'
 import { SessionTypes } from '@walletconnect/types';
 import { getSdkError } from '@walletconnect/utils';
 import { Fragment, useEffect, useState } from 'react';
