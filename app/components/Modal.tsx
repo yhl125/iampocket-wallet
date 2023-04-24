@@ -1,6 +1,7 @@
 import ModalStore from '@/store/ModalStore';
 import LegacySessionProposalModal from '@/views/LegacySessionProposalModal';
 import LegacySessionSignModal from '@/views/LegacySessionSignModal';
+import LegacySwitchNetworkModal from '@/views/LegacySwitchNetworkModal';
 import SessionProposalModal from '@/views/SessionProposalModal';
 // import SessionSendTransactionModal from '@/views/SessionSendTransactionModal';
 import SessionSignModal from '@/views/SessionSignModal';
@@ -37,6 +38,7 @@ export default function Modal() {
         {view === 'LegacySessionSignModal' && <LegacySessionSignModal />}
       {/* {view === 'LegacySessionSignTypedDataModal' && <LegacySessionSignTypedDataModal />}
       {view === 'LegacySessionSendTransactionModal' && <LegacySessionSendTransactionModal />} */}
+      {view === 'LegacySwitchNetworkModal' && <LegacySwitchNetworkModal />}
       </div>
     </>
   );

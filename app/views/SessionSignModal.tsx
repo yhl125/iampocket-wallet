@@ -9,7 +9,6 @@ import {
 } from '@/utils/ERC4337RequestHandlerUtil';
 import { getSignParamsMessage } from '@/utils/HelperUtil';
 import { web3wallet } from '@/utils/WalletConnectUtil';
-import { Fragment } from 'react';
 
 export default function SessionSignModal() {
   // Get request and wallet data from store
@@ -53,7 +52,7 @@ export default function SessionSignModal() {
   }
 
   return (
-    <Fragment>
+    <>
       <RequestModalContainer title="Sign Message">
         <ProjectInfoCard metadata={requestSession.peer.metadata} />
 
@@ -74,7 +73,6 @@ export default function SessionSignModal() {
         <div className="my-2"></div>
 
         <RequestMethodCard methods={[request.method]} />
-      </RequestModalContainer>
 
       <div className="modal-action">
         <button className="btn-error btn" onClick={onReject}>
@@ -84,6 +82,7 @@ export default function SessionSignModal() {
           Approve
         </button>
       </div>
-    </Fragment>
+      </RequestModalContainer>
+    </>
   );
 }

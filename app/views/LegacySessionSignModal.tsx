@@ -9,8 +9,6 @@ import {
 } from '@/utils/ERC4337RequestHandlerUtil';
 import { getSignParamsMessage } from '@/utils/HelperUtil';
 import { legacySignClient } from '@/utils/LegacyWalletConnectUtil';
-// import { Button, Col, Divider, Modal, Row, Text } from '@nextui-org/react'
-import { Fragment } from 'react';
 
 export default function LegacySessionSignModal() {
   // Get request and wallet data from store
@@ -62,7 +60,7 @@ export default function LegacySessionSignModal() {
   }
 
   return (
-    <Fragment>
+    <>
       <RequestModalContainer title="Sign Message">
         <ProjectInfoCard metadata={requestSession.peerMeta!} />
 
@@ -83,16 +81,16 @@ export default function LegacySessionSignModal() {
         <div className="my-2"></div>
 
         <RequestMethodCard methods={[method]} />
-      </RequestModalContainer>
 
-      <div className="modal-action">
-        <button className="btn-error btn" onClick={onReject}>
-          Reject
-        </button>
-        <button className="btn-success btn" onClick={onApprove}>
-          Approve
-        </button>
-      </div>
-    </Fragment>
+        <div className="modal-action">
+          <button className="btn-error btn" onClick={onReject}>
+            Reject
+          </button>
+          <button className="btn-success btn" onClick={onApprove}>
+            Approve
+          </button>
+        </div>
+      </RequestModalContainer>
+    </>
   );
 }
