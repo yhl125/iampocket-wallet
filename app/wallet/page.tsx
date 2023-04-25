@@ -39,7 +39,7 @@ const WalletPage = () => {
     }
   };
 
-  useAccounts(initialProvider);
+  useAccounts();
 
   useEffect(() => {
     if (erc4337Address == '') return;

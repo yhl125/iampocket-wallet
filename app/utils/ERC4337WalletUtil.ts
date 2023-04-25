@@ -1,32 +1,25 @@
-import { getSimpleAccount } from '@/api/src';
-import { ethers } from 'ethers';
 import config from 'config.json';
 import SettingsStore from '@/store/SettingsStore';
+import { Presets } from 'userop';
 
 /**
  * Utilities
  */
-export async function createOrRestoreERC4337Wallet(provider: ethers.providers.JsonRpcProvider) {
-  const accountAPI = getSimpleAccount(
-    provider,
-    config.signingKey,
-    config.entryPoint,
-    config.simpleAccountFactory
-  );
-  const address = await accountAPI.getCounterFactualAddress();
+export async function createOrRestoreERC4337Wallet() {
+  const simpleAccount = await getERC4337Wallet();
+  const address = simpleAccount.getSender();
   SettingsStore.setERC4337Address(address);
   SettingsStore.setWeb3WalletReady(true);
 
   return address;
 }
 
-export function getERC4337Wallet() {
-  const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
-  const accountAPI = getSimpleAccount(
-    provider,
+export async function getERC4337Wallet() {
+  const simpleAccount = await Presets.Builder.SimpleAccount.init(
     config.signingKey,
+    config.rpcUrl,
     config.entryPoint,
     config.simpleAccountFactory
   );
-  return accountAPI;
+  return simpleAccount;
 }
