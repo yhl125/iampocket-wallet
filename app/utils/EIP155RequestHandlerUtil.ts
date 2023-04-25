@@ -1,8 +1,4 @@
-import {
-  EIP155_CHAINS,
-  EIP155_SIGNING_METHODS,
-  TEIP155Chain,
-} from '@/data/EIP155Data';
+import { EIP155_SIGNING_METHODS } from '@/data/EIP155Data';
 import {
   getSignParamsMessage,
   getSignTypedDataParamsData,
@@ -15,22 +11,27 @@ import {
   formatJsonRpcError,
   formatJsonRpcResult,
 } from '@walletconnect/jsonrpc-utils';
+import { getERC4337Wallet } from './ERC4337WalletUtil';
+import { Client, DEFAULT_CALL_GAS_LIMIT } from 'userop';
 
-export async function approveERC4337Request(
+export async function approveEIP155Request(
   requestEvent: SignClientTypes.EventArguments['session_request']
 ) {
   const { params, id } = requestEvent;
   const { chainId, request } = params;
   const provider = new providers.JsonRpcProvider(config.rpcUrl);
-  const owner = new Wallet(config.signingKey, provider);
+  const signer = new Wallet(config.signingKey, provider);
+  const erc4337Wallet = await getERC4337Wallet();
+  const client = await Client.init(config.rpcUrl, config.entryPoint);
+
+  // https://discord.com/channels/874596133148696576/942772249662996520/1100391863002878054
+  erc4337Wallet.setCallGasLimit(DEFAULT_CALL_GAS_LIMIT.mul(2));
 
   switch (request.method) {
     case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
-    case EIP155_SIGNING_METHODS.ETH_SIGN: 
+    case EIP155_SIGNING_METHODS.ETH_SIGN:
       const message = getSignParamsMessage(request.params);
-      const signedMessage = await owner.signMessage(message);
-      
-
+      const signedMessage = await signer.signMessage(message);
       return formatJsonRpcResult(id, signedMessage);
 
     case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA:
@@ -43,21 +44,25 @@ export async function approveERC4337Request(
       } = getSignTypedDataParamsData(request.params);
       // https://github.com/ethers-io/ethers.js/issues/687#issuecomment-714069471
       delete types.EIP712Domain;
-      const signedData = await owner._signTypedData(domain, types, data);
+      const signedData = await signer._signTypedData(domain, types, data);
       return formatJsonRpcResult(id, signedData);
 
     case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
-      const provider = new providers.JsonRpcProvider(
-        EIP155_CHAINS[chainId as TEIP155Chain].rpc
-      );
       const sendTransaction = request.params[0];
-      const connectedWallet = owner.connect(provider);
-      const { hash } = await connectedWallet.sendTransaction(sendTransaction);
+      const res = await client.sendUserOperation(
+        erc4337Wallet.execute(
+          sendTransaction.to,
+          sendTransaction.value || 0,
+          sendTransaction.data
+        )
+      );
+      const ev = await res.wait();
+      const hash = ev?.transactionHash;
       return formatJsonRpcResult(id, hash);
 
     case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
       const signTransaction = request.params[0];
-      const signature = await owner.signTransaction(signTransaction);
+      const signature = await signer.signTransaction(signTransaction);
       return formatJsonRpcResult(id, signature);
 
     default:
@@ -65,8 +70,11 @@ export async function approveERC4337Request(
   }
 }
 
-export function rejectERC4337Request(
+export function rejectEIP155Request(
   request: SignClientTypes.EventArguments['session_request']
 ) {
-  return formatJsonRpcError(request.id, getSdkError('USER_REJECTED_METHODS').message);
+  return formatJsonRpcError(
+    request.id,
+    getSdkError('USER_REJECTED_METHODS').message
+  );
 }

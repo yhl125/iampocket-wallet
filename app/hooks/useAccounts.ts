@@ -1,11 +1,8 @@
 import { createOrRestoreERC4337Wallet } from '@/utils/ERC4337WalletUtil';
-import { ethers } from 'ethers';
 import { useEffect } from 'react';
 
-export default function useAccounts(
-  provider: ethers.providers.JsonRpcProvider
-) {
+export default function useAccounts() {
   useEffect(() => {
-    createOrRestoreERC4337Wallet(provider);
-  }, [provider]);
+    createOrRestoreERC4337Wallet();
+  }, []);
 }

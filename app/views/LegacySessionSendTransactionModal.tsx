@@ -1,4 +1,6 @@
+import { LoadingSmall } from '@/components/Loading';
 import ProjectInfoCard from '@/components/ProjectInfoCard';
+import RequestDataCard from '@/components/RequestDataCard';
 import RequesDetailsCard from '@/components/RequestDetalilsCard';
 import RequestMethodCard from '@/components/RequestMethodCard';
 import RequestModalContainer from '@/components/RequestModalContainer';
@@ -7,10 +9,12 @@ import {
   approveEIP155Request,
   rejectEIP155Request,
 } from '@/utils/EIP155RequestHandlerUtil';
-import { getSignParamsMessage } from '@/utils/HelperUtil';
 import { legacySignClient } from '@/utils/LegacyWalletConnectUtil';
+import { useState } from 'react';
 
-export default function LegacySessionSignModal() {
+export default function LegacySessionSendTransactionModal() {
+  const [loading, setLoading] = useState(false);
+
   // Get request and wallet data from store
   const requestEvent = ModalStore.state.data?.legacyCallRequestEvent;
   const requestSession = ModalStore.state.data?.legacyRequestSession;
@@ -20,25 +24,32 @@ export default function LegacySessionSignModal() {
     return <p>Missing request data</p>;
   }
 
-  // Get required request data
+  // Get required proposal data
+
   const { id, method, params } = requestEvent;
+  const transaction = params[0];
 
-  // Get message, convert it to UTF8 string if it is valid hex
-  const message = getSignParamsMessage(params);
+  // // Remove unneeded key coming from v1 sample dapp that throws Ethers.
+  if (transaction['gas']) delete transaction['gas'];
 
-  // Handle approve action (logic varies based on request method)
+  // Handle approve action
   async function onApprove() {
     if (requestEvent) {
+      const chainId = 'eip155:' + requestSession!.chainId.toString();
       const { result } = await approveEIP155Request({
         id,
         topic: '',
-        params: { request: { method, params }, chainId: '5' },
+        params: {
+          request: { method, params },
+          chainId: chainId,
+        },
       });
 
       legacySignClient.approveRequest({
         id,
         result,
       });
+      console.log('result', result);
       ModalStore.close();
     }
   }
@@ -49,7 +60,7 @@ export default function LegacySessionSignModal() {
       const { error } = rejectEIP155Request({
         id,
         topic: '',
-        params: { request: { method, params }, chainId: '5' },
+        params: { request: { method, params }, chainId: '1' },
       });
       legacySignClient.rejectRequest({
         id,
@@ -61,8 +72,12 @@ export default function LegacySessionSignModal() {
 
   return (
     <>
-      <RequestModalContainer title="Sign Message">
+      <RequestModalContainer title="Send / Sign Transaction">
         <ProjectInfoCard metadata={requestSession.peerMeta!} />
+
+        <div className="my-2"></div>
+
+        <RequestDataCard data={transaction} />
 
         <div className="my-2"></div>
 
@@ -73,21 +88,22 @@ export default function LegacySessionSignModal() {
 
         <div className="my-2"></div>
 
-        <div>
-          <h5>Message</h5>
-          <p>{message}</p>
-        </div>
-
-        <div className="my-2"></div>
-
         <RequestMethodCard methods={[method]} />
 
         <div className="modal-action">
-          <button className="btn-error btn" onClick={onReject}>
+          <button
+            className="btn-error btn"
+            onClick={onReject}
+            disabled={loading}
+          >
             Reject
           </button>
-          <button className="btn-success btn" onClick={onApprove}>
-            Approve
+          <button
+            className="btn-success btn"
+            onClick={onApprove}
+            disabled={loading}
+          >
+            {loading ? <LoadingSmall /> : 'Approve'}
           </button>
         </div>
       </RequestModalContainer>

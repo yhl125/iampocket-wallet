@@ -1,4 +1,6 @@
+import { LoadingSmall } from '@/components/Loading';
 import ProjectInfoCard from '@/components/ProjectInfoCard';
+import RequestDataCard from '@/components/RequestDataCard';
 import RequesDetailsCard from '@/components/RequestDetalilsCard';
 import RequestMethodCard from '@/components/RequestMethodCard';
 import RequestModalContainer from '@/components/RequestModalContainer';
@@ -7,10 +9,13 @@ import {
   approveEIP155Request,
   rejectEIP155Request,
 } from '@/utils/EIP155RequestHandlerUtil';
-import { getSignParamsMessage } from '@/utils/HelperUtil';
 import { web3wallet } from '@/utils/WalletConnectUtil';
+// import { Button, Divider, Loading, Modal, Text } from '@nextui-org/react';
+import { useState } from 'react';
 
-export default function SessionSignModal() {
+export default function SessionSendTransactionModal() {
+  const [loading, setLoading] = useState(false);
+
   // Get request and wallet data from store
   const requestEvent = ModalStore.state.data?.requestEvent;
   const requestSession = ModalStore.state.data?.requestSession;
@@ -20,16 +25,16 @@ export default function SessionSignModal() {
     return <p>Missing request data</p>;
   }
 
-  // Get required request data
+  // Get required proposal data
+
   const { topic, params } = requestEvent;
   const { request, chainId } = params;
+  const transaction = request.params[0];
 
-  // Get message, convert it to UTF8 string if it is valid hex
-  const message = getSignParamsMessage(request.params);
-
-  // Handle approve action (logic varies based on request method)
+  // Handle approve action
   async function onApprove() {
     if (requestEvent) {
+      setLoading(true);
       const response = await approveEIP155Request(requestEvent);
       await web3wallet.respondSessionRequest({
         topic,
@@ -53,8 +58,12 @@ export default function SessionSignModal() {
 
   return (
     <>
-      <RequestModalContainer title="Sign Message">
+      <RequestModalContainer title="Send / Sign Transaction">
         <ProjectInfoCard metadata={requestSession.peer.metadata} />
+
+        <div className="my-2"></div>
+
+        <RequestDataCard data={transaction} />
 
         <div className="my-2"></div>
 
@@ -65,23 +74,24 @@ export default function SessionSignModal() {
 
         <div className="my-2"></div>
 
-        <div>
-          <h5>Message</h5>
-          <p>{message}</p>
-        </div>
-
-        <div className="my-2"></div>
-
         <RequestMethodCard methods={[request.method]} />
 
-      <div className="modal-action">
-        <button className="btn-error btn" onClick={onReject}>
-          Reject
-        </button>
-        <button className="btn-success btn" onClick={onApprove}>
-          Approve
-        </button>
-      </div>
+        <div className="modal-action">
+          <button
+            className="btn-error btn"
+            onClick={onReject}
+            disabled={loading}
+          >
+            Reject
+          </button>
+          <button
+            className="btn-success btn"
+            onClick={onApprove}
+            disabled={loading}
+          >
+            {loading ? <LoadingSmall /> : 'Approve'}
+          </button>
+        </div>
       </RequestModalContainer>
     </>
   );

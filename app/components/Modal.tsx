@@ -1,9 +1,10 @@
 import ModalStore from '@/store/ModalStore';
 import LegacySessionProposalModal from '@/views/LegacySessionProposalModal';
+import LegacySessionSendTransactionModal from '@/views/LegacySessionSendTransactionModal';
 import LegacySessionSignModal from '@/views/LegacySessionSignModal';
 import LegacySwitchNetworkModal from '@/views/LegacySwitchNetworkModal';
 import SessionProposalModal from '@/views/SessionProposalModal';
-// import SessionSendTransactionModal from '@/views/SessionSendTransactionModal';
+import SessionSendTransactionModal from '@/views/SessionSendTransactionModal';
 import SessionSignModal from '@/views/SessionSignModal';
 // import SessionSignTypedDataModal from '@/views/SessionSignTypedDataModal';
 // import SessionUnsuportedMethodModal from '@/views/SessionUnsuportedMethodModal';
@@ -25,19 +26,19 @@ export default function Modal() {
       <div className="modal">
         {view === 'SessionProposalModal' && <SessionProposalModal />}
         {view === 'SessionSignModal' && <SessionSignModal />}
-        {/* {view === 'SessionSignTypedDataModal' && <SessionSignTypedDataModal />}
+        {/* {view === 'SessionSignTypedDataModal' && <SessionSignTypedDataModal />} */}
         {view === 'SessionSendTransactionModal' && (
           <SessionSendTransactionModal />
         )}
-        {view === 'SessionUnsuportedMethodModal' && (
+        {/* {view === 'SessionUnsuportedMethodModal' && (
           <SessionUnsuportedMethodModal />
         )} */}
         {view === 'LegacySessionProposalModal' && (
           <LegacySessionProposalModal />
         )}
         {view === 'LegacySessionSignModal' && <LegacySessionSignModal />}
-      {/* {view === 'LegacySessionSignTypedDataModal' && <LegacySessionSignTypedDataModal />}
-      {view === 'LegacySessionSendTransactionModal' && <LegacySessionSendTransactionModal />} */}
+      {/* {view === 'LegacySessionSignTypedDataModal' && <LegacySessionSignTypedDataModal />} */}
+      {view === 'LegacySessionSendTransactionModal' && <LegacySessionSendTransactionModal />}
       {view === 'LegacySwitchNetworkModal' && <LegacySwitchNetworkModal />}
       </div>
     </>
