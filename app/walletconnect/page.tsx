@@ -6,7 +6,7 @@ import QrReader from '@/components/QrReader';
 import useAccounts from '@/hooks/useAccounts';
 import useWalletConnectEventsManager from '@/hooks/useWalletConnectEventsManager';
 import { createWeb3Wallet, web3wallet } from '@/utils/WalletConnectUtil';
-import { Fragment, SetStateAction, useEffect, useMemo, useState } from 'react';
+import { Fragment, SetStateAction, useEffect, useState } from 'react';
 import { parseUri } from '@walletconnect/utils';
 import { createLegacySignClient } from '@/utils/LegacyWalletConnectUtil';
 
