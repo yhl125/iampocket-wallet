@@ -44,6 +44,7 @@ const ManageTokenPage = () => {
       name: name,
       balance: balance,
       tokenSymbol: symbol,
+      tokenDecimal: 0
     });
     router.push('/wallet');
   };
