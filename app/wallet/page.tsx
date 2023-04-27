@@ -12,14 +12,15 @@ import copyClipboardSVG from '../../public/copyToClipboard.svg';
 import { useRouter } from 'next/navigation';
 import TokenList from './component/tokenList';
 import useAccounts from '@/hooks/useAccounts';
-import TokenStore from '@/store/TokenStore';
+import TokenStore, { TokenState } from '@/store/TokenStore';
 import { truncateAddress } from '@/utils/HelperUtil';
 
 const WalletPage = () => {
-  const [balance, setBalance] = useState<string>('0');
+  const [balance, setBalance] = useState<string>('');
   const [symbol, setSymbol] = useState('GoerliETH');
   const { erc4337Address } = useSnapshot(SettingsStore.state);
   const { tokenList } = useSnapshot(TokenStore.tokenListState);
+  const mainToken = useSnapshot(TokenStore.mainTokenState);
   const router = useRouter();
   const initialProvider = useMemo(
     () => new ethers.providers.JsonRpcProvider(config.rpcUrl),
@@ -32,15 +33,26 @@ const WalletPage = () => {
   ) => {
     if (provider != undefined) {
       const bigNumberBalance = await provider.getBalance(address);
-      const balance = formatEther(bigNumberBalance);
-      setBalance(balance);
+      const initialBalance = formatEther(bigNumberBalance);
+      setBalance(initialBalance);
+      const ethInfo: TokenState = {
+        name: 'GoerliEthereum',
+        tokenSymbol: 'ETH',
+        tokenDecimal: 0,
+        balance: initialBalance,
+      };
+      if (mainToken.name == ethInfo.name) {
+        console.log('Main Token already set');
+      } else {
+        console.log(`Main Token not set, Setting ${ethInfo.name} as Main Token`);
+        TokenStore.setMainTokenState(ethInfo);
+      }
     } else {
       alert('Provider is ' + provider);
     }
   };
 
   useAccounts();
-
   useEffect(() => {
     if (erc4337Address == '') return;
     getAddressBalance(erc4337Address, initialProvider);
@@ -113,7 +125,7 @@ const WalletPage = () => {
               {balance} {symbol}
             </div>
             <div className="asset-options space-around mt-2 flex w-3/4 items-center justify-around">
-              <button className="btn-sm btn">Send</button>
+              <button className="btn-sm btn" onClick={()=>router.push('/transfer')}>Send</button>
               <button className="btn-sm btn">Deposit</button>
             </div>
           </div>

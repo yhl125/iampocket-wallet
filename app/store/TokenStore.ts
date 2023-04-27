@@ -14,8 +14,23 @@ export interface TokenListState {
 const tokenListState = proxy<TokenListState>({
   tokenList: [],
 });
+
+const mainTokenState = proxy<TokenState>({
+  name: '',
+  tokenDecimal: 0,
+  tokenSymbol: '',
+  balance: '',
+});
+
 const TokenStore = {
   tokenListState,
+  mainTokenState,
+  setMainTokenState(value: TokenState) {
+    mainTokenState.name = value.name;
+    mainTokenState.balance = value.balance;
+    mainTokenState.tokenDecimal = value.tokenDecimal;
+    mainTokenState.tokenSymbol = value.tokenSymbol;
+  },
   addTokenInfo(value: TokenState) {
     tokenListState.tokenList.push(value);
   },
