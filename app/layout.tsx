@@ -13,7 +13,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="flex h-2/5 h-3/5 w-1/5 flex-col rounded-lg border">
+        <div className="flex h-3/5 w-1/5 flex-col rounded-lg border">
           {children}
         </div>
       </body>
