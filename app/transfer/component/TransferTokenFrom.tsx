@@ -8,10 +8,9 @@ import Example from './ComboBox';
 import { useSnapshot } from 'valtio';
 import TokenStore, { TokenState } from '@/store/TokenStore';
 import main from '@/api/scripts/simpleAccount/address';
-import { formatEther, parseEther } from 'ethers/lib/utils';
-import { transfer } from '@/utils/transferUtils';
 import SettingsStore from '@/store/SettingsStore';
 import { useRouter } from 'next/navigation';
+import { transfer, erc20Transfer } from '@/utils/transferUtils';
 
 const TransferTokenForm = () => {
   const { tokenList } = useSnapshot(TokenStore.tokenListState);
@@ -31,7 +30,15 @@ const TransferTokenForm = () => {
   const [recipientAddressOrEns, setRecipientAddressOrEns] =
     useState<string>('');
   const handleSubmit = async (event: any) => {
-    transfer(recipientAddressOrEns, String(sendAmount), withPM);
+    if (selectedToken != mainToken)
+      erc20Transfer(
+        selectedToken.tokenAddress,
+        recipientAddressOrEns,
+        String(sendAmount),
+        withPM
+      );
+    else transfer(recipientAddressOrEns, String(sendAmount), withPM);
+
     event.preventDefault();
   };
   const handleChecked = (event: any) => {

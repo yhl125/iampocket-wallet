@@ -40,11 +40,14 @@ const WalletPage = () => {
         tokenSymbol: 'ETH',
         tokenDecimal: 0,
         balance: initialBalance,
+        tokenAddress: '',
       };
       if (mainToken.name == ethInfo.name) {
         console.log('Main Token already set');
       } else {
-        console.log(`Main Token not set, Setting ${ethInfo.name} as Main Token`);
+        console.log(
+          `Main Token not set, Setting ${ethInfo.name} as Main Token`
+        );
         TokenStore.setMainTokenState(ethInfo);
       }
     } else {
@@ -125,7 +128,12 @@ const WalletPage = () => {
               {balance} {symbol}
             </div>
             <div className="asset-options space-around mt-2 flex w-3/4 items-center justify-around">
-              <button className="btn-sm btn" onClick={()=>router.push('/transfer')}>Send</button>
+              <button
+                className="btn-sm btn"
+                onClick={() => router.push('/transfer')}
+              >
+                Send
+              </button>
               <button className="btn-sm btn">Deposit</button>
             </div>
           </div>
