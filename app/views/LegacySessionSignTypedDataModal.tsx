@@ -1,4 +1,5 @@
 import ProjectInfoCard from '@/components/ProjectInfoCard';
+import RequestDataCard from '@/components/RequestDataCard';
 import RequesDetailsCard from '@/components/RequestDetalilsCard';
 import RequestMethodCard from '@/components/RequestMethodCard';
 import RequestModalContainer from '@/components/RequestModalContainer';
@@ -7,10 +8,10 @@ import {
   approveEIP155Request,
   rejectEIP155Request,
 } from '@/utils/EIP155RequestHandlerUtil';
-import { getSignParamsMessage } from '@/utils/HelperUtil';
+import { getSignTypedDataParamsData } from '@/utils/HelperUtil';
 import { legacySignClient } from '@/utils/LegacyWalletConnectUtil';
 
-export default function LegacySessionSignModal() {
+export default function LegacySessionSignTypedDataModal() {
   // Get request and wallet data from store
   const requestEvent = ModalStore.state.data?.legacyCallRequestEvent;
   const requestSession = ModalStore.state.data?.legacyRequestSession;
@@ -23,8 +24,8 @@ export default function LegacySessionSignModal() {
   // Get required request data
   const { id, method, params } = requestEvent;
 
-  // Get message, convert it to UTF8 string if it is valid hex
-  const message = getSignParamsMessage(params);
+  // Get data
+  const data = getSignTypedDataParamsData(params);
 
   // Handle approve action (logic varies based on request method)
   async function onApprove() {
@@ -67,7 +68,7 @@ export default function LegacySessionSignModal() {
 
   return (
     <>
-      <RequestModalContainer title="Sign Message">
+      <RequestModalContainer title="Sign Typed Data">
         <ProjectInfoCard metadata={requestSession.peerMeta!} />
 
         <div className="my-2"></div>
@@ -79,10 +80,7 @@ export default function LegacySessionSignModal() {
 
         <div className="my-2"></div>
 
-        <div>
-          <h5>Message</h5>
-          <p>{message}</p>
-        </div>
+        <RequestDataCard data={data} />
 
         <div className="my-2"></div>
 

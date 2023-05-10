@@ -1,4 +1,5 @@
 import ProjectInfoCard from '@/components/ProjectInfoCard';
+import RequestDataCard from '@/components/RequestDataCard';
 import RequesDetailsCard from '@/components/RequestDetalilsCard';
 import RequestMethodCard from '@/components/RequestMethodCard';
 import RequestModalContainer from '@/components/RequestModalContainer';
@@ -7,13 +8,13 @@ import {
   approveEIP155Request,
   rejectEIP155Request,
 } from '@/utils/EIP155RequestHandlerUtil';
-import { getSignParamsMessage } from '@/utils/HelperUtil';
-import { legacySignClient } from '@/utils/LegacyWalletConnectUtil';
+import { getSignTypedDataParamsData } from '@/utils/HelperUtil';
+import { web3wallet } from '@/utils/WalletConnectUtil';
 
-export default function LegacySessionSignModal() {
+export default function SessionSignTypedDataModal() {
   // Get request and wallet data from store
-  const requestEvent = ModalStore.state.data?.legacyCallRequestEvent;
-  const requestSession = ModalStore.state.data?.legacyRequestSession;
+  const requestEvent = ModalStore.state.data?.requestEvent;
+  const requestSession = ModalStore.state.data?.requestSession;
 
   // Ensure request and wallet are defined
   if (!requestEvent || !requestSession) {
@@ -21,26 +22,19 @@ export default function LegacySessionSignModal() {
   }
 
   // Get required request data
-  const { id, method, params } = requestEvent;
+  const { topic, params } = requestEvent;
+  const { request, chainId } = params;
 
-  // Get message, convert it to UTF8 string if it is valid hex
-  const message = getSignParamsMessage(params);
+  // Get data
+  const data = getSignTypedDataParamsData(request.params);
 
   // Handle approve action (logic varies based on request method)
   async function onApprove() {
     if (requestEvent) {
-      const { result } = await approveEIP155Request({
-        id,
-        topic: '',
-        params: {
-          request: { method, params },
-          chainId: requestSession!.chainId.toString(),
-        },
-      });
-
-      legacySignClient.approveRequest({
-        id,
-        result,
+      const response = await approveEIP155Request(requestEvent);
+      await web3wallet.respondSessionRequest({
+        topic,
+        response,
       });
       ModalStore.close();
     }
@@ -49,17 +43,10 @@ export default function LegacySessionSignModal() {
   // Handle reject action
   async function onReject() {
     if (requestEvent) {
-      const { error } = rejectEIP155Request({
-        id,
-        topic: '',
-        params: {
-          request: { method, params },
-          chainId: requestSession!.chainId.toString(),
-        },
-      });
-      legacySignClient.rejectRequest({
-        id,
-        error,
+      const response = rejectEIP155Request(requestEvent);
+      await web3wallet.respondSessionRequest({
+        topic,
+        response,
       });
       ModalStore.close();
     }
@@ -67,26 +54,23 @@ export default function LegacySessionSignModal() {
 
   return (
     <>
-      <RequestModalContainer title="Sign Message">
-        <ProjectInfoCard metadata={requestSession.peerMeta!} />
+      <RequestModalContainer title="Sign Typed Data">
+        <ProjectInfoCard metadata={requestSession.peer.metadata} />
 
         <div className="my-2"></div>
 
         <RequesDetailsCard
-          chains={['eip155:' + legacySignClient.chainId]}
-          protocol={legacySignClient.protocol}
+          chains={[chainId ?? '']}
+          protocol={requestSession.relay.protocol}
         />
 
         <div className="my-2"></div>
 
-        <div>
-          <h5>Message</h5>
-          <p>{message}</p>
-        </div>
+        <RequestDataCard data={data} />
 
         <div className="my-2"></div>
 
-        <RequestMethodCard methods={[method]} />
+        <RequestMethodCard methods={[request.method]} />
 
         <div className="modal-action">
           <button className="btn-error btn" onClick={onReject}>
