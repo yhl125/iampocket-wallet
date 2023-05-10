@@ -5,6 +5,7 @@ export interface TokenState {
   tokenSymbol: string;
   tokenDecimal: number;
   balance: string;
+  tokenAddress: string;
 }
 
 export interface TokenListState {
@@ -20,6 +21,7 @@ const mainTokenState = proxy<TokenState>({
   tokenDecimal: 0,
   tokenSymbol: '',
   balance: '',
+  tokenAddress: '',
 });
 
 const TokenStore = {
@@ -30,6 +32,7 @@ const TokenStore = {
     mainTokenState.balance = value.balance;
     mainTokenState.tokenDecimal = value.tokenDecimal;
     mainTokenState.tokenSymbol = value.tokenSymbol;
+    mainTokenState.tokenAddress = value.tokenAddress;
   },
   addTokenInfo(value: TokenState) {
     tokenListState.tokenList.push(value);

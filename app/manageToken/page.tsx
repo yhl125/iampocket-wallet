@@ -32,19 +32,20 @@ const ManageTokenPage = () => {
   const getTokenInfo = async (token: tokenAttribute) => {
     const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
     const contract = new ethers.Contract(token.address, ERC_20Abi, provider);
-    const [name, symbol, tokenBalance,decimals] = await Promise.all([
+    const [name, symbol, tokenBalance, decimals] = await Promise.all([
       contract.name(),
       contract.symbol(),
       contract.balanceOf(erc4337Address),
       contract.decimals(),
-    ])
+    ]);
     const balance = formatEther(tokenBalance);
 
     TokenStore.addTokenInfo({
       name: name,
       balance: balance,
       tokenSymbol: symbol,
-      tokenDecimal: 0
+      tokenDecimal: decimals,
+      tokenAddress: address,
     });
     router.push('/wallet');
   };
