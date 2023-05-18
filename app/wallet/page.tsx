@@ -2,7 +2,7 @@
 
 import { ethers } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import config from 'config.json';
 import SettingsStore from '@/store/SettingsStore';
 import { useSnapshot } from 'valtio';
@@ -17,7 +17,7 @@ import { truncateAddress } from '@/utils/HelperUtil';
 
 const WalletPage = () => {
   const [balance, setBalance] = useState<string>('');
-  const [symbol, setSymbol] = useState('GoerliETH');
+  const [symbol, setSymbol] = useState('Matic');
   const { erc4337Address } = useSnapshot(SettingsStore.state);
   const { tokenList } = useSnapshot(TokenStore.tokenListState);
   const mainToken = useSnapshot(TokenStore.mainTokenState);
@@ -27,39 +27,39 @@ const WalletPage = () => {
     []
   );
 
-  const getAddressBalance = async (
-    address: string,
-    provider: ethers.providers.JsonRpcProvider
-  ) => {
-    if (provider != undefined) {
-      const bigNumberBalance = await provider.getBalance(address);
-      const initialBalance = formatEther(bigNumberBalance);
-      setBalance(initialBalance);
-      const ethInfo: TokenState = {
-        name: 'GoerliEthereum',
-        tokenSymbol: 'ETH',
-        tokenDecimal: 0,
-        balance: initialBalance,
-        tokenAddress: '',
-      };
-      if (mainToken.name == ethInfo.name) {
-        console.log('Main Token already set');
+  const getAddressBalance = useCallback(
+    async (address: string, provider: ethers.providers.JsonRpcProvider) => {
+      if (provider != undefined) {
+        const bigNumberBalance = await provider.getBalance(address);
+        const initialBalance = formatEther(bigNumberBalance);
+        setBalance(initialBalance);
+        const ethInfo: TokenState = {
+          name: 'Polygon',
+          tokenSymbol: 'Matic',
+          tokenDecimal: 0,
+          balance: initialBalance,
+          tokenAddress: '',
+        };
+        if (mainToken.name == ethInfo.name) {
+          console.log('Main Token already set');
+        } else {
+          console.log(
+            `Main Token not set, Setting ${ethInfo.name} as Main Token`
+          );
+          TokenStore.setMainTokenState(ethInfo);
+        }
       } else {
-        console.log(
-          `Main Token not set, Setting ${ethInfo.name} as Main Token`
-        );
-        TokenStore.setMainTokenState(ethInfo);
+        alert('Provider is ' + provider);
       }
-    } else {
-      alert('Provider is ' + provider);
-    }
-  };
+    },
+    [mainToken.name]
+  );
 
   useAccounts();
   useEffect(() => {
     if (erc4337Address == '') return;
     getAddressBalance(erc4337Address, initialProvider);
-  }, [erc4337Address, initialProvider]);
+  }, [erc4337Address, getAddressBalance, initialProvider]);
 
   return (
     <>

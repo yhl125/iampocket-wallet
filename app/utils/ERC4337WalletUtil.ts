@@ -1,25 +1,34 @@
 import config from 'config.json';
 import SettingsStore from '@/store/SettingsStore';
-import { Presets } from 'userop';
+import { getZeroDevSigner } from '@zerodevapp/sdk';
+import { Wallet } from 'ethers';
+import { SupportedGasToken } from '@zerodevapp/sdk/dist/src/types';
 
 /**
  * Utilities
  */
 export async function createOrRestoreERC4337Wallet() {
-  const simpleAccount = await getERC4337Wallet();
-  const address = simpleAccount.getSender();
+  const signer = await getERC4337Signer();
+  const address = await signer.getAddress();
   SettingsStore.setERC4337Address(address);
   SettingsStore.setWeb3WalletReady(true);
 
   return address;
 }
 
-export async function getERC4337Wallet() {
-  const simpleAccount = await Presets.Builder.SimpleAccount.init(
-    config.signingKey,
-    config.rpcUrl,
-    config.entryPoint,
-    config.simpleAccountFactory
-  );
-  return simpleAccount;
+export async function getERC4337Signer() {
+  return getZeroDevSigner({
+    projectId: config.defaultProjectId,
+    owner: new Wallet(config.signingKey),
+  });
+}
+
+export async function getERC4337SignerWithERC20Gas(
+  gasToken: SupportedGasToken
+) {
+  return getZeroDevSigner({
+    projectId: config.defaultProjectId,
+    owner: new Wallet(config.signingKey),
+    gasToken: gasToken,
+  });
 }

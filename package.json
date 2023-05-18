@@ -20,6 +20,7 @@
     "@walletconnect/legacy-types": "^2.0.0",
     "@walletconnect/utils": "2.6.2",
     "@walletconnect/web3wallet": "^1.5.1",
+    "@zerodevapp/sdk": "^3.1.18",
     "axios": "^1.2.3",
     "commander": "^10.0.0",
     "daisyui": "^2.51.5",
@@ -35,7 +36,6 @@
     "react-dom": "18.2.0",
     "react-qr-reader": "^3.0.0-beta-1",
     "typescript": "5.0.2",
-    "userop": "^0.1.5",
     "valtio": "^1.10.4"
   },
   "devDependencies": {

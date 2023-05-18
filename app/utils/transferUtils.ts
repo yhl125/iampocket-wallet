@@ -1,40 +1,38 @@
-import { ERC20_ABI } from '@/api/src/abi';
+import { ERC20_ABI } from '@/abi/abi';
 import { parseEther } from '@ethersproject/units';
 import { ethers } from 'ethers';
-import { Client, Presets } from 'userop';
 import config from '../../config.json';
+import {
+  getERC4337Signer,
+  getERC4337SignerWithERC20Gas,
+} from './ERC4337WalletUtil';
 
 export const transfer = async (
   targetAddress: string,
   amount: string,
   withPM: Boolean
 ) => {
-  const paymaster = withPM
-    ? Presets.Middleware.verifyingPaymaster(
-        config.paymaster.rpcUrl,
-        config.paymaster.context
-      )
-    : undefined;
-  const simpleAccount = await Presets.Builder.SimpleAccount.init(
-    config.signingKey,
-    config.rpcUrl,
-    config.entryPoint,
-    config.simpleAccountFactory,
-    paymaster
-  );
-  const client = await Client.init(config.rpcUrl, config.entryPoint);
-  console.log(client);
+  const signer = withPM
+    ? await getERC4337SignerWithERC20Gas('TEST_ERC20')
+    : await getERC4337Signer();
+
+  const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
+  const feeData = await provider.getFeeData();
+
   const target = ethers.utils.getAddress(targetAddress);
   const value = ethers.utils.parseEther(amount);
-  const res = await client.sendUserOperation(
-    simpleAccount.execute(target, value, '0x'),
-    { onBuild: (op) => console.log('Signed UserOperation:', op) }
-  );
-  console.log(`UserOpHash: ${res.userOpHash}`);
+  const res = await signer.sendTransaction({
+    to: target,
+    value: value,
+    gasPrice: feeData.gasPrice ?? 1000000000,
+    maxFeePerGas: feeData.maxFeePerGas ?? 1000000000,
+    maxPriorityFeePerGas: feeData.maxPriorityFeePerGas ?? 1000000000,
+    gasLimit: 33100,
+  });
 
-  console.log('Waiting for transaction...');
+  console.log(`Transaction hash: ${res.hash}`);
   const ev = await res.wait();
-  console.log(`Transaction hash: ${ev?.transactionHash ?? null}`);
+  console.log(`Transaction done: ${ev.transactionHash}`);
 };
 
 export const getEstimateGas = async (
@@ -56,22 +54,13 @@ export const erc20Transfer = async (
   amountToSend: string,
   withPM: boolean
 ) => {
-  const paymaster = withPM
-    ? Presets.Middleware.verifyingPaymaster(
-        config.paymaster.rpcUrl,
-        config.paymaster.context
-      )
-    : undefined;
-  const simpleAccount = await Presets.Builder.SimpleAccount.init(
-    config.signingKey,
-    config.rpcUrl,
-    config.entryPoint,
-    config.simpleAccountFactory,
-    paymaster
-  );
-  const client = await Client.init(config.rpcUrl, config.entryPoint);
+  const signer = withPM
+    ? await getERC4337SignerWithERC20Gas('TEST_ERC20')
+    : await getERC4337Signer();
 
   const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
+  const feeData = await provider.getFeeData();
+
   const token = ethers.utils.getAddress(tokenAddress);
   const to = ethers.utils.getAddress(targetAddress);
   const erc20 = new ethers.Contract(token, ERC20_ABI, provider);
@@ -82,17 +71,17 @@ export const erc20Transfer = async (
   const amount = ethers.utils.parseUnits(amountToSend, decimals);
   console.log(`Transferring ${amountToSend} ${symbol}...`);
 
-  const res = await client.sendUserOperation(
-    simpleAccount.execute(
-      erc20.address,
-      0,
-      erc20.interface.encodeFunctionData('transfer', [to, amount])
-    ),
-    { onBuild: (op) => console.log('Signed UserOperation:', op) }
-  );
-  console.log(`UserOpHash: ${res.userOpHash}`);
+  const res = await signer.sendTransaction({
+    to: erc20.address,
+    value: 0,
+    data: erc20.interface.encodeFunctionData('transfer', [to, amount]),
+    gasPrice: feeData.gasPrice ?? 1000000000,
+    maxFeePerGas: feeData.maxFeePerGas ?? 1000000000,
+    maxPriorityFeePerGas: feeData.maxPriorityFeePerGas ?? 1000000000,
+    gasLimit: 33100,
+  });
 
-  console.log('Waiting for transaction...');
+  console.log(`Transaction hash: ${res.hash}`);
   const ev = await res.wait();
-  console.log(`Transaction hash: ${ev?.transactionHash ?? null}`);
+  console.log(`Transaction done: ${ev.transactionHash}`);
 };
