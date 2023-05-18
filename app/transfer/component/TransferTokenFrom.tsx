@@ -7,7 +7,6 @@ import config from 'config.json';
 import Example from './ComboBox';
 import { useSnapshot } from 'valtio';
 import TokenStore, { TokenState } from '@/store/TokenStore';
-import main from '@/api/scripts/simpleAccount/address';
 import SettingsStore from '@/store/SettingsStore';
 import { useRouter } from 'next/navigation';
 import { transfer, erc20Transfer } from '@/utils/transferUtils';
@@ -22,10 +21,6 @@ const TransferTokenForm = () => {
     tokenList.length == 0 ? mainToken : tokenList[0]
   );
   const router = useRouter();
-  const provider = useMemo(
-    () => new ethers.providers.JsonRpcProvider(config.rpcUrl),
-    []
-  );
   const { erc4337Address } = useSnapshot(SettingsStore.state);
   const [recipientAddressOrEns, setRecipientAddressOrEns] =
     useState<string>('');
