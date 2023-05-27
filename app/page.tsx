@@ -11,7 +11,7 @@ export default function Home() {
   const router = useRouter();
   useEffect(() => {
     if (erc4337Address != '') router.push('/wallet');
-  }, []);
+  }, [erc4337Address, router]);
 
   return <MainPage />;
 }

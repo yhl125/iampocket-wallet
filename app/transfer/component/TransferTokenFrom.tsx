@@ -10,6 +10,7 @@ import TokenStore, { TokenState } from '@/store/TokenStore';
 import SettingsStore from '@/store/SettingsStore';
 import { useRouter } from 'next/navigation';
 import { transfer, erc20Transfer } from '@/utils/transferUtils';
+import PKPStore from '@/store/PKPStore';
 
 const TransferTokenForm = () => {
   const { tokenList } = useSnapshot(TokenStore.tokenListState);
@@ -24,15 +25,26 @@ const TransferTokenForm = () => {
   const { erc4337Address } = useSnapshot(SettingsStore.state);
   const [recipientAddressOrEns, setRecipientAddressOrEns] =
     useState<string>('');
+  const { currentPKP, authSig } = useSnapshot(PKPStore.state);
+  
   const handleSubmit = async (event: any) => {
     if (selectedToken != mainToken)
       erc20Transfer(
         selectedToken.tokenAddress,
         recipientAddressOrEns,
         String(sendAmount),
-        withPM
+        withPM,
+        currentPKP!.publicKey,
+        authSig!
       );
-    else transfer(recipientAddressOrEns, String(sendAmount), withPM);
+    else
+      transfer(
+        recipientAddressOrEns,
+        String(sendAmount),
+        withPM,
+        currentPKP!.publicKey,
+        authSig!
+      );
 
     event.preventDefault();
   };
@@ -46,7 +58,7 @@ const TransferTokenForm = () => {
 
   useEffect(() => {
     if (!erc4337Address) router.push('/wallet');
-  }, []);
+  }, [erc4337Address, router]);
   return (
     <>
       <SearchRecipientAddress

@@ -5,15 +5,18 @@ import RequesDetailsCard from '@/components/RequestDetalilsCard';
 import RequestMethodCard from '@/components/RequestMethodCard';
 import RequestModalContainer from '@/components/RequestModalContainer';
 import ModalStore from '@/store/ModalStore';
+import PKPStore from '@/store/PKPStore';
 import {
   approveEIP155Request,
   rejectEIP155Request,
 } from '@/utils/EIP155RequestHandlerUtil';
 import { legacySignClient } from '@/utils/LegacyWalletConnectUtil';
 import { useState } from 'react';
+import { useSnapshot } from 'valtio';
 
 export default function LegacySessionSendTransactionModal() {
   const [loading, setLoading] = useState(false);
+  const { currentPKP, authSig } = useSnapshot(PKPStore.state);
 
   // Get request and wallet data from store
   const requestEvent = ModalStore.state.data?.legacyCallRequestEvent;
@@ -36,14 +39,18 @@ export default function LegacySessionSendTransactionModal() {
   async function onApprove() {
     if (requestEvent) {
       const chainId = 'eip155:' + requestSession!.chainId.toString();
-      const { result } = await approveEIP155Request({
-        id,
-        topic: '',
-        params: {
-          request: { method, params },
-          chainId: chainId,
+      const { result } = await approveEIP155Request(
+        {
+          id,
+          topic: '',
+          params: {
+            request: { method, params },
+            chainId: chainId,
+          },
         },
-      });
+        currentPKP!.publicKey,
+        authSig!
+      );
 
       legacySignClient.approveRequest({
         id,

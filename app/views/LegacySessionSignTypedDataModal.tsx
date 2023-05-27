@@ -4,17 +4,20 @@ import RequesDetailsCard from '@/components/RequestDetalilsCard';
 import RequestMethodCard from '@/components/RequestMethodCard';
 import RequestModalContainer from '@/components/RequestModalContainer';
 import ModalStore from '@/store/ModalStore';
+import PKPStore from '@/store/PKPStore';
 import {
   approveEIP155Request,
   rejectEIP155Request,
 } from '@/utils/EIP155RequestHandlerUtil';
 import { getSignTypedDataParamsData } from '@/utils/HelperUtil';
 import { legacySignClient } from '@/utils/LegacyWalletConnectUtil';
+import { useSnapshot } from 'valtio';
 
 export default function LegacySessionSignTypedDataModal() {
   // Get request and wallet data from store
   const requestEvent = ModalStore.state.data?.legacyCallRequestEvent;
   const requestSession = ModalStore.state.data?.legacyRequestSession;
+  const { currentPKP, authSig } = useSnapshot(PKPStore.state);
 
   // Ensure request and wallet are defined
   if (!requestEvent || !requestSession) {
@@ -30,14 +33,18 @@ export default function LegacySessionSignTypedDataModal() {
   // Handle approve action (logic varies based on request method)
   async function onApprove() {
     if (requestEvent) {
-      const { result } = await approveEIP155Request({
-        id,
-        topic: '',
-        params: {
-          request: { method, params },
-          chainId: requestSession!.chainId.toString(),
+      const { result } = await approveEIP155Request(
+        {
+          id,
+          topic: '',
+          params: {
+            request: { method, params },
+            chainId: requestSession!.chainId.toString(),
+          },
         },
-      });
+        currentPKP!.publicKey,
+        authSig!
+      );
 
       legacySignClient.approveRequest({
         id,
