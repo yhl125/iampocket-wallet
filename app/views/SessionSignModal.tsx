@@ -3,17 +3,20 @@ import RequesDetailsCard from '@/components/RequestDetalilsCard';
 import RequestMethodCard from '@/components/RequestMethodCard';
 import RequestModalContainer from '@/components/RequestModalContainer';
 import ModalStore from '@/store/ModalStore';
+import PKPStore from '@/store/PKPStore';
 import {
   approveEIP155Request,
   rejectEIP155Request,
 } from '@/utils/EIP155RequestHandlerUtil';
 import { getSignParamsMessage } from '@/utils/HelperUtil';
 import { web3wallet } from '@/utils/WalletConnectUtil';
+import { useSnapshot } from 'valtio';
 
 export default function SessionSignModal() {
   // Get request and wallet data from store
   const requestEvent = ModalStore.state.data?.requestEvent;
   const requestSession = ModalStore.state.data?.requestSession;
+  const { currentPKP, authSig } = useSnapshot(PKPStore.state);
 
   // Ensure request and wallet are defined
   if (!requestEvent || !requestSession) {
@@ -30,7 +33,11 @@ export default function SessionSignModal() {
   // Handle approve action (logic varies based on request method)
   async function onApprove() {
     if (requestEvent) {
-      const response = await approveEIP155Request(requestEvent);
+      const response = await approveEIP155Request(
+        requestEvent,
+        currentPKP!.publicKey,
+        authSig!
+      );
       await web3wallet.respondSessionRequest({
         topic,
         response,
@@ -74,14 +81,14 @@ export default function SessionSignModal() {
 
         <RequestMethodCard methods={[request.method]} />
 
-      <div className="modal-action">
-        <button className="btn-error btn" onClick={onReject}>
-          Reject
-        </button>
-        <button className="btn-success btn" onClick={onApprove}>
-          Approve
-        </button>
-      </div>
+        <div className="modal-action">
+          <button className="btn-error btn" onClick={onReject}>
+            Reject
+          </button>
+          <button className="btn-success btn" onClick={onApprove}>
+            Approve
+          </button>
+        </div>
       </RequestModalContainer>
     </>
   );

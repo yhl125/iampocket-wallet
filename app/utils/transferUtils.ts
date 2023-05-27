@@ -6,15 +6,18 @@ import {
   getERC4337Signer,
   getERC4337SignerWithERC20Gas,
 } from './ERC4337WalletUtil';
+import { AuthSig } from '@lit-protocol/types';
 
 export const transfer = async (
   targetAddress: string,
   amount: string,
-  withPM: Boolean
+  withPM: Boolean,
+  pkpPubKey: string,
+  authSig: AuthSig
 ) => {
   const signer = withPM
-    ? await getERC4337SignerWithERC20Gas('TEST_ERC20')
-    : await getERC4337Signer();
+    ? await getERC4337SignerWithERC20Gas('TEST_ERC20', pkpPubKey, authSig)
+    : await getERC4337Signer(pkpPubKey, authSig);
 
   const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
   const feeData = await provider.getFeeData();
@@ -52,11 +55,13 @@ export const erc20Transfer = async (
   tokenAddress: string,
   targetAddress: string,
   amountToSend: string,
-  withPM: boolean
+  withPM: boolean,
+  pkpPubKey: string,
+  authSig: AuthSig
 ) => {
   const signer = withPM
-    ? await getERC4337SignerWithERC20Gas('TEST_ERC20')
-    : await getERC4337Signer();
+    ? await getERC4337SignerWithERC20Gas('TEST_ERC20', pkpPubKey, authSig)
+    : await getERC4337Signer(pkpPubKey, authSig);
 
   const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
   const feeData = await provider.getFeeData();

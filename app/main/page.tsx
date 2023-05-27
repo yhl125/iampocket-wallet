@@ -15,7 +15,7 @@ const MainPage = () => {
           </div>
           <button
             className="btn-wide btn text-white"
-            onClick={() => router.push('/wallet')}
+            onClick={() => router.push('/login')}
           >
             Get Started
           </button>

@@ -5,6 +5,7 @@ import RequesDetailsCard from '@/components/RequestDetalilsCard';
 import RequestMethodCard from '@/components/RequestMethodCard';
 import RequestModalContainer from '@/components/RequestModalContainer';
 import ModalStore from '@/store/ModalStore';
+import PKPStore from '@/store/PKPStore';
 import {
   approveEIP155Request,
   rejectEIP155Request,
@@ -12,6 +13,7 @@ import {
 import { web3wallet } from '@/utils/WalletConnectUtil';
 // import { Button, Divider, Loading, Modal, Text } from '@nextui-org/react';
 import { useState } from 'react';
+import { useSnapshot } from 'valtio';
 
 export default function SessionSendTransactionModal() {
   const [loading, setLoading] = useState(false);
@@ -19,6 +21,7 @@ export default function SessionSendTransactionModal() {
   // Get request and wallet data from store
   const requestEvent = ModalStore.state.data?.requestEvent;
   const requestSession = ModalStore.state.data?.requestSession;
+  const { currentPKP, authSig } = useSnapshot(PKPStore.state);
 
   // Ensure request and wallet are defined
   if (!requestEvent || !requestSession) {
@@ -35,7 +38,11 @@ export default function SessionSendTransactionModal() {
   async function onApprove() {
     if (requestEvent) {
       setLoading(true);
-      const response = await approveEIP155Request(requestEvent);
+      const response = await approveEIP155Request(
+        requestEvent,
+        currentPKP!.publicKey,
+        authSig!
+      );
       await web3wallet.respondSessionRequest({
         topic,
         response,
