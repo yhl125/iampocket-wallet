@@ -9,6 +9,7 @@ import { SessionTypes } from '@walletconnect/types';
 import { getSdkError } from '@walletconnect/utils';
 import { Fragment, useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
+import { useRouter } from 'next/navigation';
 
 export default function SessionProposalModal() {
   const [selectedAccounts, setSelectedAccounts] = useState<
@@ -16,6 +17,7 @@ export default function SessionProposalModal() {
   >({});
   const hasSelected = Object.keys(selectedAccounts).length;
   const { erc4337Address } = useSnapshot(SettingsStore.state);
+  const router = useRouter();
 
   // Get proposal data and wallet address from store
   const proposal = ModalStore.state.data?.proposal;
@@ -127,6 +129,7 @@ export default function SessionProposalModal() {
       });
     }
     ModalStore.close();
+    router.back();
   }
 
   // Hanlde reject action

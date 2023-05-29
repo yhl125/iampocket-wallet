@@ -8,6 +8,7 @@ import { legacySignClient } from '@/utils/LegacyWalletConnectUtil';
 import { getSdkError } from '@walletconnect/utils';
 import { useState } from 'react';
 import { useSnapshot } from 'valtio';
+import { useRouter } from 'next/navigation';
 
 export default function LegacySessionProposalModal() {
   const [selectedAccounts, setSelectedAccounts] = useState<
@@ -15,6 +16,7 @@ export default function LegacySessionProposalModal() {
   >({});
   const hasSelected = Object.keys(selectedAccounts).length;
   const { erc4337Address } = useSnapshot(SettingsStore.state);
+  const router = useRouter();
 
   // Get proposal data and wallet address from store
   const proposal = ModalStore.state.data?.legacyProposal;
@@ -56,6 +58,7 @@ export default function LegacySessionProposalModal() {
       });
     }
     ModalStore.close();
+    router.back();
   }
 
   // Handle reject action
