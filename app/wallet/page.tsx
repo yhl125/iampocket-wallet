@@ -14,6 +14,9 @@ import TokenList from './component/tokenList';
 import useAccounts from '@/hooks/useAccounts';
 import TokenStore, { TokenState } from '@/store/TokenStore';
 import { truncateAddress } from '@/utils/HelperUtil';
+import { createWeb3Wallet } from '@/utils/WalletConnectUtil';
+import useWalletConnectEventsManager from '@/hooks/useWalletConnectEventsManager';
+import Modal from '@/components/Modal';
 
 const WalletPage = () => {
   const [balance, setBalance] = useState<string>('');
@@ -60,6 +63,12 @@ const WalletPage = () => {
     if (erc4337Address == '') return;
     getAddressBalance(erc4337Address, initialProvider);
   }, [erc4337Address, getAddressBalance, initialProvider]);
+
+  useEffect(() => {
+    createWeb3Wallet();
+  });
+
+  useWalletConnectEventsManager();
 
   return (
     <>
@@ -150,6 +159,7 @@ const WalletPage = () => {
           </div>
         </div>
       </div>
+      <Modal />
     </>
   );
 };
