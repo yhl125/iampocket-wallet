@@ -14,6 +14,17 @@ interface ConnectedApp {
   metadata: CoreTypes.Metadata;
 }
 
+export interface ReadOnlyConnectedApp {
+  readonly topic: string;
+  readonly expiry: Date;
+  readonly metadata: {
+    readonly name: string;
+    readonly description: string;
+    readonly url: string;
+    readonly icons: readonly string[];
+  };
+}
+
 /**
  * State
  */
