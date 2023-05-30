@@ -10,6 +10,7 @@ import { getSdkError } from '@walletconnect/utils';
 import { Fragment, useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { useRouter } from 'next/navigation';
+import ConnectedAppStore from '@/store/ConnectedAppStore';
 
 export default function SessionProposalModal() {
   const [selectedAccounts, setSelectedAccounts] = useState<
@@ -33,20 +34,8 @@ export default function SessionProposalModal() {
   // Get required proposal data
   const { id, params } = proposal;
 
-  const {
-    proposer,
-    requiredNamespaces,
-    optionalNamespaces,
-    sessionProperties,
-    relays,
-  } = params;
-  console.log(
-    'proposal',
-    params,
-    requiredNamespaces,
-    optionalNamespaces,
-    sessionProperties
-  );
+  const { proposer, requiredNamespaces, optionalNamespaces, relays } = params;
+
   const requiredNamespaceKeys = requiredNamespaces
     ? Object.keys(requiredNamespaces)
     : [];
@@ -122,11 +111,19 @@ export default function SessionProposalModal() {
         });
 
       console.log('namespaces', namespaces);
-      await web3wallet.approveSession({
+      const approvedSession = await web3wallet.approveSession({
         id,
         relayProtocol: relays[0].protocol,
         namespaces,
       });
+      // https://docs.walletconnect.com/2.0/advanced/glossary#expiry
+      const expiryDate = new Date(approvedSession.expiry * 1000 + Date.now());
+
+      ConnectedAppStore.addConnectedApp(
+        approvedSession.topic,
+        expiryDate,
+        proposer.metadata
+      );
     }
     ModalStore.close();
     router.back();
