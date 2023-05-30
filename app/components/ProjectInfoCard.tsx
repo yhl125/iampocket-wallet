@@ -18,11 +18,7 @@ export default function ProjectInfoCard({ metadata }: IProps) {
     <div className="flex">
       <div className="avatar mr-4">
         <div className="w-12 rounded">
-          <Image
-            src={icons[0]}
-            fill
-            alt="Tailwind-CSS-Avatar-component"
-          />
+          <Image src={icons[0]} fill alt="Tailwind-CSS-Avatar-component" />
         </div>
       </div>
       <div>

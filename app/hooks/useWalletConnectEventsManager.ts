@@ -6,6 +6,7 @@ import { useCallback, useEffect } from 'react';
 import { useSnapshot } from 'valtio';
 import { EIP155_SIGNING_METHODS } from '@/data/EIP155Data';
 import { web3wallet } from '@/utils/WalletConnectUtil';
+import ConnectedAppStore from '@/store/ConnectedAppStore';
 
 export default function useWalletConnectEventsManager() {
   const { web3WalletReady } = useSnapshot(SettingsStore.state);
@@ -25,7 +26,6 @@ export default function useWalletConnectEventsManager() {
    *****************************************************************************/
   const onSessionRequest = useCallback(
     async (requestEvent: SignClientTypes.EventArguments['session_request']) => {
-      console.log('session_request', requestEvent);
       const { topic, params } = requestEvent;
       const { request } = params;
       const requestSession = web3wallet.getActiveSessions()[topic];
@@ -63,6 +63,13 @@ export default function useWalletConnectEventsManager() {
     []
   );
 
+  const onSessionDelete = useCallback(
+    (data: SignClientTypes.EventArguments['session_delete']) => {
+      ConnectedAppStore.disconnectApp(data.topic);
+    },
+    []
+  );
+
   /******************************************************************************
    * Set up WalletConnect event listeners
    *****************************************************************************/
@@ -70,15 +77,7 @@ export default function useWalletConnectEventsManager() {
     if (web3WalletReady) {
       web3wallet.on('session_proposal', onSessionProposal);
       web3wallet.on('session_request', onSessionRequest);
-      web3wallet.on('session_delete', (data) => console.log('delete', data));
+      web3wallet.on('session_delete', onSessionDelete);
     }
-
-    return () => {
-      if (web3WalletReady) {
-        web3wallet.off('session_proposal', onSessionProposal);
-        web3wallet.off('session_request', onSessionRequest);
-        web3wallet.off('session_delete', (data) => console.log('delete', data));
-      }
-    };
-  }, [web3WalletReady, onSessionProposal, onSessionRequest]);
+  }, [web3WalletReady, onSessionProposal, onSessionRequest, onSessionDelete]);
 }
