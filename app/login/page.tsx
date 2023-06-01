@@ -3,7 +3,6 @@
 import Login from '@/components/Login';
 import PKPStore from '@/store/PKPStore';
 import { browserSupportsWebAuthn } from '@simplewebauthn/browser';
-import Head from 'next/head';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useSnapshot } from 'valtio';
@@ -41,16 +40,7 @@ const LoginPage = () => {
   if (!isWebAuthnSupported) {
     return (
       <>
-        <Head>
-          <title>Lit x WebAuthn | Lit Protocol</title>
-          <meta
-            name="description"
-            content="The most secure and customizable wallet that's 100% yours."
-          />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-        <div>
+        <div className='webAuthnNotSupported m-4'>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -65,7 +55,7 @@ const LoginPage = () => {
               d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
             />
           </svg>
-          <h1 className="mb-4 mt-6 text-3xl font-medium text-base-100 sm:text-4xl">
+          <h1 className="mb-4 mt-6 text-3xl font-medium">
             Browser not supported
           </h1>
           <p className="mb-6">
@@ -79,7 +69,7 @@ const LoginPage = () => {
               href="https://webauthn.me/browser-support"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-base-500 underline"
+              className="underline"
             >
               this table
             </a>{' '}
@@ -93,15 +83,6 @@ const LoginPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Lit x WebAuthn | Lit Protocol</title>
-        <meta
-          name="description"
-          content="The most secure and customizable wallet that's 100% yours."
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       {isAuthenticated ? router.replace('/wallet') : <Login />}
     </>
   );

@@ -1,4 +1,4 @@
-import './globals.css';
+import './global.css';
 
 export const metadata = {
   title: 'Create Next App',
@@ -12,11 +12,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <div className="flex h-3/5 w-1/5 flex-col rounded-lg border">
-          {children}
-        </div>
-      </body>
+      <body data-theme="light">{children}</body>
     </html>
   );
 }

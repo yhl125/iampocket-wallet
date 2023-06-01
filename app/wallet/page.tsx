@@ -73,13 +73,13 @@ const WalletPage = () => {
   return (
     <>
       <div className="wallet">
-        <div className="wallet-header flex justify-between p-4">
+        <div className="wallet-header relative flex items-center justify-center p-4">
           <div className="wallet-address">
-            <div className="stat-value">Address</div>
+            <p className="text-center text-xl">Address</p>
             <div className="address flex">
-              <div className="stat-title">
+              <p className="text-sm text-gray-500">
                 {truncateAddress(erc4337Address)}
-              </div>
+              </p>
               <div className="dropdown-end dropdown">
                 <Image
                   tabIndex={0}
@@ -89,14 +89,14 @@ const WalletPage = () => {
                 ></Image>
                 <ul
                   tabIndex={0}
-                  className="dropdown-content menu rounded-box bg-base-100 p-1 shadow"
+                  className="dropdown-content menu rounded-box p-1 shadow"
                 >
                   <li>copied to clipboard!</li>
                 </ul>
               </div>
             </div>
           </div>
-          <div className="dropdown-end dropdown py-2">
+          <div className="dropdown-end dropdown absolute right-0 top-0 py-2">
             <label
               tabIndex={0}
               className="setting-button btn-ghost btn-square btn"
