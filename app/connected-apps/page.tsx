@@ -23,13 +23,15 @@ export default function ConnectedAppsPage() {
 
   return (
     <>
-      {connectedApps.map((connectedApp) => (
-        <ConnectedAppCard
-          connectedApp={connectedApp}
-          wcDisconnect={wcDisconnect}
-          key={connectedApp.topic}
-        />
-      ))}
+      <div className="connectedApps m-4">
+        {connectedApps.map((connectedApp) => (
+          <ConnectedAppCard
+            connectedApp={connectedApp}
+            wcDisconnect={wcDisconnect}
+            key={connectedApp.topic}
+          />
+        ))}
+      </div>
     </>
   );
 }

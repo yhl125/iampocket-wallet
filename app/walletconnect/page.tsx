@@ -45,7 +45,7 @@ export default function WalletConnectPage() {
 
   return (
     <>
-      <div className="walletconnect">
+      <div className="walletconnect m-4">
         <QrHandler onConnect={onConnect} />
         <p className="my-4 text-center text-sm">
           or use walletconnect uri
