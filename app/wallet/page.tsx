@@ -89,7 +89,7 @@ const WalletPage = () => {
                 ></Image>
                 <ul
                   tabIndex={0}
-                  className="dropdown-content menu rounded-box bg-base-100 p-1 shadow"
+                  className="dropdown-content menu rounded-box p-1 shadow"
                 >
                   <li>copied to clipboard!</li>
                 </ul>

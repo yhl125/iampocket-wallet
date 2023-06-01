@@ -32,7 +32,7 @@ export default function QrHandler({ onConnect }: IProps) {
           <div className="relative w-full overflow-hidden">
             <div className="absolute right-0 top-0 z-[1]">
               <button
-                className="hover:bg-base-1000 flex items-center justify-center p-2 text-base-300"
+                className="hover:bg-base-1000 flex items-center justify-center p-2"
                 onClick={() => {
                   setFacingMode(facingMode === 'user' ? 'environment' : 'user');
                 }}

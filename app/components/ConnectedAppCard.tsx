@@ -11,7 +11,7 @@ export default function ConnectedAppCard({
   const metadata = connectedApp.metadata;
 
   return (
-    <div className="flex justify-between bg-base-100 p-4 my-2">
+    <div className="flex justify-between p-4 my-2">
       <div>
         {metadata.icons.length > 0 && (
           <div className="avatar mr-4">

@@ -76,7 +76,7 @@ const TransferTokenForm = () => {
               </label>
               <ul
                 tabIndex={0}
-                className="dropdown-content menu rounded-box w-64 bg-base-100 p-2 shadow"
+                className="dropdown-content menu rounded-box w-64 p-2 shadow"
               >
                 <li onClick={() => handleTokenListClick(mainToken)}>
                   <a>
