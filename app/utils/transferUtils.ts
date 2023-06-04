@@ -1,12 +1,12 @@
 import { ERC20_ABI } from '@/abi/abi';
 import { parseEther } from '@ethersproject/units';
 import { ethers } from 'ethers';
-import config from '../../config.json';
 import {
   getERC4337Signer,
   getERC4337SignerWithERC20Gas,
 } from './ERC4337WalletUtil';
 import { AuthSig } from '@lit-protocol/types';
+import { providerOf } from './ProviderUtil';
 
 export const transfer = async (
   targetAddress: string,
@@ -19,7 +19,7 @@ export const transfer = async (
     ? await getERC4337SignerWithERC20Gas('TEST_ERC20', pkpPubKey, authSig)
     : await getERC4337Signer(pkpPubKey, authSig);
 
-  const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
+  const provider = providerOf(80001);
   const feeData = await provider.getFeeData();
 
   const target = ethers.utils.getAddress(targetAddress);
@@ -63,7 +63,7 @@ export const erc20Transfer = async (
     ? await getERC4337SignerWithERC20Gas('TEST_ERC20', pkpPubKey, authSig)
     : await getERC4337Signer(pkpPubKey, authSig);
 
-  const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
+  const provider = providerOf(80001);
   const feeData = await provider.getFeeData();
 
   const token = ethers.utils.getAddress(tokenAddress);

@@ -6,8 +6,8 @@ import { useSnapshot } from 'valtio';
 import SettingsStore from '@/store/SettingsStore';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import config from 'config.json';
 import { formatEther } from 'ethers/lib/utils';
+import { providerOf } from '@/utils/ProviderUtil';
 interface tokenAttribute {
   address: string;
   decimal?: number;
@@ -30,7 +30,7 @@ const ManageTokenPage = () => {
   ];
 
   const getTokenInfo = async (token: tokenAttribute) => {
-    const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
+    const provider = providerOf(80001);
     const contract = new ethers.Contract(token.address, ERC_20Abi, provider);
     const [name, symbol, tokenBalance, decimals] = await Promise.all([
       contract.name(),
