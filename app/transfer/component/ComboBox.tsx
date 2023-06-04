@@ -59,6 +59,7 @@ export default function Example() {
                 </div>
               ) : (
                 filteredToken.map((person) => (
+                  // eslint-disable-next-line react/jsx-key
                   <Combobox.Option
                     // key={person.id}
                     className={({ active }) =>

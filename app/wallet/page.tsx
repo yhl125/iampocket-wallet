@@ -2,8 +2,7 @@
 
 import { ethers } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
-import { useEffect, useMemo, useState, useCallback } from 'react';
-import config from 'config.json';
+import { useEffect, useState, useCallback } from 'react';
 import SettingsStore from '@/store/SettingsStore';
 import { useSnapshot } from 'valtio';
 import Link from 'next/link';
@@ -17,18 +16,17 @@ import { truncateAddress } from '@/utils/HelperUtil';
 import { createWeb3Wallet } from '@/utils/WalletConnectUtil';
 import useWalletConnectEventsManager from '@/hooks/useWalletConnectEventsManager';
 import Modal from '@/components/Modal';
+import { providerOf } from '@/utils/ProviderUtil';
 
 const WalletPage = () => {
   const [balance, setBalance] = useState<string>('');
   const [symbol, setSymbol] = useState('Matic');
+  
   const { erc4337Address } = useSnapshot(SettingsStore.state);
   const { tokenList } = useSnapshot(TokenStore.tokenListState);
   const mainToken = useSnapshot(TokenStore.mainTokenState);
   const router = useRouter();
-  const initialProvider = useMemo(
-    () => new ethers.providers.JsonRpcProvider(config.rpcUrl),
-    []
-  );
+  const initialProvider = providerOf(80001);
 
   const getAddressBalance = useCallback(
     async (address: string, provider: ethers.providers.JsonRpcProvider) => {

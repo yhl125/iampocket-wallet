@@ -30,7 +30,7 @@ export default function Login() {
   const { currentPKP } = useSnapshot(PKPStore.state);
 
   // For UI
-  const [view, setView] = useState(LoginViews.SIGN_UP);
+  const [view, setView] = useState(LoginViews.SIGN_IN);
   const [errorMsg, setErrorMsg] = useState('');
 
   // Current user
@@ -152,9 +152,7 @@ export default function Login() {
               d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
             />
           </svg>
-          <h1 className="mb-4 mt-6 text-3xl font-medium">
-            Uh oh!
-          </h1>
+          <h1 className="mb-4 mt-6 text-3xl font-medium">Uh oh!</h1>
           {errorMsg ? (
             <>
               <p className="mb-4">Something went wrong:</p>
@@ -194,10 +192,7 @@ export default function Login() {
           </p>
           <form onSubmit={createPKPWithWebAuthn} className="w-100 mb-3">
             <div className="mb-6">
-              <label
-                htmlFor="username"
-                className="block text-base"
-              >
+              <label htmlFor="username" className="block text-base">
                 Your passkey name
               </label>
               <div className="mt-1">
@@ -209,17 +204,14 @@ export default function Login() {
                   placeholder='e.g. "Eth Denver 2023"'
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="input input-bordered w-full"
+                  className="input-bordered input w-full"
                 />
               </div>
               <p id="username-field" className="mt-2 text-sm">
                 Give your passkey a unique name.
               </p>
             </div>
-            <button
-              type="submit"
-              className="btn btn-outline w-full"
-            >
+            <button type="submit" className="btn-outline btn w-full">
               Sign up
             </button>
           </form>
@@ -301,7 +293,7 @@ export default function Login() {
             you&apos;re ready.
           </p>
           <button
-            className="btn btn-outline btn-success w-full"
+            className="btn-outline btn-success btn w-full"
             onClick={authThenGetSessionSigs}
           >
             Continue
@@ -385,9 +377,7 @@ export default function Login() {
       )}
       {view === LoginViews.SIGN_IN && (
         <div className="signin m-4">
-          <h1 className="mb-4 text-3xl font-medium">
-            Welcome back
-          </h1>
+          <h1 className="mb-4 text-3xl font-medium">Welcome back</h1>
           <p className="mb-8 text-sm">
             Navigate the open web with a secure, self-custody wallet that you
             can easily tailor to your needs.
@@ -395,7 +385,7 @@ export default function Login() {
           <div className="w-100 mb-3">
             <button
               onClick={authThenGetSessionSigs}
-              className="w-full border border-indigo-500 bg-indigo-600 bg-opacity-20 px-6 py-3 text-base text-indigo-300 hover:bg-opacity-10 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              className="btn-outline btn w-full"
             >
               Sign in
             </button>

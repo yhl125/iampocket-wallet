@@ -1,5 +1,5 @@
-import { proxy, subscribe } from 'valtio';
 import { AuthSig } from '@lit-protocol/types';
+import { proxyWithLocalStorage } from '@/utils/StoreUtil';
 
 /**
  * Types
@@ -22,23 +22,16 @@ interface PKP {
 /**
  * State
  */
-const state = proxy<PKPState>(
-  localStorage.getItem('PKPState')
-    ? JSON.parse(localStorage.getItem('PKPState')!)
-    : {
-        isAuthenticated: false,
-        currentUsername: undefined,
-        currentPKP: undefined,
-        // sessionSigs: {},
-        sessionExpiration: undefined,
-        authSig: undefined,
-      }
-);
-
-
-subscribe(state, () => {
-  localStorage.setItem('PKPState', JSON.stringify(state));
+const state = proxyWithLocalStorage<PKPState>('PKPState', {
+  isAuthenticated: false,
+  currentUsername: undefined,
+  currentPKP: undefined,
+  // sessionSigs: {},
+  sessionExpiration: undefined,
+  authSig: undefined,
 });
+
+
 /**
  * Store / Actions
  */

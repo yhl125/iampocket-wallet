@@ -2,9 +2,7 @@
 
 import Conditional from '@/components/ConditionalRender';
 import { ethers } from 'ethers';
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
-import config from 'config.json';
-import Example from './ComboBox';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import TokenStore, { TokenState } from '@/store/TokenStore';
 import SettingsStore from '@/store/SettingsStore';

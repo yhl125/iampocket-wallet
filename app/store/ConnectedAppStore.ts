@@ -1,5 +1,5 @@
-import { proxy, subscribe } from 'valtio';
 import { CoreTypes } from '@walletconnect/types';
+import { proxyWithLocalStorage } from '@/utils/StoreUtil';
 
 /**
  * Types
@@ -28,17 +28,9 @@ export interface ReadOnlyConnectedApp {
 /**
  * State
  */
-const state = proxy<State>(
-  localStorage.getItem('ConnectedAppState')
-    ? JSON.parse(localStorage.getItem('ConnectedAppState')!)
-    : {
-        connectedApps: [],
-      }
-);
+const state = proxyWithLocalStorage<State>('ConnectedAppState', { connectedApps: [] });
 
-subscribe(state, () => {
-  localStorage.setItem('ConnectedAppState', JSON.stringify(state));
-});
+
 /**
  * Store / Actions
  */

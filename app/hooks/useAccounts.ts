@@ -5,10 +5,10 @@ import { useSnapshot } from 'valtio';
 
 export default function useAccounts() {
   const {isAuthenticated, currentPKP, authSig} = useSnapshot(PKPStore.state);
-  if (!isAuthenticated) {
-    throw new Error('User is not authenticated');
-  }
   useEffect(() => {
+    if (!isAuthenticated) {
+      throw new Error('User is not authenticated');
+    }
     createOrRestoreERC4337Wallet(currentPKP!.publicKey, authSig!);
-  }, [authSig, currentPKP]);
+  }, [authSig, currentPKP, isAuthenticated]);
 }

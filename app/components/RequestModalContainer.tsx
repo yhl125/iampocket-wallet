@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
  */
 interface IProps {
   title: string;
-  children: ReactNode | ReactNode[];
+  children: ReactNode;
 }
 
 /**
