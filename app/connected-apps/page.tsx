@@ -4,14 +4,19 @@ import ConnectedAppStore from '@/store/ConnectedAppStore';
 import { createWeb3Wallet, web3wallet } from '@/utils/WalletConnectUtil';
 import { useSnapshot } from 'valtio';
 import ConnectedAppCard from '@/components/ConnectedAppCard';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ConnectedAppsPage() {
   const { connectedApps } = useSnapshot(ConnectedAppStore.state);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     createWeb3Wallet();
   });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   function wcDisconnect(topic: string) {
     ConnectedAppStore.disconnectApp(topic);
@@ -22,16 +27,18 @@ export default function ConnectedAppsPage() {
   }
 
   return (
-    <>
-      <div className="connectedApps m-4">
-        {connectedApps.map((connectedApp) => (
-          <ConnectedAppCard
-            connectedApp={connectedApp}
-            wcDisconnect={wcDisconnect}
-            key={connectedApp.topic}
-          />
-        ))}
-      </div>
-    </>
+    mounted && (
+      <>
+        <div className="connectedApps m-4">
+          {connectedApps.map((connectedApp) => (
+            <ConnectedAppCard
+              connectedApp={connectedApp}
+              wcDisconnect={wcDisconnect}
+              key={connectedApp.topic}
+            />
+          ))}
+        </div>
+      </>
+    )
   );
 }
