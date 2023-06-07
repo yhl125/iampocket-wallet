@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useSnapshot } from 'valtio';
 import MainPage from './main/page';
-import SettingsStore from './store/SettingsStore';
+import SettingsStore from '../store/SettingsStore';
 
 export default function Home() {
   const { erc4337Address } = useSnapshot(SettingsStore.state);

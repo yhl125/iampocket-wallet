@@ -1,14 +1,14 @@
 import ModalStore from '@/store/ModalStore';
-import LegacySessionProposalModal from '@/views/LegacySessionProposalModal';
-import LegacySessionSendTransactionModal from '@/views/LegacySessionSendTransactionModal';
-import LegacySessionSignModal from '@/views/LegacySessionSignModal';
-import LegacySessionSignTypedDataModal from '@/views/LegacySessionSignTypedDataModal';
-import LegacySwitchNetworkModal from '@/views/LegacySwitchNetworkModal';
-import SessionProposalModal from '@/views/SessionProposalModal';
-import SessionSendTransactionModal from '@/views/SessionSendTransactionModal';
-import SessionSignModal from '@/views/SessionSignModal';
-import SessionSignTypedDataModal from '@/views/SessionSignTypedDataModal';
-import SessionUnsuportedMethodModal from '@/views/SessionUnsuportedMethodModal';
+import LegacySessionProposalModal from '@/app/views/LegacySessionProposalModal';
+import LegacySessionSendTransactionModal from '@/app/views/LegacySessionSendTransactionModal';
+import LegacySessionSignModal from '@/app/views/LegacySessionSignModal';
+import LegacySessionSignTypedDataModal from '@/app/views/LegacySessionSignTypedDataModal';
+import LegacySwitchNetworkModal from '@/app/views/LegacySwitchNetworkModal';
+import SessionProposalModal from '@/app/views/SessionProposalModal';
+import SessionSendTransactionModal from '@/app/views/SessionSendTransactionModal';
+import SessionSignModal from '@/app/views/SessionSignModal';
+import SessionSignTypedDataModal from '@/app/views/SessionSignTypedDataModal';
+import SessionUnsuportedMethodModal from '@/app/views/SessionUnsuportedMethodModal';
 
 import { useSnapshot } from 'valtio';
 

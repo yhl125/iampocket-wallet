@@ -1,5 +1,5 @@
-import { Fragment, useState, useCallback } from 'react';
-import { QrReader } from 'react-qr-reader';
+import { Fragment, useState } from 'react';
+import { BarcodeScanner } from '@thewirv/react-barcode-scanner';
 
 interface IProps {
   onConnect: (uri: string) => Promise<void>;
@@ -72,20 +72,12 @@ export default function QrHandler({ onConnect }: IProps) {
                 </svg>
               </button>
             </div>
-            <QrReader
+            <BarcodeScanner
               key={facingMode}
               videoStyle={{ width: '100%' }}
               constraints={{ facingMode: facingMode }}
-              onResult={(result, error) => {
-                // if result is not null or undefined
-                if (!!result) {
-                  onScan(result.getText());
-                }
-
-                if (!!error) {
-                  onError;
-                }
-              }}
+              onSuccess={onScan}
+              onError={onError}
             />
           </div>
         </Fragment>
