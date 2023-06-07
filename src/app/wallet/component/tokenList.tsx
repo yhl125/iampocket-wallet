@@ -1,6 +1,6 @@
 import { TokenState } from '@/store/TokenStore';
 import Image from 'next/image';
-import ethereumSVG from '../../../public/ethereum-eth-logo.svg';
+import ethereumSVG from 'public/ethereum-eth-logo.svg';
 interface Iprops {
   tokenList: readonly TokenState[];
   ethereumBalance: string;

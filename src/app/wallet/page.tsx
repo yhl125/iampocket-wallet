@@ -7,7 +7,7 @@ import SettingsStore from '@/store/SettingsStore';
 import { useSnapshot } from 'valtio';
 import Link from 'next/link';
 import Image from 'next/image';
-import copyClipboardSVG from '../../public/copyToClipboard.svg';
+import copyClipboardSVG from 'public/copyToClipboard.svg';
 import { useRouter } from 'next/navigation';
 import TokenList from './component/tokenList';
 import useAccounts from '@/hooks/useAccounts';
