@@ -9,9 +9,11 @@ import SettingsStore from '@/store/SettingsStore';
 import { useRouter } from 'next/navigation';
 import { transfer, erc20Transfer } from '@/utils/transferUtils';
 import PKPStore from '@/store/PKPStore';
+import NetworkStore from '@/store/NetworkStore';
 
 const TransferTokenForm = () => {
   const { tokenList } = useSnapshot(TokenStore.tokenListState);
+  const [isERC20,setIsERC20] = useState<boolean>(true);
   const [withPM, setWithPM] = useState<boolean>(false);
   const mainToken = useSnapshot(TokenStore.mainTokenState);
   const [verifyAddress, setVerifyAddress] = useState<Boolean>(false);
@@ -24,26 +26,29 @@ const TransferTokenForm = () => {
   const [recipientAddressOrEns, setRecipientAddressOrEns] =
     useState<string>('');
   const { currentPKP, authSig } = useSnapshot(PKPStore.state);
-  
+
   const handleSubmit = async (event: any) => {
-    if (selectedToken != mainToken)
+    if(isERC20) {
       erc20Transfer(
         selectedToken.tokenAddress,
         recipientAddressOrEns,
         String(sendAmount),
         withPM,
         currentPKP!.publicKey,
-        authSig!
+        authSig!,
+        selectedToken.chainId,
       );
-    else
+    }
+    else {
       transfer(
         recipientAddressOrEns,
         String(sendAmount),
         withPM,
         currentPKP!.publicKey,
-        authSig!
-      );
-
+        authSig!,
+        selectedToken.chainId
+        );
+    }
     event.preventDefault();
   };
   const handleChecked = (event: any) => {

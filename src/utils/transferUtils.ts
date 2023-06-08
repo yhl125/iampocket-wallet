@@ -13,11 +13,12 @@ export const transfer = async (
   amount: string,
   withPM: Boolean,
   pkpPubKey: string,
-  authSig: AuthSig
+  authSig: AuthSig,
+  chainId:number
 ) => {
   const signer = withPM
-    ? await getERC4337SignerWithERC20Gas('TEST_ERC20', pkpPubKey, authSig)
-    : await getERC4337Signer(pkpPubKey, authSig);
+    ? await getERC4337SignerWithERC20Gas('TEST_ERC20', pkpPubKey, authSig,chainId)
+    : await getERC4337Signer(pkpPubKey, authSig,chainId);
 
   const provider = providerOf(80001);
   const feeData = await provider.getFeeData();
@@ -57,13 +58,19 @@ export const erc20Transfer = async (
   amountToSend: string,
   withPM: boolean,
   pkpPubKey: string,
-  authSig: AuthSig
+  authSig: AuthSig,
+  chaindId:number
 ) => {
   const signer = withPM
-    ? await getERC4337SignerWithERC20Gas('TEST_ERC20', pkpPubKey, authSig)
-    : await getERC4337Signer(pkpPubKey, authSig);
+    ? await getERC4337SignerWithERC20Gas(
+      'TEST_ERC20',
+      pkpPubKey,
+      authSig,
+      chaindId
+    )
+    : await getERC4337Signer(pkpPubKey, authSig,chaindId);
 
-  const provider = providerOf(80001);
+  const provider = providerOf(chaindId);
   const feeData = await provider.getFeeData();
 
   const token = ethers.utils.getAddress(tokenAddress);
