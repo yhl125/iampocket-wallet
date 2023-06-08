@@ -6,6 +6,7 @@ export interface TokenState {
   tokenDecimal: number;
   balance: string;
   tokenAddress: string;
+  chainId: number;
 }
 
 export interface TokenListState {
@@ -22,6 +23,7 @@ const mainTokenState = proxy<TokenState>({
   tokenSymbol: '',
   balance: '',
   tokenAddress: '',
+  chainId: 0,
 });
 
 const TokenStore = {
@@ -33,13 +35,14 @@ const TokenStore = {
     mainTokenState.tokenDecimal = value.tokenDecimal;
     mainTokenState.tokenSymbol = value.tokenSymbol;
     mainTokenState.tokenAddress = value.tokenAddress;
+    mainTokenState.chainId = value.chainId;
   },
   addTokenInfo(value: TokenState) {
     tokenListState.tokenList.push(value);
   },
   deleteTokenInfo(value: TokenState) {
     tokenListState.tokenList = tokenListState.tokenList.filter(
-      (token) => token.name !== value.name
+      (token) => token.tokenAddress !== value.tokenAddress
     );
   },
 };

@@ -21,7 +21,6 @@ import { providerOf } from '@/utils/ProviderUtil';
 const WalletPage = () => {
   const [balance, setBalance] = useState<string>('');
   const [symbol, setSymbol] = useState('Matic');
-  
   const { erc4337Address } = useSnapshot(SettingsStore.state);
   const { tokenList } = useSnapshot(TokenStore.tokenListState);
   const mainToken = useSnapshot(TokenStore.mainTokenState);
@@ -34,12 +33,14 @@ const WalletPage = () => {
         const bigNumberBalance = await provider.getBalance(address);
         const initialBalance = formatEther(bigNumberBalance);
         setBalance(initialBalance);
+
         const ethInfo: TokenState = {
           name: 'Polygon',
           tokenSymbol: 'Matic',
           tokenDecimal: 0,
           balance: initialBalance,
           tokenAddress: '',
+          chainId: 80001
         };
         if (mainToken.name == ethInfo.name) {
           console.log('Main Token already set');
@@ -141,7 +142,12 @@ const WalletPage = () => {
               >
                 Send
               </button>
-              <button className="btn-sm btn">Deposit</button>
+              <button
+                className="btn-sm btn"
+                onClick={() => console.log(initialProvider)}
+              >
+                Deposit
+              </button>
             </div>
           </div>
           <div className="token-list flex flex-col items-center justify-center overflow-auto p-2">
@@ -149,7 +155,7 @@ const WalletPage = () => {
             <div className="add-token mt-7">
               <button
                 className="btn-ghost btn"
-                onClick={() => router.push('/manageToken')}
+                onClick={() => router.push('/manage-token')}
               >
                 Manage Token List
               </button>
