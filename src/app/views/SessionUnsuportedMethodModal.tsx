@@ -1,7 +1,7 @@
-import ProjectInfoCard from '@/components/ProjectInfoCard';
-import RequesDetailsCard from '@/components/RequestDetalilsCard';
-import RequestMethodCard from '@/components/RequestMethodCard';
-import RequestModalContainer from '@/components/RequestModalContainer';
+import ProjectInfoCard from '@/components/walletconnect-modal/ProjectInfoCard';
+import RequesDetailsCard from '@/components/walletconnect-modal/RequestDetalilsCard';
+import RequestMethodCard from '@/components/walletconnect-modal/RequestMethodCard';
+import RequestModalContainer from '@/components/walletconnect-modal/RequestModalContainer';
 import ModalStore from '@/store/ModalStore';
 
 export default function SessionUnsuportedMethodModal() {

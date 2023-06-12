@@ -1,14 +1,13 @@
 'use client';
 
 import { LoadingSmall } from '@/components/Loading';
-import Modal from '@/components/Modal';
+import Modal from '@/components/walletconnect-modal/Modal';
 import useAccounts from '@/hooks/useAccounts';
-import useWalletConnectEventsManager from '@/hooks/useWalletConnectEventsManager';
-import { createWeb3Wallet, web3wallet } from '@/utils/WalletConnectUtil';
-import { SetStateAction, useEffect, useState } from 'react';
+import { web3wallet } from '@/utils/WalletConnectUtil';
+import { SetStateAction, useState } from 'react';
 import { parseUri } from '@walletconnect/utils';
 import { createLegacySignClient } from '@/utils/LegacyWalletConnectUtil';
-import QrHandler from '@/components/QrHandler';
+import QrHandler from '@/components/walletconnect/QrHandler';
 
 export default function WalletConnectPage() {
   const [uri, setUri] = useState('');
@@ -33,15 +32,7 @@ export default function WalletConnectPage() {
     }
   }
 
-  useEffect(() => {
-    createWeb3Wallet();
-  });
-
-  // Step 2 - Initialize wallets
   useAccounts();
-
-  // Step 3 - Once initialized, set up wallet connect event manager
-  useWalletConnectEventsManager();
 
   return (
     <>

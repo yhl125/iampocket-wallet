@@ -1,4 +1,4 @@
-import AccountSelectCard from '@/components/AccountSelectCard';
+import AccountSelectCard from '@/components/walletconnect-modal/AccountSelectCard';
 
 /**
  * Types

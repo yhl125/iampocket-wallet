@@ -1,4 +1,4 @@
-import RequestModalContainer from '@/components/RequestModalContainer';
+import RequestModalContainer from '@/components/walletconnect-modal/RequestModalContainer';
 import ModalStore from '@/store/ModalStore';
 import { legacySignClient } from '@/utils/LegacyWalletConnectUtil';
 

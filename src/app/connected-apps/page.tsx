@@ -3,7 +3,7 @@
 import ConnectedAppStore from '@/store/ConnectedAppStore';
 import { createWeb3Wallet, web3wallet } from '@/utils/WalletConnectUtil';
 import { useSnapshot } from 'valtio';
-import ConnectedAppCard from '@/components/ConnectedAppCard';
+import ConnectedAppCard from '@/components/connected-apps/ConnectedAppCard';
 import { useEffect, useState } from 'react';
 
 export default function ConnectedAppsPage() {
