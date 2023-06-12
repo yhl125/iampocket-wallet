@@ -1,9 +1,9 @@
 import { LoadingSmall } from '@/components/Loading';
-import ProjectInfoCard from '@/components/ProjectInfoCard';
-import RequestDataCard from '@/components/RequestDataCard';
-import RequesDetailsCard from '@/components/RequestDetalilsCard';
-import RequestMethodCard from '@/components/RequestMethodCard';
-import RequestModalContainer from '@/components/RequestModalContainer';
+import ProjectInfoCard from '@/components/walletconnect-modal/ProjectInfoCard';
+import RequestDataCard from '@/components/walletconnect-modal/RequestDataCard';
+import RequesDetailsCard from '@/components/walletconnect-modal/RequestDetalilsCard';
+import RequestMethodCard from '@/components/walletconnect-modal/RequestMethodCard';
+import RequestModalContainer from '@/components/walletconnect-modal/RequestModalContainer';
 import ModalStore from '@/store/ModalStore';
 import PKPStore from '@/store/PKPStore';
 import {

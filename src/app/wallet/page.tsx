@@ -9,13 +9,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import copyClipboardSVG from 'public/copyToClipboard.svg';
 import { useRouter } from 'next/navigation';
-import TokenList from './component/tokenList';
+import TokenList from '@/components/wallet/tokenList';
 import useAccounts from '@/hooks/useAccounts';
 import TokenStore, { TokenState } from '@/store/TokenStore';
 import { truncateAddress } from '@/utils/HelperUtil';
 import { createWeb3Wallet } from '@/utils/WalletConnectUtil';
 import useWalletConnectEventsManager from '@/hooks/useWalletConnectEventsManager';
-import Modal from '@/components/Modal';
+import Modal from '@/components/walletconnect-modal/Modal';
 import { providerOf } from '@/utils/ProviderUtil';
 
 const WalletPage = () => {
@@ -63,11 +63,11 @@ const WalletPage = () => {
     getAddressBalance(erc4337Address, initialProvider);
   }, [erc4337Address, getAddressBalance, initialProvider]);
 
-  useEffect(() => {
-    createWeb3Wallet();
-  });
+  // useEffect(() => {
+  //   createWeb3Wallet();
+  // });
 
-  useWalletConnectEventsManager();
+  // useWalletConnectEventsManager();
 
   return (
     <>
