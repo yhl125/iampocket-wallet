@@ -1,6 +1,6 @@
 'use client';
 
-import Login from '@/components/Login';
+import Login from '@/components/login/Login';
 import PKPStore from '@/store/PKPStore';
 import { browserSupportsWebAuthn } from '@simplewebauthn/browser';
 import { useRouter } from 'next/navigation';

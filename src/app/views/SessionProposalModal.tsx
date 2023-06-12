@@ -1,6 +1,6 @@
-import ProjectInfoCard from '@/components/ProjectInfoCard';
-import ProposalSelectSection from '@/components/ProposalSelectSection';
-import RequestModalContainer from '@/components/RequestModalContainer';
+import ProjectInfoCard from '@/components/walletconnect-modal/ProjectInfoCard';
+import ProposalSelectSection from '@/components/walletconnect-modal/ProposalSelectSection';
+import RequestModalContainer from '@/components/walletconnect-modal/RequestModalContainer';
 import ModalStore from '@/store/ModalStore';
 import SettingsStore from '@/store/SettingsStore';
 import { isEIP155Chain } from '@/utils/HelperUtil';
