@@ -5,37 +5,46 @@ import { BigNumber, ethers } from 'ethers';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import TokenStore, { TokenState } from '@/store/TokenStore';
-import SettingsStore from '@/store/SettingsStore';
 import { useRouter } from 'next/navigation';
 import { transfer, erc20Transfer } from '@/utils/transferUtils';
 import PKPStore from '@/store/PKPStore';
-import NetworkStore from '@/store/NetworkStore';
-import { LoadingSmall } from '../Loading';
+import AddressStore from '@/store/AddressStore';
 import TransactionModalStore from '@/store/TransactionModalStore';
 
 const TransferTokenForm = () => {
-  const { tokenList } = useSnapshot(TokenStore.tokenListState);
   const [transactionLoading, setTransactionLoading] = useState<boolean>(false);
-  const [isERC20, setIsERC20] = useState<boolean>(true);
+  const { tokenList } = useSnapshot(TokenStore.tokenListState);
   const [withPM, setWithPM] = useState<boolean>(false);
-  const mainToken = useSnapshot(TokenStore.mainTokenState);
   const [verifyAddress, setVerifyAddress] = useState<Boolean>(false);
   const [sendAmount, setSendAmount] = useState<number>(0);
+  const psudoToken: TokenState = {
+    address: '',
+    name: 'Sudo Token',
+    symbol: 'SUDO',
+    decimals: 18,
+    logoUrl: '',
+    nativeToken: false,
+    type: '',
+    balance: '0',
+    quote: 0,
+    prettyQuote: '0',
+    quoteRate: 0,
+    quoteRate24hAgo: 0,
+    chainId: 80001,
+  };
   const [selectedToken, setSelectedToken] = useState(() =>
-    tokenList.length == 0 ? mainToken : tokenList[0]
+    tokenList.length == 0 ? psudoToken : tokenList[0]
   );
   const router = useRouter();
-  const { erc4337Address } = useSnapshot(SettingsStore.state);
+  const { erc4337Address } = useSnapshot(AddressStore.state);
   const [recipientAddressOrEns, setRecipientAddressOrEns] =
     useState<string>('');
   const { currentPKP, authSig } = useSnapshot(PKPStore.state);
 
   const handleSubmit = async (event: any) => {
-    setTransactionLoading(true);
-    if (isERC20) {
-      console.log(recipientAddressOrEns);
-      await erc20Transfer(
-        selectedToken.tokenAddress,
+    if(!selectedToken.nativeToken) {
+      erc20Transfer(
+        selectedToken.address,
         recipientAddressOrEns,
         String(sendAmount),
         withPM,
@@ -112,11 +121,11 @@ const TransferTokenForm = () => {
                 tabIndex={0}
                 className="dropdown-content menu rounded-box w-64 p-2 shadow"
               >
-                <li onClick={() => handleTokenListClick(mainToken)}>
+                {/* <li onClick={() => handleTokenListClick(mainToken)}>
                   <a>
                     {mainToken.name} {mainToken.balance}
                   </a>
-                </li>
+                </li> */}
                 {tokenList.length != 0 ? (
                   tokenList.map((token, idx) => (
                     <li key={idx} onClick={() => handleTokenListClick(token)}>
@@ -142,7 +151,7 @@ const TransferTokenForm = () => {
                 placeholder="0.0"
                 className="input-bordered input"
               />
-              <span>{selectedToken.tokenSymbol}</span>
+              <span>{selectedToken.symbol}</span>
             </label>
             <label className="label flex cursor-pointer justify-start">
               <span className="label-text">With PayMaster</span>

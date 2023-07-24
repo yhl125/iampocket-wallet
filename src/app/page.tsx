@@ -4,10 +4,10 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useSnapshot } from 'valtio';
 import MainPage from './main/page';
-import SettingsStore from '../store/SettingsStore';
+import AddressStore from '@/store/AddressStore';
 
 export default function Home() {
-  const { erc4337Address } = useSnapshot(SettingsStore.state);
+  const { erc4337Address } = useSnapshot(AddressStore.state);
   const router = useRouter();
   useEffect(() => {
     if (erc4337Address != '') router.push('/wallet');
