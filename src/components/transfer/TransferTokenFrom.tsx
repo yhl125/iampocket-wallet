@@ -1,7 +1,7 @@
 'use client';
 
 import Conditional from '@/components/ConditionalRender';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import TokenStore, { TokenState } from '@/store/TokenStore';
@@ -10,10 +10,13 @@ import { useRouter } from 'next/navigation';
 import { transfer, erc20Transfer } from '@/utils/transferUtils';
 import PKPStore from '@/store/PKPStore';
 import NetworkStore from '@/store/NetworkStore';
+import { LoadingSmall } from '../Loading';
+import TransactionModalStore from '@/store/TransactionModalStore';
 
 const TransferTokenForm = () => {
   const { tokenList } = useSnapshot(TokenStore.tokenListState);
-  const [isERC20,setIsERC20] = useState<boolean>(true);
+  const [transactionLoading, setTransactionLoading] = useState<boolean>(false);
+  const [isERC20, setIsERC20] = useState<boolean>(true);
   const [withPM, setWithPM] = useState<boolean>(false);
   const mainToken = useSnapshot(TokenStore.mainTokenState);
   const [verifyAddress, setVerifyAddress] = useState<Boolean>(false);
@@ -28,26 +31,52 @@ const TransferTokenForm = () => {
   const { currentPKP, authSig } = useSnapshot(PKPStore.state);
 
   const handleSubmit = async (event: any) => {
-    if(isERC20) {
-      erc20Transfer(
+    setTransactionLoading(true);
+    if (isERC20) {
+      console.log(recipientAddressOrEns);
+      await erc20Transfer(
         selectedToken.tokenAddress,
         recipientAddressOrEns,
         String(sendAmount),
         withPM,
         currentPKP!.publicKey,
         authSig!,
-        selectedToken.chainId,
-      );
-    }
-    else {
-      transfer(
+        selectedToken.chainId
+      ).then((res) => {
+        console.log(res);
+        setTransactionLoading(false);
+        TransactionModalStore.open({
+          hash: res.hash,
+          from: res.from,
+          to: recipientAddressOrEns,
+          value: res.value.toString(),
+          tokenName: selectedToken.name,
+          network: res.chainId.toString(),
+          amount: String(sendAmount),
+        });
+        router.push('/wallet');
+      });
+    } else {
+      await transfer(
         recipientAddressOrEns,
         String(sendAmount),
         withPM,
         currentPKP!.publicKey,
         authSig!,
         selectedToken.chainId
-        );
+      ).then((res) => {
+        setTransactionLoading(false);
+        TransactionModalStore.open({
+          hash: res.hash,
+          from: res.from,
+          to: recipientAddressOrEns,
+          value: res.value.toString(),
+          tokenName: selectedToken.name,
+          network: res.chainId.toString(),
+          amount: String(sendAmount),
+        });
+        router.push('/wallet');
+      });
     }
     event.preventDefault();
   };
@@ -72,7 +101,9 @@ const TransferTokenForm = () => {
         <div>
           <div>
             <span>Your Asset: </span>
-            <span>{selectedToken.name}</span>
+            <span>
+              {selectedToken.name} {selectedToken.balance}
+            </span>
             <div className="dropdown-end dropdown">
               <label tabIndex={0} className="btn m-1">
                 Show Token List
@@ -134,6 +165,12 @@ const TransferTokenForm = () => {
           )}
         </div>
       </Conditional>
+      {transactionLoading ? (
+        <>
+          Transaction In Progress...
+          <LoadingSmall></LoadingSmall>
+        </>
+      ) : null}
     </>
   );
 };

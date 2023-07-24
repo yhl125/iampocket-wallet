@@ -13,10 +13,9 @@ import TokenList from '@/components/wallet/tokenList';
 import useAccounts from '@/hooks/useAccounts';
 import TokenStore, { TokenState } from '@/store/TokenStore';
 import { truncateAddress } from '@/utils/HelperUtil';
-import { createWeb3Wallet } from '@/utils/WalletConnectUtil';
-import useWalletConnectEventsManager from '@/hooks/useWalletConnectEventsManager';
 import Modal from '@/components/walletconnect-modal/Modal';
 import { providerOf } from '@/utils/ProviderUtil';
+import TransactionResultModal from '@/components/transfer/TransactionResultModal';
 
 const WalletPage = () => {
   const [balance, setBalance] = useState<string>('');
@@ -39,9 +38,10 @@ const WalletPage = () => {
           tokenSymbol: 'Matic',
           tokenDecimal: 0,
           balance: initialBalance,
-          tokenAddress: '',
-          chainId: 80001
+          tokenAddress: '0x0000000000000000000000000000000000001010',
+          chainId: 80001,
         };
+        console.log(initialBalance);
         if (mainToken.name == ethInfo.name) {
           console.log('Main Token already set');
         } else {
@@ -62,12 +62,6 @@ const WalletPage = () => {
     if (erc4337Address == '') return;
     getAddressBalance(erc4337Address, initialProvider);
   }, [erc4337Address, getAddressBalance, initialProvider]);
-
-  // useEffect(() => {
-  //   createWeb3Wallet();
-  // });
-
-  // useWalletConnectEventsManager();
 
   return (
     <>
@@ -163,6 +157,7 @@ const WalletPage = () => {
           </div>
         </div>
       </div>
+      <TransactionResultModal />
       <Modal />
     </>
   );
