@@ -1,9 +1,9 @@
-import SettingsStore from '@/store/SettingsStore';
 import { getZeroDevSigner } from '@zerodevapp/sdk';
 import { SupportedGasToken } from '@zerodevapp/sdk/dist/src/types';
 import { PKPEthersWallet } from '@lit-protocol/pkp-ethers';
 import { AuthSig } from '@lit-protocol/types';
 import { projectIdOf } from './ProviderUtil';
+import AddressStore from '@/store/AddressStore';
 
 /**
  * Utilities
@@ -14,8 +14,7 @@ export async function createOrRestoreERC4337Wallet(
 ) {
   const signer = await getERC4337Signer(pkpPubKey, authSig);
   const address = await signer.getAddress();
-  SettingsStore.setERC4337Address(address);
-  SettingsStore.setWeb3WalletReady(true);
+  AddressStore.setERC4337Address(address);
 
   return address;
 }

@@ -2,7 +2,6 @@ import ProjectInfoCard from '@/components/walletconnect-modal/ProjectInfoCard';
 import ProposalSelectSection from '@/components/walletconnect-modal/ProposalSelectSection';
 import RequestModalContainer from '@/components/walletconnect-modal/RequestModalContainer';
 import ModalStore from '@/store/ModalStore';
-import SettingsStore from '@/store/SettingsStore';
 import { isEIP155Chain } from '@/utils/HelperUtil';
 import { web3wallet } from '@/utils/WalletConnectUtil';
 import { SessionTypes } from '@walletconnect/types';
@@ -11,13 +10,14 @@ import { Fragment, useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { useRouter } from 'next/navigation';
 import ConnectedAppStore from '@/store/ConnectedAppStore';
+import AddressStore from '@/store/AddressStore';
 
 export default function SessionProposalModal() {
   const [selectedAccounts, setSelectedAccounts] = useState<
     Record<string, string[]>
   >({});
   const hasSelected = Object.keys(selectedAccounts).length;
-  const { erc4337Address } = useSnapshot(SettingsStore.state);
+  const { erc4337Address } = useSnapshot(AddressStore.state);
   const router = useRouter();
 
   // Get proposal data and wallet address from store
