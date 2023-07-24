@@ -57,9 +57,9 @@
     zen-observable-ts "^1.2.5"
 
 "@apollo/experimental-nextjs-app-support@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@apollo/experimental-nextjs-app-support/-/experimental-nextjs-app-support-0.2.1.tgz#6a2b03991e9678c5b9303fd736e1604a8e0b6d15"
-  integrity sha512-Dykrn/AWuaO4zt+DlZsPx7pQr86Z/F/3n3Hi1kQFhdLFksWu/TCuM90JLr7NZBF4DNn5vSodama6nhWf7DlyVg==
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@apollo/experimental-nextjs-app-support/-/experimental-nextjs-app-support-0.2.2.tgz#2d07a25be05a9a11eda16422cefe94784c9700d6"
+  integrity sha512-C7qaBktQptVq5+E9BU+weilkB+abtTMU8E6Zima5sZRqydjsr0PrRwn3P13ibu4yyW0FiPEAx1zgy4oHSutsjQ==
   dependencies:
     superjson "^1.12.2"
     ts-invariant "^0.10.3"
@@ -4515,6 +4515,11 @@ graphql-tag@^2.12.6:
   integrity sha512-FdSNcu2QQcWnM2VNvSCCDCVS5PpPqpzgFT8+GXzqJuoDd0CBncxCY278u4mhRO7tMgo2JjgJA5aZ+nWSQ/Z+xg==
   dependencies:
     tslib "^2.1.0"
+
+graphql@^16.6.0:
+  version "16.6.0"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.6.0.tgz#c2dcffa4649db149f6282af726c8c83f1c7c5fdb"
+  integrity sha512-KPIBPDlW7NxrbT/eh4qPXz5FiFdL5UbaA0XUNz2Rp3Z3hqBSkbj0GVjwFDztsWVauZUWsbKHgMg++sk8UX0bkw==
 
 hamt-sharding@^3.0.0:
   version "3.0.2"
