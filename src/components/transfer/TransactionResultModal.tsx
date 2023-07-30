@@ -1,5 +1,6 @@
+'use client'
+
 import { useSnapshot } from 'valtio';
-import RequestModalContainer from '../walletconnect-modal/RequestModalContainer';
 import TransactionModalStore from '@/store/TransactionModalStore';
 
 const TransactionResultModal = () => {

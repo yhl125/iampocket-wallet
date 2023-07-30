@@ -177,7 +177,6 @@ const TransferTokenForm = () => {
       {transactionLoading ? (
         <>
           Transaction In Progress...
-          <LoadingSmall></LoadingSmall>
         </>
       ) : null}
     </>
