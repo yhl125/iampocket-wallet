@@ -14,7 +14,7 @@ const MainPage = () => {
             <h2 className="text-2xl">Wallet for you </h2>
           </div>
           <button
-            className="btn-outline btn-wide btn"
+            className="btn btn-outline btn-wide"
             onClick={() => router.push('/login')}
           >
             Get Started

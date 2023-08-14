@@ -7,7 +7,7 @@ const TransferToken = () => {
   const router = useRouter();
   return (
     <>
-      <div className="flex w-full items-center justify-center border-b-2">
+      <div className="flex h-1/6 items-center justify-center border-b-2">
         <h1 className="text-2xl">Transfer</h1>
         <button onClick={() => router.back()} className="btn-xs btn">
           Cancel

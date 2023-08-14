@@ -1,8 +1,7 @@
 'use client';
 
 import Conditional from '@/components/ConditionalRender';
-import { BigNumber, ethers } from 'ethers';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import TokenStore, { TokenState } from '@/store/TokenStore';
 import { useRouter } from 'next/navigation';
@@ -10,6 +9,8 @@ import { transfer, erc20Transfer } from '@/utils/transferUtils';
 import PKPStore from '@/store/PKPStore';
 import AddressStore from '@/store/AddressStore';
 import TransactionModalStore from '@/store/TransactionModalStore';
+import SearchRecipientAddress from './SearchRecipientAddress';
+import { erc20BalanceToReadable } from '@/utils/ERC20Util';
 
 const TransferTokenForm = () => {
   const [transactionLoading, setTransactionLoading] = useState<boolean>(false);
@@ -42,7 +43,8 @@ const TransferTokenForm = () => {
   const { currentPKP, authSig } = useSnapshot(PKPStore.state);
 
   const handleSubmit = async (event: any) => {
-    if(!selectedToken.nativeToken) {
+    setTransactionLoading(true);
+    if (!selectedToken.nativeToken) {
       erc20Transfer(
         selectedToken.address,
         recipientAddressOrEns,
@@ -52,7 +54,6 @@ const TransferTokenForm = () => {
         authSig!,
         selectedToken.chainId
       ).then((res) => {
-        console.log(res);
         setTransactionLoading(false);
         TransactionModalStore.open({
           hash: res.hash,
@@ -94,7 +95,6 @@ const TransferTokenForm = () => {
   };
   const handleTokenListClick = (token: TokenState) => {
     setSelectedToken(token);
-    console.log(token);
   };
 
   useEffect(() => {
@@ -111,26 +111,26 @@ const TransferTokenForm = () => {
           <div>
             <span>Your Asset: </span>
             <span>
-              {selectedToken.name} {selectedToken.balance}
+              {selectedToken.name}{' '}
+              {erc20BalanceToReadable(
+                selectedToken.balance,
+                selectedToken.decimals
+              )}
             </span>
-            <div className="dropdown-end dropdown">
+            <div className="dropdown">
               <label tabIndex={0} className="btn m-1">
                 Show Token List
               </label>
               <ul
                 tabIndex={0}
-                className="dropdown-content menu rounded-box w-64 p-2 shadow"
+                className="menu dropdown-content rounded-box z-[1] w-52 bg-base-100 p-2 shadow"
               >
-                {/* <li onClick={() => handleTokenListClick(mainToken)}>
-                  <a>
-                    {mainToken.name} {mainToken.balance}
-                  </a>
-                </li> */}
                 {tokenList.length != 0 ? (
                   tokenList.map((token, idx) => (
                     <li key={idx} onClick={() => handleTokenListClick(token)}>
                       <a>
-                        {token.name} {token.balance}
+                        {token.name}{' '}
+                        {erc20BalanceToReadable(token.balance, token.decimals)}
                       </a>
                     </li>
                   ))
@@ -149,7 +149,7 @@ const TransferTokenForm = () => {
                 onChange={(e: any) => setSendAmount(e.target.value)}
                 type="text"
                 placeholder="0.0"
-                className="input-bordered input"
+                className="input input-bordered"
               />
               <span>{selectedToken.symbol}</span>
             </label>
@@ -163,7 +163,13 @@ const TransferTokenForm = () => {
               />
             </label>
           </div>
-          {sendAmount < Number(selectedToken.balance) ? (
+          {sendAmount <
+            Number(
+              erc20BalanceToReadable(
+                selectedToken.balance,
+                selectedToken.decimals
+              )
+            ) ? (
             <button className="btn" onClick={handleSubmit}>
               Send
             </button>
@@ -174,49 +180,8 @@ const TransferTokenForm = () => {
           )}
         </div>
       </Conditional>
-      {transactionLoading ? (
-        <>
-          Transaction In Progress...
-        </>
-      ) : null}
+      {transactionLoading ? <>Transaction In Progress...</> : null}
     </>
-  );
-};
-
-//SearchRecipientAddress Component
-interface Props {
-  setVerifyAddress: Dispatch<SetStateAction<Boolean>>;
-  setRecipientAddressOrEns: Dispatch<SetStateAction<string>>;
-}
-
-const SearchRecipientAddress = ({
-  setVerifyAddress,
-  setRecipientAddressOrEns,
-}: Props) => {
-  const checkRecipientAddress = (recipientAddress: string): Boolean => {
-    if (recipientAddress != '') {
-      const isAddressVerified = ethers.utils.isAddress(recipientAddress);
-      return isAddressVerified;
-    } else return false;
-  };
-
-  return (
-    <div className="p-2">
-      <div className="form-control w-full max-w-xs">
-        <label className="label">
-          <span className="label-text">Send to</span>
-        </label>
-        <input
-          onChange={(e: any) => {
-            setVerifyAddress(checkRecipientAddress(e.target.value));
-            setRecipientAddressOrEns(e.target.value);
-          }}
-          type="text"
-          placeholder="Address(0x),ENS"
-          className="input-bordered input w-full max-w-xs"
-        />
-      </div>
-    </div>
   );
 };
 
