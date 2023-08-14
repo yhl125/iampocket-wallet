@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation';
 import ConnectedAppStore from '@/store/ConnectedAppStore';
 import AddressStore from '@/store/AddressStore';
 
-export default function SessionProposalModal() {
+const SessionProposalModal = () => {
   const [selectedAccounts, setSelectedAccounts] = useState<
     Record<string, string[]>
   >({});
@@ -183,11 +183,11 @@ export default function SessionProposalModal() {
             );
           })}
         <div className="modal-action">
-          <button className="btn-error btn" onClick={onReject}>
+          <button className="btn btn-error" onClick={onReject}>
             Reject
           </button>
           <button
-            className="btn-success btn"
+            className="btn btn-success"
             onClick={onApprove}
             disabled={!hasSelected}
           >
@@ -197,4 +197,5 @@ export default function SessionProposalModal() {
       </RequestModalContainer>
     </>
   );
-}
+};
+export default SessionProposalModal;

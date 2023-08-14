@@ -4,7 +4,7 @@ import RequestMethodCard from '@/components/walletconnect-modal/RequestMethodCar
 import RequestModalContainer from '@/components/walletconnect-modal/RequestModalContainer';
 import ModalStore from '@/store/ModalStore';
 
-export default function SessionUnsuportedMethodModal() {
+const SessionUnsuportedMethodModal = () => {
   // Get request and wallet data from store
   const requestEvent = ModalStore.state.data?.requestEvent;
   const requestSession = ModalStore.state.data?.requestSession;
@@ -36,10 +36,11 @@ export default function SessionUnsuportedMethodModal() {
       </RequestModalContainer>
 
       <div className="modal-action">
-        <button className="btn-error btn" onClick={ModalStore.close}>
+        <button className="btn btn-error" onClick={ModalStore.close}>
           Close
         </button>
       </div>
     </>
   );
-}
+};
+export default SessionUnsuportedMethodModal;

@@ -12,7 +12,7 @@ interface IProps {
 /**
  * Component
  */
-export default function RequesDetailsCard({ chains, protocol }: IProps) {
+const RequesDetailsCard = ({ chains, protocol }: IProps) => {
   return (
     <Fragment>
       <div>
@@ -32,4 +32,5 @@ export default function RequesDetailsCard({ chains, protocol }: IProps) {
       </div>
     </Fragment>
   );
-}
+};
+export default RequesDetailsCard;
