@@ -5,7 +5,7 @@ interface IProps {
   onConnect: (uri: string) => Promise<void>;
 }
 
-export default function QrHandler({ onConnect }: IProps) {
+const QrHandler = ({ onConnect }: IProps) => {
   const [show, setShow] = useState(false);
   const [facingMode, setFacingMode] = useState('user');
 
@@ -110,4 +110,5 @@ export default function QrHandler({ onConnect }: IProps) {
       )}
     </div>
   );
-}
+};
+export default QrHandler;

@@ -13,18 +13,18 @@ interface IProps {
 /**
  * Component
  */
-export default function ProposalSelectSection({
+const ProposalSelectSection = ({
   addresses,
   selectedAddresses,
   chain,
   onSelect,
-}: IProps) {
+}: IProps) => {
   return (
     <div className="grid grid-flow-row auto-rows-max">
-        <div>
-          <h4>{`Choose ${chain} accounts`}</h4>
-          {/* TODO(ilja) re-implement when duplicate optional namespaces are fixed */}
-          {/* {addresses.map((address, index) => (
+      <div>
+        <h4>{`Choose ${chain} accounts`}</h4>
+        {/* TODO(ilja) re-implement when duplicate optional namespaces are fixed */}
+        {/* {addresses.map((address, index) => (
           <AccountSelectCard
             key={address}
             address={address}
@@ -33,14 +33,15 @@ export default function ProposalSelectSection({
             selected={selectedAddresses?.includes(address) ?? false}
           />
         ))} */}
-          <AccountSelectCard
-            key={addresses[0]}
-            address={addresses[0]}
-            index={0}
-            onSelect={() => onSelect(chain, addresses[0])}
-            selected={selectedAddresses?.includes(addresses[0]) ?? false}
-          />
-        </div>
+        <AccountSelectCard
+          key={addresses[0]}
+          address={addresses[0]}
+          index={0}
+          onSelect={() => onSelect(chain, addresses[0])}
+          selected={selectedAddresses?.includes(addresses[0]) ?? false}
+        />
+      </div>
     </div>
   );
-}
+};
+export default ProposalSelectSection;

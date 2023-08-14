@@ -13,7 +13,7 @@ import AddressStore from '@/store/AddressStore';
 import TokenList from './tokenList';
 import FetchTokens from './fetchToken';
 
-export default function Wallet() {
+const Wallet = () => {
   useAccounts();
 
   const { erc4337Address } = useSnapshot(AddressStore.state);
@@ -93,12 +93,7 @@ export default function Wallet() {
                 >
                   Send
                 </button>
-                <button
-                  className="btn btn-sm"
-                  onClick={() => console.log(initialProvider)}
-                >
-                  Deposit
-                </button>
+                <button className="btn btn-sm">Deposit</button>
               </div>
             </div>
             <FetchTokens
@@ -112,4 +107,6 @@ export default function Wallet() {
       </>
     )
   );
-}
+};
+
+export default Wallet;

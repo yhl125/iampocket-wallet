@@ -1,17 +1,17 @@
 import { ReadOnlyConnectedApp } from '@/store/ConnectedAppStore';
 import Image from 'next/image';
 
-export default function ConnectedAppCard({
+const ConnectedAppCard = ({
   connectedApp,
   wcDisconnect,
 }: {
   connectedApp: ReadOnlyConnectedApp;
   wcDisconnect: (topic: string) => Promise<void>;
-}) {
+}) => {
   const metadata = connectedApp.metadata;
 
   return (
-    <div className="flex justify-between p-4 my-2">
+    <div className="my-2 flex justify-between p-4">
       <div>
         {metadata.icons.length > 0 && (
           <div className="avatar mr-4">
@@ -29,10 +29,11 @@ export default function ConnectedAppCard({
       </div>
       <button
         onClick={() => wcDisconnect(connectedApp.topic)}
-        className="btn-error btn-sm btn"
+        className="btn btn-error btn-sm"
       >
         Disconnect
       </button>
     </div>
   );
-}
+};
+export default ConnectedAppCard;

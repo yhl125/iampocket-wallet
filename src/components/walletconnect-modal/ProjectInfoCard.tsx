@@ -11,7 +11,7 @@ interface IProps {
 /**
  * Components
  */
-export default function ProjectInfoCard({ metadata }: IProps) {
+const ProjectInfoCard = ({ metadata }: IProps) => {
   const { icons, name, url } = metadata;
 
   return (
@@ -29,4 +29,5 @@ export default function ProjectInfoCard({ metadata }: IProps) {
       </div>
     </div>
   );
-}
+};
+export default ProjectInfoCard;

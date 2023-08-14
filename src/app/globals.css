@@ -84,5 +84,5 @@ body {
   min-height: 100vh;
   max-width: 360px;
   margin: 0 auto;
-  display: grid;
+  /* display: grid; */
 }

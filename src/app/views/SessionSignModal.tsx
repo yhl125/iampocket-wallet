@@ -12,7 +12,7 @@ import { getSignParamsMessage } from '@/utils/HelperUtil';
 import { web3wallet } from '@/utils/WalletConnectUtil';
 import { useSnapshot } from 'valtio';
 
-export default function SessionSignModal() {
+const SessionSignModal = () => {
   // Get request and wallet data from store
   const requestEvent = ModalStore.state.data?.requestEvent;
   const requestSession = ModalStore.state.data?.requestSession;
@@ -82,14 +82,15 @@ export default function SessionSignModal() {
         <RequestMethodCard methods={[request.method]} />
 
         <div className="modal-action">
-          <button className="btn-error btn" onClick={onReject}>
+          <button className="btn btn-error" onClick={onReject}>
             Reject
           </button>
-          <button className="btn-success btn" onClick={onApprove}>
+          <button className="btn btn-success" onClick={onApprove}>
             Approve
           </button>
         </div>
       </RequestModalContainer>
     </>
   );
-}
+};
+export default SessionSignModal;

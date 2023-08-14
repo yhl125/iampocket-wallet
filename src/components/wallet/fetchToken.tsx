@@ -74,4 +74,5 @@ export default function FetchTokens(props: FetchTokensProps) {
     });
   });
   return <></>;
-}
+};
+export default FetchToken;

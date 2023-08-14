@@ -10,12 +10,14 @@ import { useSnapshot } from 'valtio';
 import { useEffect } from 'react';
 import { createWeb3Wallet } from '@/utils/WalletConnectUtil';
 import useWalletConnectEventsManager from '@/hooks/useWalletConnectEventsManager';
+import SettingsStore from '@/store/SettingsStore';
 
-export default function Modal() {
+const Modal = () => {
   const { open, view } = useSnapshot(ModalStore.state);
+  const { web3WalletReady } = useSnapshot(SettingsStore.state);
   useEffect(() => {
-    createWeb3Wallet();
-  });
+    if (web3WalletReady === false) createWeb3Wallet();
+  }, []);
 
   useWalletConnectEventsManager();
 
@@ -41,4 +43,5 @@ export default function Modal() {
       </div>
     </>
   );
-}
+};
+export default Modal;

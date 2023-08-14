@@ -1,4 +1,4 @@
-export default function Footer({ showDisclaimer = false }) {
+const Footer = ({ showDisclaimer = false }) => {
   return (
     <div className="m-4">
       {showDisclaimer && (
@@ -21,4 +21,5 @@ export default function Footer({ showDisclaimer = false }) {
       </p>
     </div>
   );
-}
+};
+export default Footer;

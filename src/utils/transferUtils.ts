@@ -14,11 +14,16 @@ export const transfer = async (
   withPM: Boolean,
   pkpPubKey: string,
   authSig: AuthSig,
-  chainId:number
+  chainId: number
 ) => {
   const signer = withPM
-    ? await getERC4337SignerWithERC20Gas('TEST_ERC20', pkpPubKey, authSig,chainId)
-    : await getERC4337Signer(pkpPubKey, authSig,chainId);
+    ? await getERC4337SignerWithERC20Gas(
+        'TEST_ERC20',
+        pkpPubKey,
+        authSig,
+        chainId
+      )
+    : await getERC4337Signer(pkpPubKey, authSig, chainId);
 
   const provider = providerOf(chainId);
   const feeData = await provider.getFeeData();
@@ -37,6 +42,7 @@ export const transfer = async (
   console.log(`Transaction hash: ${res.hash}`);
   const ev = await res.wait();
   console.log(`Transaction done: ${ev.transactionHash}`);
+  return res;
 };
 
 export const getEstimateGas = async (
@@ -59,16 +65,16 @@ export const erc20Transfer = async (
   withPM: boolean,
   pkpPubKey: string,
   authSig: AuthSig,
-  chaindId:number
+  chaindId: number
 ) => {
   const signer = withPM
     ? await getERC4337SignerWithERC20Gas(
-      'TEST_ERC20',
-      pkpPubKey,
-      authSig,
-      chaindId
-    )
-    : await getERC4337Signer(pkpPubKey, authSig,chaindId);
+        'TEST_ERC20',
+        pkpPubKey,
+        authSig,
+        chaindId
+      )
+    : await getERC4337Signer(pkpPubKey, authSig, chaindId);
 
   const provider = providerOf(chaindId);
   const feeData = await provider.getFeeData();
@@ -96,4 +102,5 @@ export const erc20Transfer = async (
   console.log(`Transaction hash: ${res.hash}`);
   const ev = await res.wait();
   console.log(`Transaction done: ${ev.transactionHash}`);
+  return res;
 };
