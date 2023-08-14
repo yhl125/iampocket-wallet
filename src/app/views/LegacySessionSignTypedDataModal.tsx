@@ -13,7 +13,7 @@ import { getSignTypedDataParamsData } from '@/utils/HelperUtil';
 import { legacySignClient } from '@/utils/LegacyWalletConnectUtil';
 import { useSnapshot } from 'valtio';
 
-export default function LegacySessionSignTypedDataModal() {
+const LegacySessionSignTypedDataModal = () => {
   // Get request and wallet data from store
   const requestEvent = ModalStore.state.data?.legacyCallRequestEvent;
   const requestSession = ModalStore.state.data?.legacyRequestSession;
@@ -94,14 +94,16 @@ export default function LegacySessionSignTypedDataModal() {
         <RequestMethodCard methods={[method]} />
 
         <div className="modal-action">
-          <button className="btn-error btn" onClick={onReject}>
+          <button className="btn btn-error" onClick={onReject}>
             Reject
           </button>
-          <button className="btn-success btn" onClick={onApprove}>
+          <button className="btn btn-success" onClick={onApprove}>
             Approve
           </button>
         </div>
       </RequestModalContainer>
     </>
   );
-}
+};
+
+export default LegacySessionSignTypedDataModal;

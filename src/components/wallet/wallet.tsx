@@ -13,7 +13,7 @@ import FetchToken from './fetchToken';
 import AddressStore from '@/store/AddressStore';
 import TokenList from './tokenList';
 
-export default function Wallet() {
+const Wallet = () => {
   useAccounts();
 
   const { erc4337Address } = useSnapshot(AddressStore.state);
@@ -47,7 +47,7 @@ export default function Wallet() {
                   ></Image>
                   <ul
                     tabIndex={0}
-                    className="dropdown-content menu rounded-box p-1 shadow"
+                    className="menu dropdown-content rounded-box p-1 shadow"
                   >
                     <li>copied to clipboard!</li>
                   </ul>
@@ -57,7 +57,7 @@ export default function Wallet() {
             <div className="dropdown-end dropdown absolute right-0 top-0 py-2">
               <label
                 tabIndex={0}
-                className="setting-button btn-ghost btn-square btn"
+                className="setting-button btn btn-square btn-ghost"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -75,7 +75,7 @@ export default function Wallet() {
               </label>
               <ul
                 tabIndex={0}
-                className="dropdown-content menu rounded-box mt-7 w-52 bg-base-300 p-2 shadow"
+                className="menu dropdown-content rounded-box mt-7 w-52 bg-base-300 p-2 shadow"
               >
                 <li>
                   <Link href={'/walletconnect'}>Connect Wallet</Link>
@@ -88,17 +88,12 @@ export default function Wallet() {
             <div className="asset-overview flex flex-col items-center justify-center border-b-2 p-2">
               <div className="asset-options space-around mt-2 flex w-3/4 items-center justify-around">
                 <button
-                  className="btn-sm btn"
+                  className="btn btn-sm"
                   onClick={() => router.push('/transfer')}
                 >
                   Send
                 </button>
-                <button
-                  className="btn-sm btn"
-                  onClick={() => console.log(initialProvider)}
-                >
-                  Deposit
-                </button>
+                <button className="btn btn-sm">Deposit</button>
               </div>
             </div>
             <FetchToken
@@ -106,10 +101,12 @@ export default function Wallet() {
               chainId={80001}
               quoteCurrency={'USD'}
             />
-            <TokenList/>
+            <TokenList />
           </div>
         </div>
       </>
     )
   );
-}
+};
+
+export default Wallet;

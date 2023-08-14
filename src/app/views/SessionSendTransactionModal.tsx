@@ -15,7 +15,7 @@ import { web3wallet } from '@/utils/WalletConnectUtil';
 import { useState } from 'react';
 import { useSnapshot } from 'valtio';
 
-export default function SessionSendTransactionModal() {
+const SessionSendTransactionModal = () => {
   const [loading, setLoading] = useState(false);
 
   // Get request and wallet data from store
@@ -85,14 +85,14 @@ export default function SessionSendTransactionModal() {
 
         <div className="modal-action">
           <button
-            className="btn-error btn"
+            className="btn btn-error"
             onClick={onReject}
             disabled={loading}
           >
             Reject
           </button>
           <button
-            className="btn-success btn"
+            className="btn btn-success"
             onClick={onApprove}
             disabled={loading}
           >
@@ -102,4 +102,5 @@ export default function SessionSendTransactionModal() {
       </RequestModalContainer>
     </>
   );
-}
+};
+export default SessionSendTransactionModal;

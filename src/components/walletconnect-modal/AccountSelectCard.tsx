@@ -13,12 +13,7 @@ interface IProps {
 /**
  * Component
  */
-export default function AccountSelectCard({
-  address,
-  selected,
-  index,
-  onSelect,
-}: IProps) {
+const AccountSelectCard = ({ address, selected, index, onSelect }: IProps) => {
   return (
     <>
       <div
@@ -44,4 +39,5 @@ export default function AccountSelectCard({
       </div>
     </>
   );
-}
+};
+export default AccountSelectCard;

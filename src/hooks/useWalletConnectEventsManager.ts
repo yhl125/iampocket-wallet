@@ -8,7 +8,7 @@ import { EIP155_SIGNING_METHODS } from '@/data/EIP155Data';
 import { web3wallet } from '@/utils/WalletConnectUtil';
 import ConnectedAppStore from '@/store/ConnectedAppStore';
 
-export default function useWalletConnectEventsManager() {
+const useWalletConnectEventsManager = () => {
   const { web3WalletReady } = useSnapshot(SettingsStore.state);
 
   /******************************************************************************
@@ -80,4 +80,5 @@ export default function useWalletConnectEventsManager() {
       web3wallet.on('session_delete', onSessionDelete);
     }
   }, [web3WalletReady, onSessionProposal, onSessionRequest, onSessionDelete]);
-}
+};
+export default useWalletConnectEventsManager;

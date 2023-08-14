@@ -2,7 +2,7 @@ import RequestModalContainer from '@/components/walletconnect-modal/RequestModal
 import ModalStore from '@/store/ModalStore';
 import { legacySignClient } from '@/utils/LegacyWalletConnectUtil';
 
-export default function LegacySwitchNetworkModal() {
+const LegacySwitchNetworkModal = () => {
   // Get request and wallet data from store
   const requestEvent = ModalStore.state.data?.legacyCallRequestEvent;
   const requestSession = ModalStore.state.data?.legacyRequestSession;
@@ -21,11 +21,10 @@ export default function LegacySwitchNetworkModal() {
   // Handle approve action (logic varies based on request method)
   async function onApprove() {
     if (requestEvent) {
-
       legacySignClient.updateSession({
         accounts: requestSession?.accounts!,
         chainId: parseInt(params[0].chainId),
-      })
+      });
 
       ModalStore.close();
     }
@@ -41,7 +40,6 @@ export default function LegacySwitchNetworkModal() {
   return (
     <>
       <RequestModalContainer title="Switch Network">
-
         <div className="my-2"></div>
 
         <div>
@@ -51,16 +49,17 @@ export default function LegacySwitchNetworkModal() {
 
         <div className="my-2"></div>
 
-
-      <div className="modal-action">
-        <button className="btn-error btn" onClick={onReject}>
-          Reject
-        </button>
-        <button className="btn-success btn" onClick={onApprove}>
-          Approve
-        </button>
-      </div>
+        <div className="modal-action">
+          <button className="btn btn-error" onClick={onReject}>
+            Reject
+          </button>
+          <button className="btn btn-success" onClick={onApprove}>
+            Approve
+          </button>
+        </div>
       </RequestModalContainer>
     </>
   );
-}
+};
+
+export default LegacySwitchNetworkModal;

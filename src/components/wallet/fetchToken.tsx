@@ -40,7 +40,7 @@ interface IProps {
   quoteCurrency: string;
 }
 
-export default function FetchToken(props: IProps) {
+const FetchToken = (props: IProps) => {
   const { data } = useSuspenseQuery(query, {
     variables: {
       address: props.address,
@@ -53,4 +53,5 @@ export default function FetchToken(props: IProps) {
     props.chainId
   );
   return <></>;
-}
+};
+export default FetchToken;

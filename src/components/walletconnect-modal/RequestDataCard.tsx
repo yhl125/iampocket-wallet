@@ -10,7 +10,7 @@ interface IProps {
 /**
  * Component
  */
-export default function RequestDataCard({ data }: IProps) {
+const RequestDataCard = ({ data }: IProps) => {
   return (
     <>
       <h5>Data</h5>
@@ -22,4 +22,5 @@ export default function RequestDataCard({ data }: IProps) {
       />
     </>
   );
-}
+};
+export default RequestDataCard;

@@ -9,7 +9,7 @@ import { parseUri } from '@walletconnect/utils';
 import { createLegacySignClient } from '@/utils/LegacyWalletConnectUtil';
 import QrHandler from '@/components/walletconnect/QrHandler';
 
-export default function WalletConnectPage() {
+const WalletConnectPage = () => {
   const [uri, setUri] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -38,16 +38,14 @@ export default function WalletConnectPage() {
     <>
       <div className="walletconnect m-4">
         <QrHandler onConnect={onConnect} />
-        <p className="my-4 text-center text-sm">
-          or use walletconnect uri
-        </p>
+        <p className="my-4 text-center text-sm">or use walletconnect uri</p>
         <div className="form-control">
           <div className="input-group">
             <input
               type="text"
               aria-label="wc url connect input"
               placeholder="e.g. wc:a281567bb3e4..."
-              className="input-bordered input w-full max-w-xs"
+              className="input input-bordered w-full max-w-xs"
               onChange={(e: { target: { value: SetStateAction<string> } }) =>
                 setUri(e.target.value)
               }
@@ -66,4 +64,5 @@ export default function WalletConnectPage() {
       <Modal />
     </>
   );
-}
+};
+export default WalletConnectPage;

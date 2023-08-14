@@ -25,7 +25,7 @@ const LoginViews = {
   ERROR: 'error',
 };
 
-export default function Login() {
+const Login = () => {
   // App state
   const { currentPKP } = useSnapshot(PKPStore.state);
 
@@ -112,8 +112,6 @@ export default function Login() {
       // );
 
       const { authSig, pkpPublicKey } = await getAuthSigForWebAuthn(authData);
-      console.log('authSig', authSig);
-      console.log('pkpPublicKey', pkpPublicKey);
 
       setView(LoginViews.SESSION_CREATED);
 
@@ -204,14 +202,14 @@ export default function Login() {
                   placeholder='e.g. "Eth Denver 2023"'
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="input-bordered input w-full"
+                  className="input input-bordered w-full"
                 />
               </div>
               <p id="username-field" className="mt-2 text-sm">
                 Give your passkey a unique name.
               </p>
             </div>
-            <button type="submit" className="btn-outline btn w-full">
+            <button type="submit" className="btn btn-outline w-full">
               Sign up
             </button>
           </form>
@@ -293,7 +291,7 @@ export default function Login() {
             you&apos;re ready.
           </p>
           <button
-            className="btn-outline btn-success btn w-full"
+            className="btn btn-success btn-outline w-full"
             onClick={authThenGetSessionSigs}
           >
             Continue
@@ -385,13 +383,13 @@ export default function Login() {
           <div className="w-100 mb-3">
             <button
               onClick={authThenGetSessionSigs}
-              className="btn-outline btn w-full"
+              className="btn btn-outline w-full"
             >
               Sign in
             </button>
           </div>
           <div className="text-center text-sm">
-            Need a cloud wallet?{' '}
+            Need a cloud wallet?
             <button
               onClick={() => setView(LoginViews.SIGN_UP)}
               className="text-indigo-400 hover:text-indigo-500 hover:underline focus:outline-none"
@@ -408,4 +406,5 @@ export default function Login() {
       />
     </>
   );
-}
+};
+export default Login;

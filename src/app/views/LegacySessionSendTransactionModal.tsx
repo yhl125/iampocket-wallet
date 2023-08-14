@@ -14,7 +14,7 @@ import { legacySignClient } from '@/utils/LegacyWalletConnectUtil';
 import { useState } from 'react';
 import { useSnapshot } from 'valtio';
 
-export default function LegacySessionSendTransactionModal() {
+const LegacySessionSendTransactionModal = () => {
   const [loading, setLoading] = useState(false);
   const { currentPKP, authSig } = useSnapshot(PKPStore.state);
 
@@ -99,14 +99,14 @@ export default function LegacySessionSendTransactionModal() {
 
         <div className="modal-action">
           <button
-            className="btn-error btn"
+            className="btn btn-error"
             onClick={onReject}
             disabled={loading}
           >
             Reject
           </button>
           <button
-            className="btn-success btn"
+            className="btn btn-success"
             onClick={onApprove}
             disabled={loading}
           >
@@ -116,4 +116,5 @@ export default function LegacySessionSendTransactionModal() {
       </RequestModalContainer>
     </>
   );
-}
+};
+export default LegacySessionSendTransactionModal;

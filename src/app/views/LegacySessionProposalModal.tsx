@@ -10,7 +10,7 @@ import { useSnapshot } from 'valtio';
 import { useRouter } from 'next/navigation';
 import AddressStore from '@/store/AddressStore';
 
-export default function LegacySessionProposalModal() {
+const LegacySessionProposalModal = () => {
   const [selectedAccounts, setSelectedAccounts] = useState<
     Record<string, string[]>
   >({});
@@ -92,12 +92,12 @@ export default function LegacySessionProposalModal() {
         <div className="my-2"></div>
 
         <div className="modal-action">
-          <button className="btn-error btn" onClick={onReject}>
+          <button className="btn btn-error" onClick={onReject}>
             Reject
           </button>
 
           <button
-            className="btn-success btn"
+            className="btn btn-success"
             onClick={onApprove}
             disabled={!hasSelected}
           >
@@ -107,4 +107,5 @@ export default function LegacySessionProposalModal() {
       </RequestModalContainer>
     </>
   );
-}
+};
+export default LegacySessionProposalModal;
