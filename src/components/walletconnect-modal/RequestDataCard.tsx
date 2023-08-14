@@ -15,10 +15,7 @@ const RequestDataCard = ({ data }: IProps) => {
     <>
       <h5>Data</h5>
       <CodeBlock
-        showLineNumbers={false}
-        text={JSON.stringify(data, null, 2)}
-        theme={codepen}
-        language="json"
+        {...codeBlockProps}
       />
     </>
   );

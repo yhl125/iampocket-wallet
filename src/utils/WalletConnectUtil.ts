@@ -8,7 +8,7 @@ export let core: InstanceType<typeof Core>;
 export async function createWeb3Wallet() {
   if (!SettingsStore.state.web3WalletReady && typeof window !== 'undefined') {
     core = new Core({
-      projectId: 'aa79d0999bbb4832eee876a58f7adc96',
+      projectId: '7811bfd4be7e92f5210294dd32820837',
     });
 
     web3wallet = await Web3Wallet.init({

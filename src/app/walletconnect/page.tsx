@@ -5,8 +5,6 @@ import Modal from '@/components/walletconnect-modal/Modal';
 import useAccounts from '@/hooks/useAccounts';
 import { web3wallet } from '@/utils/WalletConnectUtil';
 import { SetStateAction, useState } from 'react';
-import { parseUri } from '@walletconnect/utils';
-import { createLegacySignClient } from '@/utils/LegacyWalletConnectUtil';
 import QrHandler from '@/components/walletconnect/QrHandler';
 
 const WalletConnectPage = () => {
@@ -16,14 +14,9 @@ const WalletConnectPage = () => {
   async function onConnect(uri: string) {
     try {
       setLoading(true);
-      const { version } = parseUri(uri);
 
-      // Route the provided URI to the v1 SignClient if URI version indicates it, else use v2.
-      if (version === 1) {
-        createLegacySignClient({ uri });
-      } else {
-        await web3wallet.pair({ uri });
-      }
+      await web3wallet.pair({ uri });
+      
     } catch (err: unknown) {
       alert(err);
     } finally {
