@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import TransferTokenForm from '@/components/transfer/TransferTokenFrom';
 
-const TransferToken = () => {
+function TransferToken() {
   const router = useRouter();
   return (
     <>

@@ -1,13 +1,13 @@
 import { ReactNode } from 'react';
 import { Loading } from './Loading';
 
-const Conditional = ({
+function Conditional({
   showWhen,
   children,
 }: {
   showWhen: Boolean;
   children: ReactNode;
-}) => {
+}) {
   if (showWhen) return <>{children}</>;
   return <Loading></Loading>;
 };

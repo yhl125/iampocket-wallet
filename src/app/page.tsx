@@ -6,7 +6,7 @@ import { useSnapshot } from 'valtio';
 import MainPage from './main/page';
 import AddressStore from '@/store/AddressStore';
 
-const Home = () => {
+function Home() {
   const { erc4337Address } = useSnapshot(AddressStore.state);
   const router = useRouter();
   useEffect(() => {

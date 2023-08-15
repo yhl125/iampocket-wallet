@@ -3,7 +3,7 @@
 import { useSnapshot } from 'valtio';
 import TransactionModalStore from '@/store/TransactionModalStore';
 
-const TransactionResultModal = () => {
+function TransactionResultModal() {
   const { open, data } = useSnapshot(TransactionModalStore.state);
   return (
     <>

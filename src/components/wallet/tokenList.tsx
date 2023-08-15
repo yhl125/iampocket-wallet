@@ -3,7 +3,7 @@ import { erc20BalanceToReadable } from '@/utils/ERC20Util';
 import Image from 'next/image';
 import { useSnapshot } from 'valtio';
 
-const TokenList = () => {
+function TokenList() {
   const { tokenList } = useSnapshot(TokenStore.tokenListState);
   if (tokenList.length === 0) {
     return <div>You have no balance on Tokens Try to add one with Deposit</div>;

@@ -1,13 +1,13 @@
 import { ReadOnlyConnectedApp } from '@/store/ConnectedAppStore';
 import Image from 'next/image';
 
-const ConnectedAppCard = ({
+function ConnectedAppCard({
   connectedApp,
   wcDisconnect,
 }: {
   connectedApp: ReadOnlyConnectedApp;
   wcDisconnect: (topic: string) => Promise<void>;
-}) => {
+}) {
   const metadata = connectedApp.metadata;
 
   return (
@@ -35,5 +35,5 @@ const ConnectedAppCard = ({
       </button>
     </div>
   );
-};
+}
 export default ConnectedAppCard;

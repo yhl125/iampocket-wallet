@@ -4,7 +4,7 @@ import { createOrRestoreERC4337Wallet } from '@/utils/ERC4337WalletUtil';
 import { useEffect } from 'react';
 import { useSnapshot } from 'valtio';
 
-const useAccounts = () => {
+function useAccounts() {
   const { isAuthenticated, currentPKP, authSig } = useSnapshot(PKPStore.state);
   const { erc4337Address } = useSnapshot(AddressStore.state);
 

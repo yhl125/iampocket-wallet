@@ -13,7 +13,7 @@ interface IProps {
 /**
  * Component
  */
-const AccountSelectCard = ({ address, selected, index, onSelect }: IProps) => {
+function AccountSelectCard({ address, selected, index, onSelect }: IProps) {
   return (
     <>
       <div

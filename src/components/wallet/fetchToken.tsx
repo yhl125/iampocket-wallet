@@ -40,7 +40,7 @@ interface IProps {
   quoteCurrency: string;
 }
 
-const FetchToken = (props: IProps) => {
+function FetchToken(props: IProps) {
   const { data } = useSuspenseQuery(query, {
     variables: {
       address: props.address,

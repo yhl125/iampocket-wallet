@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { ClockIcon } from '@heroicons/react/24/outline';
 import { usePathname, useRouter } from 'next/navigation';
 
-const BottomNavigationBar = () => {
+function BottomNavigationBar() {
   const pathName = usePathname();
   const router = useRouter();
   if(pathName == '/') {

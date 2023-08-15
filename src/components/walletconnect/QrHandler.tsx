@@ -5,7 +5,7 @@ interface IProps {
   onConnect: (uri: string) => Promise<void>;
 }
 
-const QrHandler = ({ onConnect }: IProps) => {
+function QrHandler({ onConnect }: IProps) {
   const [show, setShow] = useState(false);
   const [facingMode, setFacingMode] = useState('user');
 

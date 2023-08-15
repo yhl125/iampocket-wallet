@@ -11,7 +11,7 @@ interface IProps {
 /**
  * Components
  */
-const ProjectInfoCard = ({ metadata }: IProps) => {
+function ProjectInfoCard({ metadata }: IProps) {
   const { icons, name, url } = metadata;
 
   return (
