@@ -25,7 +25,7 @@ const LoginViews = {
   ERROR: 'error',
 };
 
-const Login = () => {
+function Login() {
   // App state
   const { currentPKP } = useSnapshot(PKPStore.state);
 

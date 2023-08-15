@@ -13,7 +13,7 @@ import AddressStore from '@/store/AddressStore';
 import TokenList from './tokenList';
 import FetchTokens from './fetchToken';
 
-const Wallet = () => {
+function Wallet() {
   useAccounts();
 
   const { erc4337Address } = useSnapshot(AddressStore.state);

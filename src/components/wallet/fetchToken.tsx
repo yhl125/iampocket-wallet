@@ -65,7 +65,7 @@ function FetchToken(props: IProps) {
   }
 }
 
-export default function FetchTokens(props: FetchTokensProps) {
+function FetchTokens(props: FetchTokensProps) {
   props.chainIds.forEach((chainId) => {
     FetchToken({
       address: props.address,
@@ -75,4 +75,4 @@ export default function FetchTokens(props: FetchTokensProps) {
   });
   return <></>;
 };
-export default FetchToken;
+export default FetchTokens;

@@ -7,7 +7,7 @@ import { web3wallet } from '@/utils/WalletConnectUtil';
 import { SetStateAction, useState } from 'react';
 import QrHandler from '@/components/walletconnect/QrHandler';
 
-const WalletConnectPage = () => {
+function WalletConnectPage() {
   const [uri, setUri] = useState('');
   const [loading, setLoading] = useState(false);
 

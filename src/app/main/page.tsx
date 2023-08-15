@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-const MainPage = () => {
+function MainPage() {
   const router = useRouter();
   return (
     <div className="hero mt-24">
@@ -23,6 +23,6 @@ const MainPage = () => {
       </div>
     </div>
   );
-};
+}
 
 export default MainPage;

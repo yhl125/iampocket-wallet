@@ -13,7 +13,7 @@ import { getSignTypedDataParamsData } from '@/utils/HelperUtil';
 import { web3wallet } from '@/utils/WalletConnectUtil';
 import { useSnapshot } from 'valtio';
 
-const SessionSignTypedDataModal = () => {
+function SessionSignTypedDataModal() {
   // Get request and wallet data from store
   const requestEvent = ModalStore.state.data?.requestEvent;
   const requestSession = ModalStore.state.data?.requestSession;

@@ -12,7 +12,7 @@ import { createWeb3Wallet } from '@/utils/WalletConnectUtil';
 import useWalletConnectEventsManager from '@/hooks/useWalletConnectEventsManager';
 import SettingsStore from '@/store/SettingsStore';
 
-const Modal = () => {
+function Modal() {
   const { open, view } = useSnapshot(ModalStore.state);
   const { web3WalletReady } = useSnapshot(SettingsStore.state);
   useEffect(() => {

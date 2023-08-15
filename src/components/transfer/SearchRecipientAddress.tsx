@@ -6,10 +6,10 @@ interface Props {
   setRecipientAddressOrEns: Dispatch<SetStateAction<string>>;
 }
 
-const SearchRecipientAddress = ({
+function SearchRecipientAddress({
   setVerifyAddress,
   setRecipientAddressOrEns,
-}: Props) => {
+}: Props) {
   const checkRecipientAddress = (recipientAddress: string): Boolean => {
     if (recipientAddress != '') {
       const isAddressVerified = ethers.utils.isAddress(recipientAddress);

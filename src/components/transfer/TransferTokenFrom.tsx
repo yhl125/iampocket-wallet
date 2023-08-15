@@ -12,7 +12,7 @@ import TransactionModalStore from '@/store/TransactionModalStore';
 import SearchRecipientAddress from './SearchRecipientAddress';
 import { erc20BalanceToReadable } from '@/utils/ERC20Util';
 
-const TransferTokenForm = () => {
+function TransferTokenForm() {
   const [transactionLoading, setTransactionLoading] = useState<boolean>(false);
   const { tokenList } = useSnapshot(TokenStore.tokenListState);
   const [withPM, setWithPM] = useState<boolean>(false);

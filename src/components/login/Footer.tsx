@@ -1,4 +1,4 @@
-const Footer = ({ showDisclaimer = false }) => {
+function Footer({ showDisclaimer = false }) {
   return (
     <div className="m-4">
       {showDisclaimer && (

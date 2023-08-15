@@ -4,7 +4,7 @@ import RequestMethodCard from '@/components/walletconnect-modal/RequestMethodCar
 import RequestModalContainer from '@/components/walletconnect-modal/RequestModalContainer';
 import ModalStore from '@/store/ModalStore';
 
-const SessionUnsuportedMethodModal = () => {
+function SessionUnsuportedMethodModal() {
   // Get request and wallet data from store
   const requestEvent = ModalStore.state.data?.requestEvent;
   const requestSession = ModalStore.state.data?.requestSession;

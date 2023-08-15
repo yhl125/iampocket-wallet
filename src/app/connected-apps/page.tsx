@@ -6,7 +6,7 @@ import { useSnapshot } from 'valtio';
 import ConnectedAppCard from '@/components/connected-apps/ConnectedAppCard';
 import { useEffect, useState } from 'react';
 
-const ConnectedAppsPage = () => {
+function ConnectedAppsPage() {
   const { connectedApps } = useSnapshot(ConnectedAppStore.state);
   const [mounted, setMounted] = useState(false);
 
@@ -41,6 +41,6 @@ const ConnectedAppsPage = () => {
       </>
     )
   );
-};
+}
 
 export default ConnectedAppsPage;

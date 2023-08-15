@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useSnapshot } from 'valtio';
 
-const LoginPage = () => {
+function LoginPage() {
   const { isAuthenticated, sessionExpiration } = useSnapshot(PKPStore.state);
 
   const [isWebAuthnSupported, setIsWebAuthnSupported] = useState(true);
