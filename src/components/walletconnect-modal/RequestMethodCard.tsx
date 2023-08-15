@@ -8,7 +8,7 @@ interface IProps {
 /**
  * Component
  */
-const RequestMethodCard = ({ methods }: IProps) => {
+function RequestMethodCard ({ methods }: IProps) {
   return (
     <div>
       <h5>Methods</h5>

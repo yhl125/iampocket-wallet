@@ -13,12 +13,12 @@ interface IProps {
 /**
  * Component
  */
-const ProposalSelectSection = ({
+function ProposalSelectSection({
   addresses,
   selectedAddresses,
   chain,
   onSelect,
-}: IProps) => {
+}: IProps) {
   return (
     <div className="grid grid-flow-row auto-rows-max">
       <div>

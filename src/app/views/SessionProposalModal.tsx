@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation';
 import ConnectedAppStore from '@/store/ConnectedAppStore';
 import AddressStore from '@/store/AddressStore';
 
-const SessionProposalModal = () => {
+function SessionProposalModal() {
   const [selectedAccounts, setSelectedAccounts] = useState<
     Record<string, string[]>
   >({});

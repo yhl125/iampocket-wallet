@@ -11,7 +11,7 @@ interface IProps {
 /**
  * Component
  */
-const RequestModalContainer = ({ children, title }: IProps) => {
+function RequestModalContainer ({ children, title }: IProps) {
   return (
     <>
       <div className="modal-box">

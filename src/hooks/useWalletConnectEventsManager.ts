@@ -8,7 +8,7 @@ import { EIP155_SIGNING_METHODS } from '@/data/EIP155Data';
 import { web3wallet } from '@/utils/WalletConnectUtil';
 import ConnectedAppStore from '@/store/ConnectedAppStore';
 
-const useWalletConnectEventsManager = () => {
+function useWalletConnectEventsManager() {
   const { web3WalletReady } = useSnapshot(SettingsStore.state);
 
   /******************************************************************************
