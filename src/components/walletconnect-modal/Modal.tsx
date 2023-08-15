@@ -17,7 +17,7 @@ function Modal() {
   const { web3WalletReady } = useSnapshot(SettingsStore.state);
   useEffect(() => {
     if (web3WalletReady === false) createWeb3Wallet();
-  }, []);
+  }, [web3WalletReady]);
 
   useWalletConnectEventsManager();
 
