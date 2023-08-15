@@ -16,9 +16,9 @@ export function projectIdOf(chainId: number) {
     case 80001:
       return process.env.NEXT_PUBLIC_MUMBAI_PROJECT_ID!;
     case 421613:
-      return process.env.NEXT_PUBLIC_ARBITRUM_GOERLI_PROJCET_ID!;
+      return process.env.NEXT_PUBLIC_ARBITRUM_GOERLI_PROJECT_ID!;
     case 420:
-      return process.env.NEXT_PUBLIC_OPTIMISM_GOERLI_PROJCET_ID!;
+      return process.env.NEXT_PUBLIC_OPTIMISM_GOERLI_PROJECT_ID!;
     case 43113:
       return process.env.NEXT_PUBLIC_AVALANCHE_FUJI_PROJECT_ID!;
     default:

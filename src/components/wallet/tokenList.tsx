@@ -1,4 +1,4 @@
-import { EIP155_TEST_CHAINS } from '@/data/EIP155Data';
+import { EIP155_CHAINS } from '@/data/EIP155Data';
 import TokenStore, { TokenState } from '@/store/TokenStore';
 import { erc20BalanceToReadable } from '@/utils/ERC20Util';
 import Image from 'next/image';
@@ -26,7 +26,7 @@ function TokenList() {
                       <span className="badge indicator-item p-0">
                         <Image
                           src={
-                            EIP155_TEST_CHAINS[`eip155:${token.chainId}`].logo
+                            EIP155_CHAINS[`eip155:${token.chainId}`].logo
                           }
                           width={20}
                           height={20}
