@@ -25,7 +25,7 @@ export const transfer = async (
       )
     : await getERC4337Signer(pkpPubKey, authSig, chainId);
 
-  const provider = providerOf(80001);
+  const provider = providerOf(chainId);
   const feeData = await provider.getFeeData();
 
   const target = ethers.utils.getAddress(targetAddress);

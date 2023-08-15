@@ -11,13 +11,18 @@ interface IProps {
  * Component
  */
 function RequestDataCard({ data }: IProps) {
+  const codeBlockProps = {
+    text: JSON.stringify(data, null, 2),
+    language: 'json',
+    showLineNumbers: false,
+    theme: codepen,
+  };
   return (
     <>
       <h5>Data</h5>
-      <CodeBlock
-        {...codeBlockProps}
-      />
+      <CodeBlock {...codeBlockProps} />
     </>
   );
-};
+}
+
 export default RequestDataCard;

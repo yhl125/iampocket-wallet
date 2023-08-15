@@ -1,3 +1,4 @@
+import { EIP155_CHAINS } from '@/data/EIP155Data';
 import TokenStore, { TokenState } from '@/store/TokenStore';
 import { erc20BalanceToReadable } from '@/utils/ERC20Util';
 import Image from 'next/image';
@@ -21,9 +22,22 @@ function TokenList() {
               {tokenList.map((token: TokenState, idx: number) => (
                 <tr key={idx}>
                   <td>
-                    <div className="avatar placeholder">
-                      <div className="w-12 rounded-full border-2 bg-neutral-focus text-neutral-content">
-                        <Image src={token.logoUrl} alt="" fill />
+                    <div className="indicator">
+                      <span className="badge indicator-item p-0">
+                        <Image
+                          src={
+                            EIP155_CHAINS[`eip155:${token.chainId}`].logo
+                          }
+                          width={20}
+                          height={20}
+                          alt={'chain logo'}
+                          className='mask mask-circle'
+                        ></Image>
+                      </span>
+                      <div className="avatar placeholder">
+                        <div className="w-12 rounded-full border-2 bg-neutral-focus text-neutral-content">
+                          <Image src={token.logoUrl} alt="" fill />
+                        </div>
                       </div>
                     </div>
                   </td>
@@ -39,6 +53,6 @@ function TokenList() {
       </>
     );
   }
-};
+}
 
 export default TokenList;

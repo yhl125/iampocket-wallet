@@ -15,7 +15,7 @@ function useAccounts() {
     if (!erc4337Address) {
       createOrRestoreERC4337Wallet(currentPKP!.publicKey, authSig!);
     }
-  }, [authSig, currentPKP, isAuthenticated]);
+  }, [authSig, currentPKP, erc4337Address, isAuthenticated]);
 };
 
 export default useAccounts;

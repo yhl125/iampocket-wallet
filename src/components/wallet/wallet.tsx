@@ -9,9 +9,9 @@ import useAccounts from '@/hooks/useAccounts';
 import { truncateAddress } from '@/utils/HelperUtil';
 import { providerOf } from '@/utils/ProviderUtil';
 import { useEffect, useState } from 'react';
-import FetchToken from './fetchToken';
 import AddressStore from '@/store/AddressStore';
 import TokenList from './tokenList';
+import FetchTokens from './fetchToken';
 
 function Wallet() {
   useAccounts();
@@ -36,7 +36,7 @@ function Wallet() {
                 <p className="text-sm text-gray-500">
                   {truncateAddress(erc4337Address)}
                 </p>
-                <div className="dropdown-end dropdown">
+                <div className="dropdown dropdown-end">
                   <Image
                     tabIndex={0}
                     src={copyClipboardSVG}
@@ -96,9 +96,9 @@ function Wallet() {
                 <button className="btn btn-sm">Deposit</button>
               </div>
             </div>
-            <FetchToken
+            <FetchTokens
               address={erc4337Address}
-              chainId={80001}
+              chainIds={[5, 80001, 421613, 420]}
               quoteCurrency={'USD'}
             />
             <TokenList />
