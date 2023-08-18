@@ -1,101 +1,118 @@
-'use client';
+"use client";
 
-import Login from '@/components/login/Login';
-import PKPStore from '@/store/PKPStore';
-import { browserSupportsWebAuthn } from '@simplewebauthn/browser';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
-import { useSnapshot } from 'valtio';
+import useAuthenticate from '@/hooks/useAuthenticate';
+import useSession from '@/hooks/useSession';
+import useAccounts from '@/hooks/useAccounts';
+import { ORIGIN, signInWithDiscord, signInWithGoogle } from '@/utils/lit';
+import { LoadingWithCopy } from '@/components/Loading';
+import LoginMethods from '@/components/login/LoginMethods';
+import AccountSelection from '@/components/login/AccountSelection';
+import CreateAccount from '@/components/login/CreateAccount';
 
-function LoginPage() {
-  const { isAuthenticated, sessionExpiration } = useSnapshot(PKPStore.state);
+export default function LoginView() {
+  const redirectUri = ORIGIN + '/login';
 
-  const [isWebAuthnSupported, setIsWebAuthnSupported] = useState(true);
-
+  const {
+    authMethod,
+    // authWithEthWallet,
+    authWithOTP,
+    authWithWebAuthn,
+    authWithStytch,
+    loading: authLoading,
+    error: authError,
+  } = useAuthenticate(redirectUri);
+  const {
+    fetchAccounts,
+    setCurrentAccount,
+    currentAccount,
+    accounts,
+    loading: accountsLoading,
+    error: accountsError,
+  } = useAccounts();
+  const {
+    initSession,
+    sessionSigs,
+    loading: sessionLoading,
+    error: sessionError,
+  } = useSession();
   const router = useRouter();
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.replace('/wallet');
-    }
-  });
+  const error = authError || accountsError || sessionError;
+
+  async function handleGoogleLogin() {
+    await signInWithGoogle(redirectUri);
+  }
+
+  async function handleDiscordLogin() {
+    await signInWithDiscord(redirectUri);
+  }
+
+  function goToSignUp() {
+    router.push('/');
+  }
 
   useEffect(() => {
-    const supported =
-      browserSupportsWebAuthn() && !navigator.userAgent.includes('Firefox');
-    setIsWebAuthnSupported(supported);
-  }, []);
+    // If user is authenticated, fetch accounts
+    if (authMethod) {
+      fetchAccounts(authMethod);
+    }
+  }, [authMethod, fetchAccounts]);
 
   useEffect(() => {
-    // Check if session sigs have expired
-    async function checkSession() {
-      const sessionDate = new Date(sessionExpiration!);
-      const now = new Date();
-      if (sessionDate < now) {
-        // Reset state
-        PKPStore.setUnauthenticated();
-      }
+    // If user is authenticated and has selected an account, initialize session
+    if (authMethod && currentAccount) {
+      initSession(authMethod, currentAccount);
     }
+  }, [authMethod, currentAccount, initSession]);
 
-    // Check session expiration if exists
-    if (sessionExpiration) {
-      checkSession();
-    }
-  }, [sessionExpiration]);
-
-  if (!isWebAuthnSupported) {
+  if (authLoading) {
     return (
-      !isAuthenticated && (
-        <>
-          <div className="webAuthnNotSupported m-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="h-10 w-10 text-red-500"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
-              />
-            </svg>
-            <h1 className="mb-4 mt-6 text-3xl font-medium">
-              Browser not supported
-            </h1>
-            <p className="mb-6">
-              Unfortunately, your browser does not support platform
-              authenticators. Try visiting this demo on Chrome, Safari, Brave,
-              or Edge.
-            </p>
-            <p>
-              Refer to{' '}
-              <a
-                href="https://webauthn.me/browser-support"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline"
-              >
-                this table
-              </a>{' '}
-              for a more comprehensive list of supported browsers and operating
-              systems.
-            </p>
-          </div>
-        </>
-      )
+      <LoadingWithCopy copy={'Authenticating your credentials...'} error={error} />
     );
   }
 
-  return (
-    !isAuthenticated && (
-      <>
-        <Login />
-      </>
-    )
-  );
-};
+  if (accountsLoading) {
+    return <LoadingWithCopy copy={'Looking up your accounts...'} error={error} />;
+  }
 
-export default LoginPage;
+  if (sessionLoading) {
+    return <LoadingWithCopy copy={'Securing your session...'} error={error} />;
+  }
+
+  // If user is authenticated and has selected an account, initialize session
+  if (currentAccount && sessionSigs) {
+    router.replace('/wallet');
+  }
+
+  // If user is authenticated and has more than 1 account, show account selection
+  if (authMethod && accounts.length > 0) {
+    return (
+      <AccountSelection
+        accounts={accounts}
+        setCurrentAccount={setCurrentAccount}
+        error={error}
+      />
+    );
+  }
+
+  // If user is authenticated but has no accounts, prompt to create an account
+  if (authMethod && accounts.length === 0) {
+    return <CreateAccount signUp={goToSignUp} error={error} />;
+  }
+
+  // If user is not authenticated, show login methods
+  return (
+    <LoginMethods
+      handleGoogleLogin={handleGoogleLogin}
+      handleDiscordLogin={handleDiscordLogin}
+      // authWithEthWallet={authWithEthWallet}
+      authWithOTP={authWithOTP}
+      authWithWebAuthn={authWithWebAuthn}
+      authWithStytch={authWithStytch}
+      signUp={goToSignUp}
+      error={error}
+    />
+  );
+}
