@@ -35,7 +35,7 @@ export default function LoginMethods({
     <div className="container">
       <div className="wrapper">
         {error && (
-          <div className="alert alert--error">
+          <div className="alert alert-error">
             <p>{error.message}</p>
           </div>
         )}
@@ -48,11 +48,13 @@ export default function LoginMethods({
               handleDiscordLogin={handleDiscordLogin}
               setView={setView}
             />
-            <div className="buttons-container">
-              <button type="button" className="btn btn--link" onClick={signUp}>
-                Need an account? Sign up
-              </button>
-            </div>
+            <button
+              type="button"
+              className="btn relative mt-2 w-full normal-case"
+              onClick={signUp}
+            >
+              Need an account? Sign up
+            </button>
           </>
         )}
         {view === 'email' && (
