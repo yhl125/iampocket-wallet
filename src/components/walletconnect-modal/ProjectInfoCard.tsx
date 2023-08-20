@@ -17,8 +17,13 @@ function ProjectInfoCard({ metadata }: IProps) {
   return (
     <div className="flex">
       <div className="avatar mr-4">
-        <div className="w-12 rounded">
-          <Image src={icons[0]} fill alt="Tailwind-CSS-Avatar-component" />
+        <div className="relative w-12 rounded">
+          <Image
+            src={icons[0]}
+            alt="Tailwind-CSS-Avatar-component"
+            fill
+            sizes="1x"
+          />
         </div>
       </div>
       <div>
@@ -29,5 +34,5 @@ function ProjectInfoCard({ metadata }: IProps) {
       </div>
     </div>
   );
-};
+}
 export default ProjectInfoCard;

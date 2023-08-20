@@ -21,11 +21,12 @@ const AuthMethods = ({
             onClick={handleGoogleLogin}
           >
             <div className="avatar">
-              <div className="w-8 rounded">
+              <div className="relative w-8 rounded">
                 <Image
                   src="/login-logos/google.png"
                   alt="Google logo"
                   fill
+                  sizes="1x"
                 ></Image>
               </div>
             </div>
@@ -36,7 +37,7 @@ const AuthMethods = ({
             onClick={handleDiscordLogin}
           >
             <div className="avatar">
-              <div className="w-10 rounded">
+              <div className="relative w-10 rounded">
                 <Image
                   src="/login-logos/discord-square-color-icon.svg"
                   alt="Discord logo"
@@ -120,7 +121,7 @@ const AuthMethods = ({
           onClick={() => setView('webauthn')}
         >
           <div className="avatar">
-            <div className="w-8 rounded">
+            <div className="relative w-8 rounded ">
               <Image
                 src="/login-logos/icons8-touch-id.svg"
                 alt="Fingerprint logo"
@@ -129,7 +130,7 @@ const AuthMethods = ({
             </div>
           </div>
           <div className="avatar">
-            <div className="w-8 rounded">
+            <div className="relative w-8 rounded">
               <Image
                 src="/login-logos/Face_ID_logo.svg"
                 alt="Face id logo"
