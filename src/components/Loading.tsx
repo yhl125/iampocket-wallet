@@ -9,7 +9,7 @@ export function Loading() {
       </span>
     </div>
   );
-};
+}
 
 export function LoadingSmall() {
   return (
@@ -22,4 +22,23 @@ export function LoadingSmall() {
       </span>
     </div>
   );
-};
+}
+
+interface LoadingProps {
+  copy: string;
+  error?: Error;
+}
+
+export function LoadingWithCopy({ copy, error }: LoadingProps) {
+  return (
+    <div className="flex flex-col items-center gap-2">
+      {error && (
+        <div className="alert alert-error">
+          <p>{error.message}</p>
+        </div>
+      )}
+      <div className="loading loading-spinner loading-lg"></div>
+      <p>{copy}</p>
+    </div>
+  );
+}

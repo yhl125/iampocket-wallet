@@ -1,21 +1,67 @@
-import AddressStore from '@/store/AddressStore';
-import PKPStore from '@/store/PKPStore';
-import { createOrRestoreERC4337Wallet } from '@/utils/ERC4337WalletUtil';
-import { useEffect } from 'react';
-import { useSnapshot } from 'valtio';
+import { useCallback, useState } from 'react';
+import { AuthMethod } from '@lit-protocol/types';
+import { getPKPs, mintPKP } from '../utils/lit';
+import { IRelayPKP } from '@lit-protocol/types';
 
-function useAccounts() {
-  const { isAuthenticated, currentPKP, authSig } = useSnapshot(PKPStore.state);
-  const { erc4337Address } = useSnapshot(AddressStore.state);
+export default function useAccounts() {
+  const [accounts, setAccounts] = useState<IRelayPKP[]>([]);
+  const [currentAccount, setCurrentAccount] = useState<IRelayPKP>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<Error>();
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      throw new Error('User is not authenticated');
-    }
-    if (!erc4337Address) {
-      createOrRestoreERC4337Wallet(currentPKP!.publicKey, authSig!);
-    }
-  }, [authSig, currentPKP, erc4337Address, isAuthenticated]);
-};
+  /**
+   * Fetch PKPs tied to given auth method
+   */
+  const fetchAccounts = useCallback(
+    async (authMethod: AuthMethod): Promise<void> => {
+      setLoading(true);
+      setError(undefined);
+      try {
+        // Fetch PKPs tied to given auth method
+        const myPKPs = await getPKPs(authMethod);
+        // console.log('fetchAccounts pkps: ', myPKPs);
+        setAccounts(myPKPs);
+        // If only one PKP, set as current account
+        if (myPKPs.length === 1) {
+          setCurrentAccount(myPKPs[0]);
+        }
+      } catch (err: any) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
 
-export default useAccounts;
+  /**
+   * Mint a new PKP for current auth method
+   */
+  const createAccount = useCallback(
+    async (authMethod: AuthMethod): Promise<void> => {
+      setLoading(true);
+      setError(undefined);
+      try {
+        const newPKP = await mintPKP(authMethod);
+        // console.log('createAccount pkp: ', newPKP);
+        setAccounts(prev => [...prev, newPKP]);
+        setCurrentAccount(newPKP);
+      } catch (err: any) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
+  return {
+    fetchAccounts,
+    createAccount,
+    setCurrentAccount,
+    accounts,
+    currentAccount,
+    loading,
+    error,
+  };
+}

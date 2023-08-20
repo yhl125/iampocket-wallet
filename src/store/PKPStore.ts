@@ -1,22 +1,15 @@
-import { AuthSig } from '@lit-protocol/types';
+import { SessionSigs } from '@lit-protocol/types';
 import { proxyWithLocalStorage } from '@/utils/StoreUtil';
+import { IRelayPKP } from '@lit-protocol/types';
 
 /**
  * Types
  */
 interface PKPState {
   isAuthenticated: boolean;
-  currentUsername?: string;
-  currentPKP?: PKP;
-  // sessionSigs: SessionSigsMap;
-  sessionExpiration?: string;
-  authSig?: AuthSig;
-}
-
-interface PKP {
-  tokenId: string;
-  publicKey: string;
-  ethAddress: string;
+  currentPKP?: IRelayPKP;
+  sessionSigs?: SessionSigs;
+  sessionExpiration?: Date;
 }
 
 /**
@@ -24,45 +17,36 @@ interface PKP {
  */
 const state = proxyWithLocalStorage<PKPState>('PKPState', {
   isAuthenticated: false,
-  currentUsername: undefined,
   currentPKP: undefined,
-  // sessionSigs: {},
+  sessionSigs: undefined,
   sessionExpiration: undefined,
-  authSig: undefined,
 });
-
 
 /**
  * Store / Actions
  */
 const PKPStore = {
   state,
-  setPKP(pkp: PKP) {
+  setPKP(pkp: IRelayPKP) {
     state.currentPKP = pkp;
   },
 
   setAuthenticated(
-    username: string,
-    pkp: PKP,
-    // sessionSigs: SessionSigsMap,
-    sessionExpiration: string,
-    authSig: AuthSig
+    pkp: IRelayPKP,
+    sessionSigs: SessionSigs,
+    sessionExpiration: Date,
   ) {
     state.isAuthenticated = true;
-    state.currentUsername = username;
     state.currentPKP = pkp;
-    // state.sessionSigs = sessionSigs;
+    state.sessionSigs = sessionSigs;
     state.sessionExpiration = sessionExpiration;
-    state.authSig = authSig;
   },
 
   setUnauthenticated() {
     state.isAuthenticated = false;
-    state.currentUsername = undefined;
     state.currentPKP = undefined;
-    // state.sessionSigs = {};
+    state.sessionSigs = undefined;
     state.sessionExpiration = undefined;
-    state.authSig = undefined;
   },
 };
 

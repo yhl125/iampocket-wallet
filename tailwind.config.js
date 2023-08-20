@@ -4,7 +4,7 @@ module.exports = {
   content: [
     './src/components/**/*.{ts,tsx}',
     './src/app/**/*.{ts,tsx}',
-	],
+    	],
   theme: {
     container: {
       center: true,
@@ -71,7 +71,7 @@ module.exports = {
     },
   },
   plugins: [require('daisyui'), require("tailwindcss-animate")],
-  daisyui: {
+daisyui: {
     themes: ['light', 'dark'],
   },
 }

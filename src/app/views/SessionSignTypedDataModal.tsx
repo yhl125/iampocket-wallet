@@ -17,7 +17,7 @@ function SessionSignTypedDataModal() {
   // Get request and wallet data from store
   const requestEvent = ModalStore.state.data?.requestEvent;
   const requestSession = ModalStore.state.data?.requestSession;
-  const { currentPKP, authSig } = useSnapshot(PKPStore.state);
+  const { currentPKP, sessionSigs } = useSnapshot(PKPStore.state);
 
   // Ensure request and wallet are defined
   if (!requestEvent || !requestSession) {
@@ -37,7 +37,7 @@ function SessionSignTypedDataModal() {
       const response = await approveEIP155Request(
         requestEvent,
         currentPKP!.publicKey,
-        authSig!
+        sessionSigs!,
       );
       await web3wallet.respondSessionRequest({
         topic,
@@ -90,5 +90,5 @@ function SessionSignTypedDataModal() {
       </RequestModalContainer>
     </>
   );
-};
+}
 export default SessionSignTypedDataModal;

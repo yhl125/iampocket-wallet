@@ -5,20 +5,19 @@ import Link from 'next/link';
 import Image from 'next/image';
 import copyClipboardSVG from 'public/copyToClipboard.svg';
 import { useRouter } from 'next/navigation';
-import useAccounts from '@/hooks/useAccounts';
 import { truncateAddress } from '@/utils/HelperUtil';
 import { providerOf } from '@/utils/ProviderUtil';
 import { useEffect, useState } from 'react';
 import AddressStore from '@/store/AddressStore';
 import TokenList from './tokenList';
 import FetchTokens from './fetchToken';
+import useWalletWithPKP from '@/hooks/useWalletWithPKP';
 
 function Wallet() {
-  useAccounts();
+  useWalletWithPKP();
 
   const { erc4337Address } = useSnapshot(AddressStore.state);
   const router = useRouter();
-  const initialProvider = providerOf(80001);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -54,7 +53,7 @@ function Wallet() {
                 </div>
               </div>
             </div>
-            <div className="dropdown-end dropdown absolute right-0 top-0 py-2">
+            <div className="dropdown dropdown-end absolute right-0 top-0 py-2">
               <label
                 tabIndex={0}
                 className="setting-button btn btn-square btn-ghost"
@@ -107,6 +106,6 @@ function Wallet() {
       </>
     )
   );
-};
+}
 
 export default Wallet;
