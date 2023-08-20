@@ -46,7 +46,7 @@ const AuthMethods = ({
             </div>
             Discord
           </button>
-          {/* <button type="button" className="btn btn--outline">
+          {/* <button type="button" className="btn btn-outline">
             <div className="btn__icon">
               <Image src="/apple.png" alt="Apple logo" fill={true}></Image>
             </div>
@@ -95,7 +95,7 @@ const AuthMethods = ({
         </button>
         {/* <button
           type="button"
-          className="btn btn--outline"
+          className="btn btn-outline"
           onClick={() => setView('wallet')}
         >
           <div className="btn__icon">

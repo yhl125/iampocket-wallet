@@ -45,7 +45,7 @@ const EmailSMSAuth = ({ method, setView, authWithOTP }: EmailSMSAuthProps) => {
       {step === 'submit' && (
         <>
           {sendError && (
-            <div className="alert alert--error">
+            <div className="alert alert-error">
               <p>{sendError.message}</p>
             </div>
           )}
@@ -59,7 +59,7 @@ const EmailSMSAuth = ({ method, setView, authWithOTP }: EmailSMSAuthProps) => {
               <input
                 id={method}
                 value={userId}
-                onChange={e => setUserId(e.target.value)}
+                onChange={(e) => setUserId(e.target.value)}
                 type={method === 'email' ? 'email' : 'tel'}
                 name={method}
                 className="form__input"
@@ -70,14 +70,14 @@ const EmailSMSAuth = ({ method, setView, authWithOTP }: EmailSMSAuthProps) => {
               ></input>
               <button
                 type="submit"
-                className="btn btn--primary"
+                className="btn btn-primary"
                 disabled={sendLoading}
               >
                 Send code
               </button>
               <button
                 onClick={() => setView('default')}
-                className="btn btn--link"
+                className="btn	 btn-link"
               >
                 Back
               </button>
@@ -97,19 +97,19 @@ const EmailSMSAuth = ({ method, setView, authWithOTP }: EmailSMSAuthProps) => {
               <input
                 id="code"
                 value={code}
-                onChange={e => setCode(e.target.value)}
+                onChange={(e) => setCode(e.target.value)}
                 type="code"
                 name="code"
                 className="form__input"
                 placeholder="Verification code"
                 autoComplete="off"
               ></input>
-              <button type="submit" className="btn btn--primary">
+              <button type="submit" className="btn btn-primary">
                 Verify
               </button>
               <button
                 onClick={() => setStep('submit')}
-                className="btn btn--outline"
+                className="btn btn-outline"
               >
                 Try again
               </button>

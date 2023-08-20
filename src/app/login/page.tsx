@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -69,12 +69,17 @@ export default function LoginView() {
 
   if (authLoading) {
     return (
-      <LoadingWithCopy copy={'Authenticating your credentials...'} error={error} />
+      <LoadingWithCopy
+        copy={'Authenticating your credentials...'}
+        error={error}
+      />
     );
   }
 
   if (accountsLoading) {
-    return <LoadingWithCopy copy={'Looking up your accounts...'} error={error} />;
+    return (
+      <LoadingWithCopy copy={'Looking up your accounts...'} error={error} />
+    );
   }
 
   if (sessionLoading) {

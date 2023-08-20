@@ -38,7 +38,7 @@ export default function WebAuthn({
     return (
       <>
         {error && (
-          <div className="alert alert--error">
+          <div className="alert alert-error">
             <p>{error.message}</p>
           </div>
         )}
@@ -53,27 +53,27 @@ export default function WebAuthn({
   return (
     <>
       {error && (
-        <div className="alert alert--error">
+        <div className="alert alert-error">
           <p>{error.message}</p>
         </div>
       )}
       {step === 'register' && (
         <>
           <h1>Register with an authenticator</h1>
-          <p>WebAuthn credentials enable simple and secure passwordless authentication.</p>
+          <p>
+            WebAuthn credentials enable simple and secure passwordless
+            authentication.
+          </p>
           <div className="buttons-container">
             <button
               type="button"
-              className={`btn btn--outline ${loading && 'btn--loading'}`}
+              className={`btn btn-outline ${loading && 'btn--loading'}`}
               onClick={handleRegister}
               disabled={loading}
             >
               Create a credential
             </button>
-            <button
-              onClick={() => setView('default')}
-              className="btn btn--link"
-            >
+            <button onClick={() => setView('default')} className="btn	 btn-link">
               Back
             </button>
           </div>
@@ -86,16 +86,13 @@ export default function WebAuthn({
           <div className="buttons-container">
             <button
               type="button"
-              className={`btn btn--outline ${loading && 'btn--loading'}`}
+              className={`btn btn-outline ${loading && 'btn--loading'}`}
               onClick={authWithWebAuthn}
               disabled={loading}
             >
               Sign in with authenticator
             </button>
-            <button
-              onClick={() => setView('default')}
-              className="btn btn--link"
-            >
+            <button onClick={() => setView('default')} className="btn btn-link">
               Back
             </button>
           </div>

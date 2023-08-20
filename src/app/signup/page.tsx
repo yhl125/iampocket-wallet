@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -63,7 +63,6 @@ export default function SignUpView() {
     // If user is authenticated, create an account
     // For WebAuthn, the account creation is handled by the registerWithWebAuthn function
     if (authMethod && authMethod.authMethodType !== AuthMethodType.WebAuthn) {
-      router.replace(window.location.pathname, undefined, { shallow: true });
       createAccount(authMethod);
     }
   }, [authMethod, createAccount, router]);
@@ -77,7 +76,10 @@ export default function SignUpView() {
 
   if (authLoading) {
     return (
-      <LoadingWithCopy copy={'Authenticating your credentials...'} error={error} />
+      <LoadingWithCopy
+        copy={'Authenticating your credentials...'}
+        error={error}
+      />
     );
   }
 

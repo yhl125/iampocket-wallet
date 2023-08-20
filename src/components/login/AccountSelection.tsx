@@ -1,4 +1,3 @@
-
 import { IRelayPKP } from '@lit-protocol/types';
 import { useState } from 'react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -26,7 +25,7 @@ export default function AccountSelection({
     <div className="container">
       <div className="wrapper">
         {error && (
-          <div className="alert alert--error">
+          <div className="alert alert-error">
             <p>{error.message}</p>
           </div>
         )}
@@ -62,7 +61,7 @@ export default function AccountSelection({
               </div>
             ))}
           </RadioGroup>
-          <button type="submit" className="btn btn--primary">
+          <button type="submit" className="btn btn-primary">
             Continue
           </button>
         </form>

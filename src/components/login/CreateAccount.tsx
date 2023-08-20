@@ -8,7 +8,7 @@ export default function CreateAccount({ signUp, error }: CreateAccountProp) {
     <div className="container">
       <div className="wrapper">
         {error && (
-          <div className="alert alert--error">
+          <div className="alert alert-error">
             <p>{error.message}</p>
           </div>
         )}
@@ -18,7 +18,7 @@ export default function CreateAccount({ signUp, error }: CreateAccountProp) {
           credentials. Create one today.
         </p>
         <div className="buttons-container">
-          <button onClick={signUp} className="btn btn--primary">
+          <button onClick={signUp} className="btn btn-primary">
             Sign up
           </button>
         </div>
