@@ -10,16 +10,16 @@ import {
   formatJsonRpcResult,
 } from '@walletconnect/jsonrpc-utils';
 import { getERC4337Signer } from './ERC4337WalletUtil';
-import { AuthSig } from '@lit-protocol/types';
+import { SessionSigs } from '@lit-protocol/types';
 
 export async function approveEIP155Request(
   requestEvent: SignClientTypes.EventArguments['session_request'],
   publicKey: string,
-  authSig: AuthSig
+  sessionSigs: SessionSigs,
 ) {
   const { params, id } = requestEvent;
   const { chainId, request } = params;
-  const erc4337Wallet = await getERC4337Signer(publicKey, authSig!);
+  const erc4337Wallet = await getERC4337Signer(publicKey, sessionSigs);
 
   switch (request.method) {
     case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
@@ -41,7 +41,7 @@ export async function approveEIP155Request(
       const signedData = await erc4337Wallet._signTypedData(
         domain,
         types,
-        data
+        data,
       );
       return formatJsonRpcResult(id, signedData);
 
@@ -64,10 +64,10 @@ export async function approveEIP155Request(
 }
 
 export function rejectEIP155Request(
-  request: SignClientTypes.EventArguments['session_request']
+  request: SignClientTypes.EventArguments['session_request'],
 ) {
   return formatJsonRpcError(
     request.id,
-    getSdkError('USER_REJECTED_METHODS').message
+    getSdkError('USER_REJECTED_METHODS').message,
   );
 }

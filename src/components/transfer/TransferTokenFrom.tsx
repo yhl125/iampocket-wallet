@@ -20,8 +20,8 @@ function TransferTokenForm() {
   const [sendAmount, setSendAmount] = useState<number>(0);
   const psudoToken: TokenState = {
     address: '',
-    name: 'Sudo Token',
-    symbol: 'SUDO',
+    name: 'Token',
+    symbol: 'Token',
     decimals: 18,
     logoUrl: '',
     nativeToken: false,
@@ -34,13 +34,13 @@ function TransferTokenForm() {
     chainId: 80001,
   };
   const [selectedToken, setSelectedToken] = useState(() =>
-    tokenList.length == 0 ? psudoToken : tokenList[0]
+    tokenList.length == 0 ? psudoToken : tokenList[0],
   );
   const router = useRouter();
   const { erc4337Address } = useSnapshot(AddressStore.state);
   const [recipientAddressOrEns, setRecipientAddressOrEns] =
     useState<string>('');
-  const { currentPKP, authSig } = useSnapshot(PKPStore.state);
+  const { currentPKP, sessionSigs } = useSnapshot(PKPStore.state);
 
   const handleSubmit = async (event: any) => {
     setTransactionLoading(true);
@@ -51,8 +51,8 @@ function TransferTokenForm() {
         String(sendAmount),
         withPM,
         currentPKP!.publicKey,
-        authSig!,
-        selectedToken.chainId
+        sessionSigs!,
+        selectedToken.chainId,
       ).then((res) => {
         setTransactionLoading(false);
         TransactionModalStore.open({
@@ -72,8 +72,8 @@ function TransferTokenForm() {
         String(sendAmount),
         withPM,
         currentPKP!.publicKey,
-        authSig!,
-        selectedToken.chainId
+        sessionSigs!,
+        selectedToken.chainId,
       ).then((res) => {
         setTransactionLoading(false);
         TransactionModalStore.open({
@@ -114,7 +114,7 @@ function TransferTokenForm() {
               {selectedToken.name}{' '}
               {erc20BalanceToReadable(
                 selectedToken.balance,
-                selectedToken.decimals
+                selectedToken.decimals,
               )}
             </span>
             <div className="dropdown">
@@ -164,12 +164,12 @@ function TransferTokenForm() {
             </label>
           </div>
           {sendAmount <
-            Number(
-              erc20BalanceToReadable(
-                selectedToken.balance,
-                selectedToken.decimals
-              )
-            ) ? (
+          Number(
+            erc20BalanceToReadable(
+              selectedToken.balance,
+              selectedToken.decimals,
+            ),
+          ) ? (
             <button className="btn" onClick={handleSubmit}>
               Send
             </button>
@@ -183,6 +183,6 @@ function TransferTokenForm() {
       {transactionLoading ? <>Transaction In Progress...</> : null}
     </>
   );
-};
+}
 
 export default TransferTokenForm;

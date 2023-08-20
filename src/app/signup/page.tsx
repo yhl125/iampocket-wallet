@@ -14,6 +14,7 @@ import {
 import { AuthMethodType } from '@lit-protocol/constants';
 import SignUpMethods from '@/components/login/SignUpMethods';
 import { LoadingWithCopy } from '@/components/Loading';
+import PKPStore from '@/store/PKPStore';
 
 export default function SignUpView() {
   const redirectUri = ORIGIN;
@@ -37,6 +38,7 @@ export default function SignUpView() {
   const {
     initSession,
     sessionSigs,
+    sessionSigsExpiration,
     loading: sessionLoading,
     error: sessionError,
   } = useSession();
@@ -92,6 +94,11 @@ export default function SignUpView() {
   }
 
   if (currentAccount && sessionSigs) {
+    PKPStore.setAuthenticated(
+      currentAccount,
+      sessionSigs,
+      sessionSigsExpiration!,
+    );
     router.replace('/wallet');
   } else {
     return (

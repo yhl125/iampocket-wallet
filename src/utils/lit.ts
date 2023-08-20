@@ -26,7 +26,7 @@ export const ORIGIN =
 export const litNodeClient: LitNodeClient = new LitNodeClient({
   alertWhenUnauthorized: false,
   litNetwork: 'serrano',
-  debug: true,
+  debug: false,
 });
 
 export const litAuthClient: LitAuthClient = new LitAuthClient({
@@ -56,7 +56,7 @@ export function isSocialLoginSupported(provider: string): boolean {
 export async function signInWithGoogle(redirectUri: string): Promise<void> {
   const googleProvider = litAuthClient.initProvider<GoogleProvider>(
     ProviderType.Google,
-    { redirectUri }
+    { redirectUri },
   );
   await googleProvider.signIn();
 }
@@ -65,11 +65,11 @@ export async function signInWithGoogle(redirectUri: string): Promise<void> {
  * Get auth method object from redirect
  */
 export async function authenticateWithGoogle(
-  redirectUri: string
-): Promise<AuthMethod | undefined> {
+  redirectUri: string,
+): Promise<AuthMethod> {
   const googleProvider = litAuthClient.initProvider<GoogleProvider>(
     ProviderType.Google,
-    { redirectUri }
+    { redirectUri },
   );
   const authMethod = await googleProvider.authenticate();
   return authMethod;
@@ -81,7 +81,7 @@ export async function authenticateWithGoogle(
 export async function signInWithDiscord(redirectUri: string): Promise<void> {
   const discordProvider = litAuthClient.initProvider<DiscordProvider>(
     ProviderType.Discord,
-    { redirectUri }
+    { redirectUri },
   );
   await discordProvider.signIn();
 }
@@ -90,11 +90,11 @@ export async function signInWithDiscord(redirectUri: string): Promise<void> {
  * Get auth method object from redirect
  */
 export async function authenticateWithDiscord(
-  redirectUri: string
-): Promise<AuthMethod | undefined> {
+  redirectUri: string,
+): Promise<AuthMethod> {
   const discordProvider = litAuthClient.initProvider<DiscordProvider>(
     ProviderType.Discord,
-    { redirectUri }
+    { redirectUri },
   );
   const authMethod = await discordProvider.authenticate();
   return authMethod;
@@ -105,14 +105,14 @@ export async function authenticateWithDiscord(
  */
 export async function authenticateWithEthWallet(
   address?: string,
-  signMessage?: (message: string) => Promise<string>
-): Promise<AuthMethod | undefined> {
+  signMessage?: (message: string) => Promise<string>,
+): Promise<AuthMethod> {
   const ethWalletProvider = litAuthClient.initProvider<EthWalletProvider>(
     ProviderType.EthWallet,
     {
       domain: DOMAIN,
       origin: ORIGIN,
-    }
+    },
   );
   const authMethod = await ethWalletProvider.authenticate({
     address,
@@ -126,7 +126,7 @@ export async function authenticateWithEthWallet(
  */
 export async function registerWebAuthn(): Promise<IRelayPKP> {
   const provider = litAuthClient.initProvider<WebAuthnProvider>(
-    ProviderType.WebAuthn
+    ProviderType.WebAuthn,
   );
   // Register new WebAuthn credential
   const options = await provider.register();
@@ -148,13 +148,11 @@ export async function registerWebAuthn(): Promise<IRelayPKP> {
 /**
  * Get auth method object by authenticating with a WebAuthn credential
  */
-export async function authenticateWithWebAuthn(): Promise<
-  AuthMethod | undefined
-> {
+export async function authenticateWithWebAuthn(): Promise<AuthMethod> {
   let provider = litAuthClient.getProvider(ProviderType.WebAuthn);
   if (!provider) {
     provider = litAuthClient.initProvider<WebAuthnProvider>(
-      ProviderType.WebAuthn
+      ProviderType.WebAuthn,
     );
   }
   const authMethod = await provider.authenticate();
@@ -169,7 +167,7 @@ export async function sendOTPCode(emailOrPhone: string) {
     ProviderType.Otp,
     {
       userId: emailOrPhone,
-    } as unknown as ProviderOptions
+    } as unknown as ProviderOptions,
   );
   const status = await otpProvider.sendOtpCode();
   return status;
@@ -178,11 +176,12 @@ export async function sendOTPCode(emailOrPhone: string) {
 /**
  * Get auth method object by validating the OTP code
  */
-export async function authenticateWithOTP(
-  code: string
-): Promise<AuthMethod | undefined> {
-  const otpProvider = litAuthClient.getProvider(ProviderType.Otp);
-  const authMethod = await otpProvider?.authenticate({ code });
+export async function authenticateWithOTP(code: string): Promise<AuthMethod> {
+  let otpProvider = litAuthClient.getProvider(ProviderType.Otp);
+  if (!otpProvider) {
+    otpProvider = litAuthClient.initProvider<OtpProvider>(ProviderType.Otp);
+  }
+  const authMethod = await otpProvider.authenticate({ code });
   return authMethod;
 }
 
@@ -191,7 +190,7 @@ export async function authenticateWithOTP(
  */
 export async function authenticateWithStytch(
   accessToken: string,
-  userId?: string
+  userId?: string,
 ) {
   const provider = litAuthClient.initProvider(ProviderType.StytchOtp, {
     appId: process.env.NEXT_PUBLIC_STYTCH_PROJECT_ID || '',
@@ -248,7 +247,7 @@ export async function getSessionSigs({
 }
 
 export async function updateSessionSigs(
-  params: GetSessionSigsProps
+  params: GetSessionSigsProps,
 ): Promise<SessionSigs> {
   const sessionSigs = await litNodeClient.getSessionSigs(params);
   return sessionSigs;

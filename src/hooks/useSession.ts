@@ -7,6 +7,7 @@ import { SessionSigs } from '@lit-protocol/types';
 
 export default function useSession() {
   const [sessionSigs, setSessionSigs] = useState<SessionSigs>();
+  const [sessionSigsExpiration, setSessionSigsExpiration] = useState<Date>();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error>();
 
@@ -26,9 +27,7 @@ export default function useSession() {
             ability: LitAbility.PKPSigning,
           },
         ];
-        const expiration = new Date(
-          Date.now() + 1000 * 60 * 60 * 24 * 7
-        ).toISOString(); // 1 week
+        const expiration = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // 1 week
 
         // Generate session sigs
         const sessionSigs = await getSessionSigs({
@@ -36,24 +35,26 @@ export default function useSession() {
           authMethod,
           sessionSigsParams: {
             chain,
-            expiration,
+            expiration: expiration.toISOString(),
             resourceAbilityRequests: resourceAbilities,
           },
         });
 
         setSessionSigs(sessionSigs);
+        setSessionSigsExpiration(expiration);
       } catch (err: any) {
         setError(err);
       } finally {
         setLoading(false);
       }
     },
-    []
+    [],
   );
 
   return {
     initSession,
     sessionSigs,
+    sessionSigsExpiration,
     loading,
     error,
   };

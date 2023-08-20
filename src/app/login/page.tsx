@@ -10,6 +10,7 @@ import { LoadingWithCopy } from '@/components/Loading';
 import LoginMethods from '@/components/login/LoginMethods';
 import AccountSelection from '@/components/login/AccountSelection';
 import CreateAccount from '@/components/login/CreateAccount';
+import PKPStore from '@/store/PKPStore';
 
 export default function LoginView() {
   const redirectUri = ORIGIN + '/login';
@@ -34,6 +35,7 @@ export default function LoginView() {
   const {
     initSession,
     sessionSigs,
+    sessionSigsExpiration,
     loading: sessionLoading,
     error: sessionError,
   } = useSession();
@@ -88,6 +90,11 @@ export default function LoginView() {
 
   // If user is authenticated and has selected an account, initialize session
   if (currentAccount && sessionSigs) {
+    PKPStore.setAuthenticated(
+      currentAccount,
+      sessionSigs,
+      sessionSigsExpiration!,
+    );
     router.replace('/wallet');
   }
 

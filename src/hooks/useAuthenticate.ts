@@ -36,7 +36,7 @@ export default function useAuthenticate(redirectUri?: string) {
 
     try {
       const result: AuthMethod = (await authenticateWithGoogle(
-        redirectUri as any
+        redirectUri as any,
       )) as any;
       setAuthMethod(result);
     } catch (err: any) {
@@ -56,7 +56,7 @@ export default function useAuthenticate(redirectUri?: string) {
 
     try {
       const result: AuthMethod = (await authenticateWithDiscord(
-        redirectUri as any
+        redirectUri as any,
       )) as any;
       setAuthMethod(result);
     } catch (err: any) {
@@ -110,13 +110,13 @@ export default function useAuthenticate(redirectUri?: string) {
       try {
         const result: AuthMethod = await authenticateWithWebAuthn();
         setAuthMethod(result);
-      } catch (err) {
+      } catch (err: any) {
         setError(err);
       } finally {
         setLoading(false);
       }
     },
-    []
+    [],
   );
 
   /**
@@ -149,7 +149,7 @@ export default function useAuthenticate(redirectUri?: string) {
       try {
         const result: AuthMethod = (await authenticateWithStytch(
           accessToken,
-          userId
+          userId,
         )) as any;
         setAuthMethod(result);
       } catch (err: any) {
@@ -158,7 +158,7 @@ export default function useAuthenticate(redirectUri?: string) {
         setLoading(false);
       }
     },
-    []
+    [],
   );
 
   useEffect(() => {

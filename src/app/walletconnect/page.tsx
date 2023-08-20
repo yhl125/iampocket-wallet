@@ -2,10 +2,10 @@
 
 import { LoadingSmall } from '@/components/Loading';
 import Modal from '@/components/walletconnect-modal/Modal';
-import useAccounts from '@/hooks/useAccounts';
 import { web3wallet } from '@/utils/WalletConnectUtil';
 import { SetStateAction, useState } from 'react';
 import QrHandler from '@/components/walletconnect/QrHandler';
+import useWalletWithPKP from '@/hooks/useWalletWithPKP';
 
 function WalletConnectPage() {
   const [uri, setUri] = useState('');
@@ -16,7 +16,6 @@ function WalletConnectPage() {
       setLoading(true);
 
       await web3wallet.pair({ uri });
-      
     } catch (err: unknown) {
       alert(err);
     } finally {
@@ -25,7 +24,7 @@ function WalletConnectPage() {
     }
   }
 
-  useAccounts();
+  useWalletWithPKP();
 
   return (
     <>
@@ -57,5 +56,5 @@ function WalletConnectPage() {
       <Modal />
     </>
   );
-};
+}
 export default WalletConnectPage;
