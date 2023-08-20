@@ -5,7 +5,7 @@ import {
   getERC4337Signer,
   getERC4337SignerWithERC20Gas,
 } from './ERC4337WalletUtil';
-import { AuthSig } from '@lit-protocol/types';
+import { SessionSigs } from '@lit-protocol/types';
 import { providerOf } from './ProviderUtil';
 
 export const transfer = async (
@@ -13,17 +13,17 @@ export const transfer = async (
   amount: string,
   withPM: Boolean,
   pkpPubKey: string,
-  authSig: AuthSig,
-  chainId: number
+  sessionSigs: SessionSigs,
+  chainId: number,
 ) => {
   const signer = withPM
     ? await getERC4337SignerWithERC20Gas(
         'TEST_ERC20',
         pkpPubKey,
-        authSig,
-        chainId
+        sessionSigs,
+        chainId,
       )
-    : await getERC4337Signer(pkpPubKey, authSig, chainId);
+    : await getERC4337Signer(pkpPubKey, sessionSigs, chainId);
 
   const provider = providerOf(chainId);
   const feeData = await provider.getFeeData();
@@ -49,7 +49,7 @@ export const getEstimateGas = async (
   provider: ethers.providers.JsonRpcProvider,
   fromAddress: string,
   toAddress: string,
-  amount: string
+  amount: string,
 ) => {
   return await provider.estimateGas({
     from: fromAddress,
@@ -64,17 +64,17 @@ export const erc20Transfer = async (
   amountToSend: string,
   withPM: boolean,
   pkpPubKey: string,
-  authSig: AuthSig,
-  chaindId: number
+  sessionSigs: SessionSigs,
+  chaindId: number,
 ) => {
   const signer = withPM
     ? await getERC4337SignerWithERC20Gas(
         'TEST_ERC20',
         pkpPubKey,
-        authSig,
-        chaindId
+        sessionSigs,
+        chaindId,
       )
-    : await getERC4337Signer(pkpPubKey, authSig, chaindId);
+    : await getERC4337Signer(pkpPubKey, sessionSigs, chaindId);
 
   const provider = providerOf(chaindId);
   const feeData = await provider.getFeeData();

@@ -23,20 +23,18 @@ function TokenList() {
                 <tr key={idx}>
                   <td>
                     <div className="indicator">
-                      <span className="badge indicator-item p-0">
+                      <span className="badge indicator-item absolute p-0">
                         <Image
-                          src={
-                            EIP155_CHAINS[`eip155:${token.chainId}`].logo
-                          }
+                          src={EIP155_CHAINS[`eip155:${token.chainId}`].logo}
                           width={20}
                           height={20}
                           alt={'chain logo'}
-                          className='mask mask-circle'
+                          className="mask mask-circle"
                         ></Image>
                       </span>
                       <div className="avatar placeholder">
-                        <div className="w-12 rounded-full border-2 bg-neutral-focus text-neutral-content">
-                          <Image src={token.logoUrl} alt="" fill />
+                        <div className="relative w-12 rounded-full border-2 bg-neutral-focus text-neutral-content">
+                          <Image src={token.logoUrl} alt="" fill sizes="1x" />
                         </div>
                       </div>
                     </div>

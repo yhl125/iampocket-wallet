@@ -15,8 +15,13 @@ function ConnectedAppCard({
       <div>
         {metadata.icons.length > 0 && (
           <div className="avatar mr-4">
-            <div className="w-8 rounded">
-              <Image src={metadata.icons[0]} alt={metadata.name} fill />
+            <div className="relative w-8 rounded">
+              <Image
+                src={metadata.icons[0]}
+                alt={metadata.name}
+                fill
+                sizes="1x"
+              />
             </div>
           </div>
         )}

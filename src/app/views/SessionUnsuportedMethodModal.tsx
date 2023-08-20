@@ -42,5 +42,5 @@ function SessionUnsuportedMethodModal() {
       </div>
     </>
   );
-};
+}
 export default SessionUnsuportedMethodModal;

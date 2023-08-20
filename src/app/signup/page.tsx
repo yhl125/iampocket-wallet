@@ -5,15 +5,19 @@ import { useRouter } from 'next/navigation';
 import useAuthenticate from '@/hooks/useAuthenticate';
 import useSession from '@/hooks/useSession';
 import useAccounts from '@/hooks/useAccounts';
-import { ORIGIN, signInWithDiscord, signInWithGoogle } from '@/utils/lit';
+import {
+  ORIGIN,
+  registerWebAuthn,
+  signInWithDiscord,
+  signInWithGoogle,
+} from '@/utils/lit';
+import { AuthMethodType } from '@lit-protocol/constants';
+import SignUpMethods from '@/components/login/SignUpMethods';
 import { LoadingWithCopy } from '@/components/Loading';
-import LoginMethods from '@/components/login/LoginMethods';
-import AccountSelection from '@/components/login/AccountSelection';
-import CreateAccount from '@/components/login/CreateAccount';
 import PKPStore from '@/store/PKPStore';
 
-export default function LoginView() {
-  const redirectUri = ORIGIN + '/login';
+export default function SignUpView() {
+  const redirectUri = ORIGIN;
 
   const {
     authMethod,
@@ -25,10 +29,9 @@ export default function LoginView() {
     error: authError,
   } = useAuthenticate(redirectUri);
   const {
-    fetchAccounts,
+    createAccount,
     setCurrentAccount,
     currentAccount,
-    accounts,
     loading: accountsLoading,
     error: accountsError,
   } = useAccounts();
@@ -51,19 +54,23 @@ export default function LoginView() {
     await signInWithDiscord(redirectUri);
   }
 
-  function goToSignUp() {
-    router.push('/signup');
+  async function registerWithWebAuthn() {
+    const newPKP = await registerWebAuthn();
+    if (newPKP) {
+      setCurrentAccount(newPKP);
+    }
   }
 
   useEffect(() => {
-    // If user is authenticated, fetch accounts
-    if (authMethod) {
-      fetchAccounts(authMethod);
+    // If user is authenticated, create an account
+    // For WebAuthn, the account creation is handled by the registerWithWebAuthn function
+    if (authMethod && authMethod.authMethodType !== AuthMethodType.WebAuthn) {
+      createAccount(authMethod);
     }
-  }, [authMethod, fetchAccounts]);
+  }, [authMethod, createAccount, router]);
 
   useEffect(() => {
-    // If user is authenticated and has selected an account, initialize session
+    // If user is authenticated and has at least one account, initialize session
     if (authMethod && currentAccount) {
       initSession(authMethod, currentAccount);
     }
@@ -79,16 +86,13 @@ export default function LoginView() {
   }
 
   if (accountsLoading) {
-    return (
-      <LoadingWithCopy copy={'Looking up your accounts...'} error={error} />
-    );
+    return <LoadingWithCopy copy={'Creating your account...'} error={error} />;
   }
 
   if (sessionLoading) {
     return <LoadingWithCopy copy={'Securing your session...'} error={error} />;
   }
 
-  // If user is authenticated and has selected an account, initialize session
   if (currentAccount && sessionSigs) {
     PKPStore.setAuthenticated(
       currentAccount,
@@ -96,35 +100,19 @@ export default function LoginView() {
       sessionSigsExpiration!,
     );
     router.replace('/wallet');
-  }
-
-  // If user is authenticated and has more than 1 account, show account selection
-  if (authMethod && accounts.length > 0) {
+  } else {
     return (
-      <AccountSelection
-        accounts={accounts}
-        setCurrentAccount={setCurrentAccount}
+      <SignUpMethods
+        handleGoogleLogin={handleGoogleLogin}
+        handleDiscordLogin={handleDiscordLogin}
+        // authWithEthWallet={authWithEthWallet}
+        authWithOTP={authWithOTP}
+        registerWithWebAuthn={registerWithWebAuthn}
+        authWithWebAuthn={authWithWebAuthn}
+        authWithStytch={authWithStytch}
+        goToLogin={() => router.push('/login')}
         error={error}
       />
     );
   }
-
-  // If user is authenticated but has no accounts, prompt to create an account
-  if (authMethod && accounts.length === 0) {
-    return <CreateAccount signUp={goToSignUp} error={error} />;
-  }
-
-  // If user is not authenticated, show login methods
-  return (
-    <LoginMethods
-      handleGoogleLogin={handleGoogleLogin}
-      handleDiscordLogin={handleDiscordLogin}
-      // authWithEthWallet={authWithEthWallet}
-      authWithOTP={authWithOTP}
-      authWithWebAuthn={authWithWebAuthn}
-      authWithStytch={authWithStytch}
-      signUp={goToSignUp}
-      error={error}
-    />
-  );
 }
