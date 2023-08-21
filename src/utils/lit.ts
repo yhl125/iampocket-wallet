@@ -17,11 +17,8 @@ import {
   SessionSigs,
 } from '@lit-protocol/types';
 
-export const DOMAIN = process.env.NEXT_PUBLIC_PROD_URL || 'localhost';
-export const ORIGIN =
-  process.env.NEXT_PUBLIC_ENV === 'production'
-    ? `https://${DOMAIN}`
-    : `http://${DOMAIN}:3000`;
+export const DOMAIN = window.location.hostname;
+export const ORIGIN = window.location.origin;
 
 export const litNodeClient: LitNodeClient = new LitNodeClient({
   alertWhenUnauthorized: false,
