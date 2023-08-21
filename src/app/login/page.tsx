@@ -11,10 +11,11 @@ import LoginMethods from '@/components/login/LoginMethods';
 import AccountSelection from '@/components/login/AccountSelection';
 import CreateAccount from '@/components/login/CreateAccount';
 import PKPStore from '@/store/PKPStore';
+import { useIsMounted } from '@/hooks/useIsMounted';
 
 export default function LoginView() {
   const redirectUri = ORIGIN + '/login';
-
+  const mounted = useIsMounted();
   const {
     authMethod,
     // authWithEthWallet,
@@ -51,10 +52,6 @@ export default function LoginView() {
     await signInWithDiscord(redirectUri);
   }
 
-  function goToSignUp() {
-    router.push('/signup');
-  }
-
   useEffect(() => {
     // If user is authenticated, fetch accounts
     if (authMethod) {
@@ -68,6 +65,30 @@ export default function LoginView() {
       initSession(authMethod, currentAccount);
     }
   }, [authMethod, currentAccount, initSession]);
+
+  useEffect(() => {
+    // If user is authenticated and has selected an account, initialize session
+    if (currentAccount && sessionSigs) {
+      PKPStore.setAuthenticated(
+        currentAccount,
+        sessionSigs,
+        sessionSigsExpiration!,
+      );
+      router.replace('/wallet');
+    }
+  }, [currentAccount, sessionSigs]);
+
+  // If user is authenticated and has 1 account, immediately set current account rerender
+  useEffect(() => {
+    if (authMethod && accounts.length === 1) {
+      PKPStore.setAuthenticated(
+        accounts[0],
+        sessionSigs!,
+        sessionSigsExpiration!,
+      );
+      router.replace('/wallet');
+    }
+  }, [authMethod, accounts]);
 
   if (authLoading) {
     return (
@@ -88,18 +109,8 @@ export default function LoginView() {
     return <LoadingWithCopy copy={'Securing your session...'} error={error} />;
   }
 
-  // If user is authenticated and has selected an account, initialize session
-  if (currentAccount && sessionSigs) {
-    PKPStore.setAuthenticated(
-      currentAccount,
-      sessionSigs,
-      sessionSigsExpiration!,
-    );
-    router.replace('/wallet');
-  }
-
   // If user is authenticated and has more than 1 account, show account selection
-  if (authMethod && accounts.length > 0) {
+  if (authMethod && accounts.length > 1) {
     return (
       <AccountSelection
         accounts={accounts}
@@ -111,20 +122,23 @@ export default function LoginView() {
 
   // If user is authenticated but has no accounts, prompt to create an account
   if (authMethod && accounts.length === 0) {
-    return <CreateAccount signUp={goToSignUp} error={error} />;
+    return (
+      <CreateAccount signUp={() => router.replace('/signup')} error={error} />
+    );
   }
-
   // If user is not authenticated, show login methods
   return (
-    <LoginMethods
-      handleGoogleLogin={handleGoogleLogin}
-      handleDiscordLogin={handleDiscordLogin}
-      // authWithEthWallet={authWithEthWallet}
-      authWithOTP={authWithOTP}
-      authWithWebAuthn={authWithWebAuthn}
-      authWithStytch={authWithStytch}
-      signUp={goToSignUp}
-      error={error}
-    />
+    mounted && (
+      <LoginMethods
+        handleGoogleLogin={handleGoogleLogin}
+        handleDiscordLogin={handleDiscordLogin}
+        // authWithEthWallet={authWithEthWallet}
+        authWithOTP={authWithOTP}
+        authWithWebAuthn={authWithWebAuthn}
+        authWithStytch={authWithStytch}
+        signUp={() => router.replace('/signup')}
+        error={error}
+      />
+    )
   );
 }
