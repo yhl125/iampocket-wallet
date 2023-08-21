@@ -76,7 +76,7 @@ export default function LoginView() {
       );
       router.replace('/wallet');
     }
-  }, [currentAccount, sessionSigs]);
+  }, [currentAccount, router, sessionSigs, sessionSigsExpiration]);
 
   // If user is authenticated and has 1 account, immediately set current account rerender
   useEffect(() => {
@@ -88,7 +88,7 @@ export default function LoginView() {
       );
       router.replace('/wallet');
     }
-  }, [authMethod, accounts]);
+  }, [authMethod, accounts, sessionSigs, sessionSigsExpiration, router]);
 
   if (authLoading) {
     return (
