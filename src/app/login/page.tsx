@@ -63,8 +63,10 @@ export default function LoginView() {
     // If user is authenticated and has selected an account, initialize session
     if (authMethod && currentAccount) {
       initSession(authMethod, currentAccount);
+    } else if (authMethod && accounts.length === 1) {
+      initSession(authMethod, accounts[0]);
     }
-  }, [authMethod, currentAccount, initSession]);
+  }, [accounts, authMethod, currentAccount, initSession]);
 
   useEffect(() => {
     // If user is authenticated and has selected an account, initialize session
@@ -80,10 +82,10 @@ export default function LoginView() {
 
   // If user is authenticated and has 1 account, immediately set current account rerender
   useEffect(() => {
-    if (authMethod && accounts.length === 1) {
+    if (authMethod && accounts.length === 1 && sessionSigs) {
       PKPStore.setAuthenticated(
         accounts[0],
-        sessionSigs!,
+        sessionSigs,
         sessionSigsExpiration!,
       );
       router.replace('/wallet');
