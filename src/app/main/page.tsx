@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 function MainPage() {
   const router = useRouter();
   return (
-    <div className="hero mt-24">
+    <div className="hero">
       <div className="hero-content text-center">
         <div className="max-w-md">
           <h1 className="text-3xl font-bold">Welcome to iamPocket</h1>
