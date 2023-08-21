@@ -11,10 +11,11 @@ import LoginMethods from '@/components/login/LoginMethods';
 import AccountSelection from '@/components/login/AccountSelection';
 import CreateAccount from '@/components/login/CreateAccount';
 import PKPStore from '@/store/PKPStore';
+import { useIsMounted } from '@/hooks/useIsMounted';
 
 export default function LoginView() {
   const redirectUri = ORIGIN + '/login';
-
+  const mounted = useIsMounted();
   const {
     authMethod,
     // authWithEthWallet,
@@ -76,7 +77,7 @@ export default function LoginView() {
       router.replace('/wallet');
     }
   }, [currentAccount, sessionSigs]);
-  
+
   // If user is authenticated and has 1 account, immediately set current account rerender
   useEffect(() => {
     if (authMethod && accounts.length === 1) {
@@ -126,8 +127,8 @@ export default function LoginView() {
     );
   }
   // If user is not authenticated, show login methods
-  if (authMethod == undefined) {
-    return (
+  return (
+    mounted && (
       <LoginMethods
         handleGoogleLogin={handleGoogleLogin}
         handleDiscordLogin={handleDiscordLogin}
@@ -138,6 +139,6 @@ export default function LoginView() {
         signUp={() => router.replace('/signup')}
         error={error}
       />
-    );
-  }
+    )
+  );
 }
