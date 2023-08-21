@@ -51,10 +51,6 @@ export default function LoginView() {
     await signInWithDiscord(redirectUri);
   }
 
-  function goToSignUp() {
-    router.push('/signup');
-  }
-
   useEffect(() => {
     // If user is authenticated, fetch accounts
     if (authMethod) {
@@ -68,6 +64,18 @@ export default function LoginView() {
       initSession(authMethod, currentAccount);
     }
   }, [authMethod, currentAccount, initSession]);
+  
+  useEffect(() => {
+    // If user is authenticated and has selected an account, initialize session
+    if (currentAccount && sessionSigs) {
+      PKPStore.setAuthenticated(
+        currentAccount,
+        sessionSigs,
+        sessionSigsExpiration!,
+      );
+      router.replace('/wallet');
+    }
+  }, [currentAccount, sessionSigs]);
 
   if (authLoading) {
     return (
@@ -88,16 +96,6 @@ export default function LoginView() {
     return <LoadingWithCopy copy={'Securing your session...'} error={error} />;
   }
 
-  // If user is authenticated and has selected an account, initialize session
-  if (currentAccount && sessionSigs) {
-    PKPStore.setAuthenticated(
-      currentAccount,
-      sessionSigs,
-      sessionSigsExpiration!,
-    );
-    router.replace('/wallet');
-  }
-
   // If user is authenticated and has more than 1 account, show account selection
   if (authMethod && accounts.length > 0) {
     return (
@@ -111,7 +109,9 @@ export default function LoginView() {
 
   // If user is authenticated but has no accounts, prompt to create an account
   if (authMethod && accounts.length === 0) {
-    return <CreateAccount signUp={goToSignUp} error={error} />;
+    return (
+      <CreateAccount signUp={() => router.replace('/signup')} error={error} />
+    );
   }
 
   // If user is not authenticated, show login methods
@@ -123,7 +123,7 @@ export default function LoginView() {
       authWithOTP={authWithOTP}
       authWithWebAuthn={authWithWebAuthn}
       authWithStytch={authWithStytch}
-      signUp={goToSignUp}
+      signUp={() => router.replace('/signup')}
       error={error}
     />
   );
