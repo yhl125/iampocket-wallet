@@ -64,7 +64,7 @@ export default function LoginView() {
       initSession(authMethod, currentAccount);
     }
   }, [authMethod, currentAccount, initSession]);
-  
+
   useEffect(() => {
     // If user is authenticated and has selected an account, initialize session
     if (currentAccount && sessionSigs) {
@@ -76,6 +76,18 @@ export default function LoginView() {
       router.replace('/wallet');
     }
   }, [currentAccount, sessionSigs]);
+  
+  // If user is authenticated and has 1 account, immediately set current account rerender
+  useEffect(() => {
+    if (authMethod && accounts.length === 1) {
+      PKPStore.setAuthenticated(
+        accounts[0],
+        sessionSigs!,
+        sessionSigsExpiration!,
+      );
+      router.replace('/wallet');
+    }
+  }, [authMethod, accounts]);
 
   if (authLoading) {
     return (
@@ -97,7 +109,7 @@ export default function LoginView() {
   }
 
   // If user is authenticated and has more than 1 account, show account selection
-  if (authMethod && accounts.length > 0) {
+  if (authMethod && accounts.length > 1) {
     return (
       <AccountSelection
         accounts={accounts}
@@ -113,18 +125,19 @@ export default function LoginView() {
       <CreateAccount signUp={() => router.replace('/signup')} error={error} />
     );
   }
-
   // If user is not authenticated, show login methods
-  return (
-    <LoginMethods
-      handleGoogleLogin={handleGoogleLogin}
-      handleDiscordLogin={handleDiscordLogin}
-      // authWithEthWallet={authWithEthWallet}
-      authWithOTP={authWithOTP}
-      authWithWebAuthn={authWithWebAuthn}
-      authWithStytch={authWithStytch}
-      signUp={() => router.replace('/signup')}
-      error={error}
-    />
-  );
+  if (authMethod == undefined) {
+    return (
+      <LoginMethods
+        handleGoogleLogin={handleGoogleLogin}
+        handleDiscordLogin={handleDiscordLogin}
+        // authWithEthWallet={authWithEthWallet}
+        authWithOTP={authWithOTP}
+        authWithWebAuthn={authWithWebAuthn}
+        authWithStytch={authWithStytch}
+        signUp={() => router.replace('/signup')}
+        error={error}
+      />
+    );
+  }
 }
