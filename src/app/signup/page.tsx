@@ -86,7 +86,7 @@ export default function SignUpView() {
       );
       router.replace('/wallet');
     }
-  }, [currentAccount, sessionSigs]);
+  }, [currentAccount, router, sessionSigs, sessionSigsExpiration]);
 
   if (authLoading) {
     return (
