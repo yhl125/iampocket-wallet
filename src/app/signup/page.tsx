@@ -17,7 +17,7 @@ import { LoadingWithCopy } from '@/components/Loading';
 import PKPStore from '@/store/PKPStore';
 
 export default function SignUpView() {
-  const redirectUri = ORIGIN;
+  const redirectUri = ORIGIN + '/signup';
 
   const {
     authMethod,
@@ -76,6 +76,18 @@ export default function SignUpView() {
     }
   }, [authMethod, currentAccount, initSession]);
 
+  useEffect(() => {
+    // If user is authenticated and has selected an account, initialize session
+    if (currentAccount && sessionSigs) {
+      PKPStore.setAuthenticated(
+        currentAccount,
+        sessionSigs,
+        sessionSigsExpiration!,
+      );
+      router.replace('/wallet');
+    }
+  }, [currentAccount, sessionSigs]);
+
   if (authLoading) {
     return (
       <LoadingWithCopy
@@ -93,26 +105,17 @@ export default function SignUpView() {
     return <LoadingWithCopy copy={'Securing your session...'} error={error} />;
   }
 
-  if (currentAccount && sessionSigs) {
-    PKPStore.setAuthenticated(
-      currentAccount,
-      sessionSigs,
-      sessionSigsExpiration!,
-    );
-    router.replace('/wallet');
-  } else {
-    return (
-      <SignUpMethods
-        handleGoogleLogin={handleGoogleLogin}
-        handleDiscordLogin={handleDiscordLogin}
-        // authWithEthWallet={authWithEthWallet}
-        authWithOTP={authWithOTP}
-        registerWithWebAuthn={registerWithWebAuthn}
-        authWithWebAuthn={authWithWebAuthn}
-        authWithStytch={authWithStytch}
-        goToLogin={() => router.push('/login')}
-        error={error}
-      />
-    );
-  }
+  return (
+    <SignUpMethods
+      handleGoogleLogin={handleGoogleLogin}
+      handleDiscordLogin={handleDiscordLogin}
+      // authWithEthWallet={authWithEthWallet}
+      authWithOTP={authWithOTP}
+      registerWithWebAuthn={registerWithWebAuthn}
+      authWithWebAuthn={authWithWebAuthn}
+      authWithStytch={authWithStytch}
+      goToLogin={() => router.push('/login')}
+      error={error}
+    />
+  );
 }
