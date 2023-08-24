@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import TransferTokenForm from '@/components/transfer/TransferTokenFrom';
+import TransferTokenForm from '@/components/transfer/TransferTokenForm';
 
 function TransferToken() {
   const router = useRouter();
