@@ -15,9 +15,11 @@ import { AuthMethodType } from '@lit-protocol/constants';
 import SignUpMethods from '@/components/login/SignUpMethods';
 import { LoadingWithCopy } from '@/components/Loading';
 import PKPStore from '@/store/PKPStore';
+import { useIsMounted } from '@/hooks/useIsMounted';
 
 export default function SignUpView() {
   const redirectUri = ORIGIN + '/signup';
+  const mounted = useIsMounted();
 
   const {
     authMethod,
@@ -106,16 +108,18 @@ export default function SignUpView() {
   }
 
   return (
-    <SignUpMethods
-      handleGoogleLogin={handleGoogleLogin}
-      handleDiscordLogin={handleDiscordLogin}
-      // authWithEthWallet={authWithEthWallet}
-      authWithOTP={authWithOTP}
-      registerWithWebAuthn={registerWithWebAuthn}
-      authWithWebAuthn={authWithWebAuthn}
-      authWithStytch={authWithStytch}
-      goToLogin={() => router.push('/login')}
-      error={error}
-    />
+    mounted && (
+      <SignUpMethods
+        handleGoogleLogin={handleGoogleLogin}
+        handleDiscordLogin={handleDiscordLogin}
+        // authWithEthWallet={authWithEthWallet}
+        authWithOTP={authWithOTP}
+        registerWithWebAuthn={registerWithWebAuthn}
+        authWithWebAuthn={authWithWebAuthn}
+        authWithStytch={authWithStytch}
+        goToLogin={() => router.push('/login')}
+        error={error}
+      />
+    )
   );
 }
