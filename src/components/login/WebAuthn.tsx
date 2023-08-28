@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { registerWebAuthn } from '@/utils/lit';
 import { AuthView } from './SignUpMethods';
 
 type WebAuthnStep = 'register' | 'authenticate';
@@ -25,7 +24,7 @@ export default function WebAuthn({
     setError(undefined);
     setLoading(true);
     try {
-      await registerWebAuthn();
+      await registerWithWebAuthn();
       setStep('authenticate');
     } catch (err: any) {
       console.error(err);
