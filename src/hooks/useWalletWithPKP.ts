@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { useSnapshot } from 'valtio';
 
 function useWalletWithPKP() {
-  const { erc4337Address } = useSnapshot(AddressStore.state);
+  const { zeroDevAddress } = useSnapshot(AddressStore.state);
   const { isAuthenticated, currentPKP, sessionSigs, sessionExpiration } =
     useSnapshot(PKPStore.state);
   const router = useRouter();
@@ -19,12 +19,12 @@ function useWalletWithPKP() {
       PKPStore.setUnauthenticated();
       router.replace('/login');
     }
-    if (!erc4337Address && currentPKP && sessionSigs) {
+    if (!zeroDevAddress && currentPKP && sessionSigs) {
       createOrRestoreERC4337Wallet(currentPKP.publicKey, sessionSigs);
     }
   }, [
     isAuthenticated,
-    erc4337Address,
+    zeroDevAddress,
     currentPKP,
     sessionSigs,
     sessionExpiration,
