@@ -1,6 +1,5 @@
-import { ChainData, ChainsData, TokenData } from '@/data/SquidData';
+import { ChainsData, TokenData } from '@/data/SquidData';
 import { proxyWithLocalStorage } from '@/utils/StoreUtil';
-import { proxy } from 'valtio';
 
 export interface State {
   isSquidInit: Boolean;
