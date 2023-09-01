@@ -93,6 +93,9 @@ function Wallet() {
                 <li>
                   <Link href={'/walletconnect'}>Connect Wallet</Link>
                 </li>
+                <li>
+                  <Link href = {'/squid'}>Squid</Link>
+                </li>
               </ul>
             </div>
           </div>
