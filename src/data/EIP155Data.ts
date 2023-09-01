@@ -37,13 +37,13 @@ export const EIP155_MAINNET_CHAINS: IEIP155ChainMap = {
     chainId: 42161,
     name: 'Arbitrum One',
     logo: '/chain-logos/eip155/42161.svg',
-    rpc: 'https://endpoints.omniatech.io/v1/arbitrum/one/public',
+    rpc: 'https://arbitrum-one.publicnode.com',
   },
   'eip155:10': {
     chainId: 10,
     name: 'Optimism',
     logo: '/chain-logos/eip155/10.svg',
-    rpc: 'https://endpoints.omniatech.io/v1/op/mainnet/public',
+    rpc: 'https://opt-mainnet.g.alchemy.com/v2/4E6r9coYpsSH3LTm-HJnfcVWlvYDt5v7',
   },
   'eip155:43114': {
     chainId: 43114,
@@ -104,3 +104,6 @@ export const EIP155_SIGNING_METHODS = {
   ETH_SEND_RAW_TRANSACTION: 'eth_sendRawTransaction',
   ETH_SEND_TRANSACTION: 'eth_sendTransaction',
 };
+
+export const enabledMainnetChainIds = [10, 42161]
+export const enabledTestnetChainIds = [5, 80001, 421613, 420]
