@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@0xsquid/sdk": "^1.8.0",
     "@apollo/client": "^3.8.0",
     "@apollo/experimental-nextjs-app-support": "^0.4.1",
     "@headlessui/react": "^1.7.16",
