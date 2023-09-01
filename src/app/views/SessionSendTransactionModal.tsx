@@ -7,7 +7,7 @@ import RequestModalContainer from '@/components/walletconnect-modal/RequestModal
 import ModalStore from '@/store/ModalStore';
 import PKPStore from '@/store/PKPStore';
 import {
-  approveEIP155Request,
+  approveEIP155RequestZeroDev,
   rejectEIP155Request,
 } from '@/utils/EIP155RequestHandlerUtil';
 import { web3wallet } from '@/utils/WalletConnectUtil';
@@ -38,7 +38,7 @@ function SessionSendTransactionModal() {
   async function onApprove() {
     if (requestEvent) {
       setLoading(true);
-      const response = await approveEIP155Request(
+      const response = await approveEIP155RequestZeroDev(
         requestEvent,
         currentPKP!.publicKey,
         sessionSigs!,

@@ -1,4 +1,4 @@
-import { EIP155_SIGNING_METHODS } from '@/data/EIP155Data';
+import { EIP155_CHAINS, EIP155_SIGNING_METHODS } from '@/data/EIP155Data';
 import {
   getSignParamsMessage,
   getSignTypedDataParamsData,
@@ -9,17 +9,21 @@ import {
   formatJsonRpcError,
   formatJsonRpcResult,
 } from '@walletconnect/jsonrpc-utils';
-import { getERC4337Signer } from './ERC4337WalletUtil';
+import { zeroDevSigner } from './ERC4337WalletUtil';
 import { SessionSigs } from '@lit-protocol/types';
 
-export async function approveEIP155Request(
+export async function approveEIP155RequestZeroDev(
   requestEvent: SignClientTypes.EventArguments['session_request'],
   publicKey: string,
   sessionSigs: SessionSigs,
 ) {
   const { params, id } = requestEvent;
   const { chainId, request } = params;
-  const erc4337Wallet = await getERC4337Signer(publicKey, sessionSigs);
+  const erc4337Wallet = await zeroDevSigner(
+    publicKey,
+    sessionSigs,
+    EIP155_CHAINS[chainId].chainId,
+  );
 
   switch (request.method) {
     case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
