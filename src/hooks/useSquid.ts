@@ -7,11 +7,9 @@ import SquidStore from '@/store/SquidStore';
 import { TokenData, ChainData, ChainsData } from '@/data/SquidData';
 
 export default function useSquid() {
-  const { erc4337Address } = useSnapshot(AddressStore.state);
-  const { isAuthenticated, currentPKP, sessionSigs, sessionExpiration } =
-    useSnapshot(PKPStore.state);
+  const { zeroDevAddress } = useSnapshot(AddressStore.state);
+  const { isAuthenticated, sessionSigs } = useSnapshot(PKPStore.state);
   const { isSquidInit } = useSnapshot(SquidStore.state);
-
   const squidInit = async () => {
     const squid = new Squid({
       baseUrl: 'https://testnet.api.squidrouter.com', // for mainnet use "https://api.0xsquid.com"
@@ -32,7 +30,7 @@ export default function useSquid() {
       console.log('Not Authenticated');
       return;
     }
-    if (erc4337Address && sessionSigs && isSquidInit === false) {
+    if (zeroDevAddress && sessionSigs && isSquidInit === false) {
       console.log(isSquidInit);
       squidInit().then((res: Squid) => {
         SquidStore.setSquidInit();
@@ -44,15 +42,15 @@ export default function useSquid() {
       });
       return;
     }
-    if (erc4337Address && sessionSigs && isSquidInit === true) {
+    if (zeroDevAddress && sessionSigs && isSquidInit === true) {
       return;
     }
     if (
-      erc4337Address === '' &&
+      zeroDevAddress === '' &&
       sessionSigs === undefined &&
       isSquidInit === false
     ) {
       return;
     }
-  }, [erc4337Address, sessionSigs, isAuthenticated]);
+  }, [zeroDevAddress, sessionSigs, isAuthenticated]);
 }
