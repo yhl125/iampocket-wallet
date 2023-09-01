@@ -6,12 +6,15 @@ import Image from 'next/image';
 import copyClipboardSVG from 'public/copyToClipboard.svg';
 import { useRouter } from 'next/navigation';
 import { truncateAddress } from '@/utils/HelperUtil';
-import { providerOf } from '@/utils/ProviderUtil';
 import { useEffect, useState } from 'react';
 import AddressStore from '@/store/AddressStore';
 import TokenList from './tokenList';
 import FetchTokens from './fetchToken';
 import useWalletWithPKP from '@/hooks/useWalletWithPKP';
+import {
+  enabledMainnetChainIds,
+  enabledTestnetChainIds,
+} from '@/data/EIP155Data';
 
 function Wallet() {
   useWalletWithPKP();
@@ -53,7 +56,7 @@ function Wallet() {
                 </div>
               </div>
             </div>
-            <div className="dropdown dropdown-end absolute right-0 top-0 py-2">
+            <div className="dropdown-end dropdown absolute right-0 top-0 py-2">
               <label
                 tabIndex={0}
                 className="setting-button btn btn-square btn-ghost"
@@ -97,7 +100,7 @@ function Wallet() {
             </div>
             <FetchTokens
               address={erc4337Address}
-              chainIds={[5, 80001, 421613, 420]}
+              chainIds={[...enabledMainnetChainIds, ...enabledTestnetChainIds]}
               quoteCurrency={'USD'}
             />
             <TokenList />

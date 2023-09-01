@@ -11,6 +11,12 @@ export function providerOf(chainId: number) {
 
 export function projectIdOf(chainId: number) {
   switch (chainId) {
+    // Mainnet
+    case 10:
+      return process.env.NEXT_PUBLIC_OPTIMISM_PROJECT_ID!;
+    case 42161:
+      return process.env.NEXT_PUBLIC_ARBITRUM_PROJECT_ID!;
+    // Testnet
     case 5:
       return process.env.NEXT_PUBLIC_GOERLI_PROJECT_ID!;
     case 80001:
