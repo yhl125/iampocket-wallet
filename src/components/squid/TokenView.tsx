@@ -32,7 +32,7 @@ export default function TokenView(props: TokenViewProps) {
         (token) => props.selectedChain.chainId === token.chainId,
       )[0],
     );
-  }, [props.selectedChain]);
+  }, [props, props.selectedChain, tokenDataList]);
   return (
     <div className="token-container px-5">
       <div className="header flex flex-row items-center justify-between py-4">

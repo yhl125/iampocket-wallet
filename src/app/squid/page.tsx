@@ -11,6 +11,8 @@ import { ChainView } from '@/components/squid/ChainView';
 import SquidStore from '@/store/SquidStore';
 import { useSnapshot } from 'valtio';
 import TokenView from '@/components/squid/TokenView';
+import { SquidTransactionParams, squidTransaction } from '@/utils/squidUtil';
+import PKPStore from '@/store/PKPStore';
 /**
  * Types
  */
@@ -97,9 +99,25 @@ export default function SquidPage() {
   const [selectedToChain, setSelectedToChain] = useState(initialToChainData);
   const [selectedToToken, setSelectedToToken] = useState(tokenDataList[0]);
   const [sendAmount, setSendAmount] = useState<string>('0');
+  const { sessionSigs, currentPKP } = useSnapshot(PKPStore.state);
 
   const isMounted = useIsMounted();
-  useSquid();
+  const squid = useSquid();
+
+  async function handleSubmit() {
+    const squiTransactionParams: SquidTransactionParams = {
+      selectedFromChain: selectedFromChain,
+      selectedToChain: selectedToChain,
+      selectedFromToken: selectedFromToken,
+      selectedToToken: selectedToToken,
+      sendAmount: sendAmount,
+      pkpPubKey: currentPKP!.publicKey,
+      sessionSigs: sessionSigs!,
+      withPM: false,
+      squid: squid,
+    };
+    squidTransaction(squiTransactionParams);
+  }
 
   return (
     isMounted && (
@@ -125,7 +143,12 @@ export default function SquidPage() {
                   <div>Estimated fee</div>
                 </div>
               </div>
-              <div className="btn mt-8 w-full">Submit</div>
+              <button
+                className="btn mt-8 w-full"
+                onClick={() => handleSubmit()}
+              >
+                Submit
+              </button>
             </div>
           </div>
         )}
@@ -146,10 +169,10 @@ export default function SquidPage() {
         )}
         {view === 'chainTo' && (
           <ChainView
-          setView={setView}
-          setSelectedChain={setSelectedToChain}
-          selectedChain={selectedToChain}
-        ></ChainView>
+            setView={setView}
+            setSelectedChain={setSelectedToChain}
+            selectedChain={selectedToChain}
+          ></ChainView>
         )}
         {view === 'tokenTo' && (
           <TokenView

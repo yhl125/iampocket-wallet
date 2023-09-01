@@ -47,7 +47,7 @@ function TransferTokenForm() {
     useState<string>('');
   const { currentPKP, sessionSigs } = useSnapshot(PKPStore.state);
 
-  const handleSubmit = async (event: any) => {
+  async function handleSubmit(event: any) {
     setTransactionLoading(true);
     if (!selectedToken.nativeToken) {
       if (selectedWallet === 'biconomy') {
