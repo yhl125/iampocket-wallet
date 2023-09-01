@@ -4,14 +4,18 @@ import { proxyWithLocalStorage } from '@/utils/StoreUtil';
  * Types
  */
 interface State {
-  erc4337Address: string;
+  zeroDevAddress: string;
+  biconomyAddress: string;
+  selectedWallet: 'zeroDev' | 'biconomy';
 }
 
 /**
  * State
  */
-const state = proxyWithLocalStorage<State>('AddressState',{
-  erc4337Address: '',
+const state = proxyWithLocalStorage<State>('AddressState', {
+  zeroDevAddress: '',
+  biconomyAddress: '',
+  selectedWallet: 'zeroDev',
 });
 
 /**
@@ -19,9 +23,15 @@ const state = proxyWithLocalStorage<State>('AddressState',{
  */
 const AddressStore = {
   state,
-  setERC4337Address(erc4337Address: string) {
-    state.erc4337Address = erc4337Address;
+  setZeroDevAddress(zerodevAddress: string) {
+    state.zeroDevAddress = zerodevAddress;
   },
+  setBiconomyAddress(biconomyAddress: string) {
+    state.biconomyAddress = biconomyAddress;
+  },
+  setSelectedWallet(selectedWallet: 'zeroDev' | 'biconomy') {
+    state.selectedWallet = selectedWallet;
+  }
 };
 
 export default AddressStore;

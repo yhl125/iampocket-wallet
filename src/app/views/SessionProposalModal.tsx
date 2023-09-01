@@ -17,7 +17,8 @@ function SessionProposalModal() {
     Record<string, string[]>
   >({});
   const hasSelected = Object.keys(selectedAccounts).length;
-  const { erc4337Address } = useSnapshot(AddressStore.state);
+  // biconomy don't have sign features, so we don't need to use it currently
+  const { zeroDevAddress } = useSnapshot(AddressStore.state);
   const router = useRouter();
 
   // Get proposal data and wallet address from store
@@ -145,7 +146,7 @@ function SessionProposalModal() {
     if (isEIP155Chain(chain)) {
       return (
         <ProposalSelectSection
-          addresses={[erc4337Address]}
+          addresses={[zeroDevAddress]}
           selectedAddresses={selectedAccounts[chain]}
           onSelect={onSelectAccount}
           chain={chain}

@@ -7,11 +7,11 @@ import MainPage from './main/page';
 import AddressStore from '@/store/AddressStore';
 
 function Home() {
-  const { erc4337Address } = useSnapshot(AddressStore.state);
+  const { zeroDevAddress } = useSnapshot(AddressStore.state);
   const router = useRouter();
   useEffect(() => {
-    if (erc4337Address != '') router.push('/wallet');
-  }, [erc4337Address, router]);
+    if (zeroDevAddress != '') router.push('/wallet');
+  }, [zeroDevAddress, router]);
 
   return <MainPage />;
 };

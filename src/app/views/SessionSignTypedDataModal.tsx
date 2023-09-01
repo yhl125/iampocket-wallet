@@ -6,7 +6,7 @@ import RequestModalContainer from '@/components/walletconnect-modal/RequestModal
 import ModalStore from '@/store/ModalStore';
 import PKPStore from '@/store/PKPStore';
 import {
-  approveEIP155Request,
+  approveEIP155RequestZeroDev,
   rejectEIP155Request,
 } from '@/utils/EIP155RequestHandlerUtil';
 import { getSignTypedDataParamsData } from '@/utils/HelperUtil';
@@ -34,7 +34,7 @@ function SessionSignTypedDataModal() {
   // Handle approve action (logic varies based on request method)
   async function onApprove() {
     if (requestEvent) {
-      const response = await approveEIP155Request(
+      const response = await approveEIP155RequestZeroDev(
         requestEvent,
         currentPKP!.publicKey,
         sessionSigs!,
