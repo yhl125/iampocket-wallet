@@ -5,7 +5,12 @@ import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import TokenStore, { TokenState } from '@/store/TokenStore';
 import { useRouter } from 'next/navigation';
-import { transfer, erc20Transfer } from '@/utils/transferUtils';
+import {
+  zeroDevTransfer,
+  zeroDevErc20Transfer,
+  biconomyErc20Transfer,
+  biconomyTransfer,
+} from '@/utils/transferUtils';
 import PKPStore from '@/store/PKPStore';
 import AddressStore from '@/store/AddressStore';
 import TransactionModalStore from '@/store/TransactionModalStore';
@@ -37,56 +42,83 @@ function TransferTokenForm() {
     tokenList.length == 0 ? psudoToken : tokenList[0],
   );
   const router = useRouter();
-  const { erc4337Address } = useSnapshot(AddressStore.state);
+  const { zeroDevAddress, selectedWallet } = useSnapshot(AddressStore.state);
   const [recipientAddressOrEns, setRecipientAddressOrEns] =
     useState<string>('');
   const { currentPKP, sessionSigs } = useSnapshot(PKPStore.state);
 
-  const handleSubmit = async (event: any) => {
+  async function handleSubmit(event: any) {
     setTransactionLoading(true);
     if (!selectedToken.nativeToken) {
-      erc20Transfer(
-        selectedToken.address,
-        recipientAddressOrEns,
-        String(sendAmount),
-        withPM,
-        currentPKP!.publicKey,
-        sessionSigs!,
-        selectedToken.chainId,
-      ).then((res) => {
-        setTransactionLoading(false);
-        TransactionModalStore.open({
-          hash: res.hash,
-          from: res.from,
-          to: recipientAddressOrEns,
-          value: res.value.toString(),
-          tokenName: selectedToken.name,
-          network: res.chainId.toString(),
-          amount: String(sendAmount),
+      if (selectedWallet === 'biconomy') {
+        await biconomyErc20Transfer(
+          selectedToken.address,
+          recipientAddressOrEns,
+          String(sendAmount),
+          currentPKP!.publicKey,
+          sessionSigs!,
+          selectedToken.chainId,
+        ).then((res) => {
+          setTransactionLoading(false);
+          router.push('/wallet');
         });
-        router.push('/wallet');
-      });
+      } else {
+        await zeroDevErc20Transfer(
+          selectedToken.address,
+          recipientAddressOrEns,
+          String(sendAmount),
+          withPM,
+          currentPKP!.publicKey,
+          sessionSigs!,
+          selectedToken.chainId,
+        ).then((res) => {
+          setTransactionLoading(false);
+          TransactionModalStore.open({
+            hash: res.hash,
+            from: res.from,
+            to: recipientAddressOrEns,
+            value: res.value.toString(),
+            tokenName: selectedToken.name,
+            network: res.chainId.toString(),
+            amount: String(sendAmount),
+          });
+          router.push('/wallet');
+        });
+      }
     } else {
-      await transfer(
-        recipientAddressOrEns,
-        String(sendAmount),
-        withPM,
-        currentPKP!.publicKey,
-        sessionSigs!,
-        selectedToken.chainId,
-      ).then((res) => {
-        setTransactionLoading(false);
-        TransactionModalStore.open({
-          hash: res.hash,
-          from: res.from,
-          to: recipientAddressOrEns,
-          value: res.value.toString(),
-          tokenName: selectedToken.name,
-          network: res.chainId.toString(),
-          amount: String(sendAmount),
+      if (selectedWallet === 'biconomy') {
+        await biconomyTransfer(
+          recipientAddressOrEns,
+          String(sendAmount),
+          currentPKP!.publicKey,
+          sessionSigs!,
+          selectedToken.chainId,
+        ).then((res) => {
+          setTransactionLoading(false);
+          router.push('/wallet');
         });
-        router.push('/wallet');
-      });
+      } else {
+        await zeroDevTransfer(
+          recipientAddressOrEns,
+          String(sendAmount),
+          withPM,
+          currentPKP!.publicKey,
+          sessionSigs!,
+          selectedToken.chainId,
+        ).then((res) => {
+          setTransactionLoading(false);
+          TransactionModalStore.open({
+            hash: res.hash,
+            from: res.from,
+            to: recipientAddressOrEns,
+            value: res.value.toString(),
+            tokenName: selectedToken.name,
+            network: res.chainId.toString(),
+            amount: String(sendAmount),
+          });
+          router.push('/wallet');
+        });
+      }
     }
     event.preventDefault();
   };
@@ -98,8 +130,8 @@ function TransferTokenForm() {
   };
 
   useEffect(() => {
-    if (!erc4337Address) router.push('/wallet');
-  }, [erc4337Address, router]);
+    if (!zeroDevAddress) router.push('/wallet');
+  }, [zeroDevAddress, router]);
   return (
     <>
       <SearchRecipientAddress

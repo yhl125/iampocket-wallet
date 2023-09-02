@@ -1,38 +1,20 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# iampocket, The seedless account abstraction Wallet
+
+> **Warning**
+> Lit protocol is in a developer preview state. The data on the Serrano Testnet is not persistent and may be erased at any time.
+> Do not store anything of value
 
 ## Getting Started
 
-First, run the development server:
+https://iampocket-wallet.vercel.app/
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+Linea scan link: https://goerli.lineascan.build/address/0xa3e0010d2ffc4a19b6a2d5448ee446fb5d63c358#internaltx
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## About
+iampocket is a seedless wallet built using Lit protocol PKP (Programmable Key Pairs), for everyone's needs. Users have multiple login options available, including Google, Discord, Email, SMS, and Webauthn (Face ID, Touch ID). 
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+With ZeroDev wallet, you can seamlessly operate across various blockchain networks such as Arbitrum One, Optimism, Ethereum Goerli, Polygon Mumbai, Arbitrum Goerli, and Optimism Goerli.And Biconomy wallet offers compatibility with Linea Goerli and Polygon zkEVM Testnet. And you can use ERC-20 Paymaster with transfer using stackup's testnet gas token.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Using ZeroDev wallet, 4337 contract is automatically deployed once you initiate a transaction. This contract facilitates connectivity and enables the use of DApps that support ERC-1271 via WalletConnect.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Please note that your ERC20 token balances are periodically updated at 30-second intervals through Covalent, so slight delays may occur.

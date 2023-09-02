@@ -6,19 +6,33 @@ import Image from 'next/image';
 import copyClipboardSVG from 'public/copyToClipboard.svg';
 import { useRouter } from 'next/navigation';
 import { truncateAddress } from '@/utils/HelperUtil';
-import { providerOf } from '@/utils/ProviderUtil';
 import { useEffect, useState } from 'react';
 import AddressStore from '@/store/AddressStore';
 import TokenList from './tokenList';
 import FetchTokens from './fetchToken';
 import useWalletWithPKP from '@/hooks/useWalletWithPKP';
+import {
+  biconomyTestnetChainIds,
+  zeroDevMainnetChainIds,
+  zeroDevTestnetChainIds,
+} from '@/data/EIP155Data';
+import SelectWallet from './selectWallet';
 
 function Wallet() {
   useWalletWithPKP();
 
-  const { erc4337Address } = useSnapshot(AddressStore.state);
+  const { zeroDevAddress, biconomyAddress, selectedWallet } = useSnapshot(
+    AddressStore.state,
+  );
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const currentAddress =
+    selectedWallet === 'biconomy' ? biconomyAddress : zeroDevAddress;
+  const chainIds = [
+    ...zeroDevMainnetChainIds,
+    ...zeroDevTestnetChainIds,
+    ...biconomyTestnetChainIds,
+  ];
 
   useEffect(() => {
     setMounted(true);
@@ -29,11 +43,11 @@ function Wallet() {
       <>
         <div className="wallet">
           <div className="wallet-header relative flex items-center justify-center p-4">
-            <div className="wallet-address">
-              <p className="text-center text-xl">Address</p>
+            <div className="wallet-address flex flex-col items-center">
+              <SelectWallet></SelectWallet>
               <div className="address flex">
                 <p className="text-sm text-gray-500">
-                  {truncateAddress(erc4337Address)}
+                  {truncateAddress(currentAddress)}
                 </p>
                 <div className="dropdown dropdown-end">
                   <Image
@@ -41,7 +55,7 @@ function Wallet() {
                     src={copyClipboardSVG}
                     alt={'copyToClipboard'}
                     onClick={() =>
-                      navigator.clipboard.writeText(erc4337Address)
+                      navigator.clipboard.writeText(currentAddress)
                     }
                   ></Image>
                   <ul
@@ -53,7 +67,7 @@ function Wallet() {
                 </div>
               </div>
             </div>
-            <div className="dropdown dropdown-end absolute right-0 top-0 py-2">
+            <div className="dropdown-end dropdown absolute right-0 top-0 py-2">
               <label
                 tabIndex={0}
                 className="setting-button btn btn-square btn-ghost"
@@ -79,6 +93,9 @@ function Wallet() {
                 <li>
                   <Link href={'/walletconnect'}>Connect Wallet</Link>
                 </li>
+                <li>
+                  <Link href = {'/squid'}>Squid</Link>
+                </li>
               </ul>
             </div>
           </div>
@@ -96,8 +113,8 @@ function Wallet() {
               </div>
             </div>
             <FetchTokens
-              address={erc4337Address}
-              chainIds={[5, 80001, 421613, 420]}
+              address={currentAddress}
+              chainIds={chainIds}
               quoteCurrency={'USD'}
             />
             <TokenList />
