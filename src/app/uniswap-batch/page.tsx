@@ -124,7 +124,7 @@ export default function StablePage() {
     };
 
     const res = await signer.execBatch([
-      wethContract.desosit({
+      wethContract.deposit({
         from: signer.address,
         value: ethers.utils.parseEther('0.003'),
       }),
