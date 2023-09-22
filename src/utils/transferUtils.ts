@@ -34,9 +34,9 @@ export async function zeroDevTransfer(
   const res = await signer.sendTransaction({
     to: target,
     value: value,
-    gasPrice: feeData.gasPrice ?? 1000000000,
-    maxFeePerGas: feeData.maxFeePerGas ?? 1000000000,
-    maxPriorityFeePerGas: feeData.maxPriorityFeePerGas ?? 1000000000,
+    gasPrice: feeData.gasPrice ?? undefined,
+    maxFeePerGas: feeData.maxFeePerGas ?? undefined,
+    maxPriorityFeePerGas: feeData.maxPriorityFeePerGas ?? undefined,
     gasLimit: 33100,
   });
 
@@ -94,9 +94,9 @@ export async function zeroDevErc20Transfer(
     to: erc20.address,
     value: 0,
     data: erc20.interface.encodeFunctionData('transfer', [to, parsedAmount]),
-    gasPrice: feeData.gasPrice ?? 1000000000,
-    maxFeePerGas: feeData.maxFeePerGas ?? 1000000000,
-    maxPriorityFeePerGas: feeData.maxPriorityFeePerGas ?? 1000000000,
+    gasPrice: feeData.gasPrice ?? undefined,
+    maxFeePerGas: feeData.maxFeePerGas ?? undefined,
+    maxPriorityFeePerGas: feeData.maxPriorityFeePerGas ?? undefined,
     gasLimit: 33100,
   });
 
