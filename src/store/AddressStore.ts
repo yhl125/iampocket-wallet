@@ -6,7 +6,8 @@ import { proxyWithLocalStorage } from '@/utils/StoreUtil';
 interface State {
   zeroDevAddress: string;
   biconomyAddress: string;
-  selectedWallet: 'zeroDev' | 'biconomy';
+  pkpEthersAddress: string;
+  selectedWallet: 'zeroDev' | 'biconomy'| 'pkpEthers';
 }
 
 /**
@@ -15,6 +16,7 @@ interface State {
 const state = proxyWithLocalStorage<State>('AddressState', {
   zeroDevAddress: '',
   biconomyAddress: '',
+  pkpEthersAddress: '',
   selectedWallet: 'zeroDev',
 });
 
@@ -29,9 +31,12 @@ const AddressStore = {
   setBiconomyAddress(biconomyAddress: string) {
     state.biconomyAddress = biconomyAddress;
   },
-  setSelectedWallet(selectedWallet: 'zeroDev' | 'biconomy') {
+  setPkpEthersAddress(pkpEthersAddress: string) {
+    state.pkpEthersAddress = pkpEthersAddress;
+  },
+  setSelectedWallet(selectedWallet: 'zeroDev' | 'biconomy' | 'pkpEthers') {
     state.selectedWallet = selectedWallet;
-  }
+  },
 };
 
 export default AddressStore;

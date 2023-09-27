@@ -17,17 +17,23 @@ import {
   zeroDevTestnetChainIds,
 } from '@/data/EIP155Data';
 import SelectWallet from './selectWallet';
+import { pkpEthersWalletSigner } from '@/utils/ERC4337WalletUtil';
 
 function Wallet() {
   useWalletWithPKP();
 
-  const { zeroDevAddress, biconomyAddress, selectedWallet } = useSnapshot(
-    AddressStore.state,
-  );
+  const { zeroDevAddress, biconomyAddress, pkpEthersAddress, selectedWallet } =
+    useSnapshot(AddressStore.state);
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const currentAddress =
-    selectedWallet === 'biconomy' ? biconomyAddress : zeroDevAddress;
+  function getCurrentAddress(
+    selectedWallet: 'zeroDev' | 'biconomy' | 'pkpEthers',
+  ) {
+    if (selectedWallet === 'biconomy') return biconomyAddress;
+    else if (selectedWallet === 'zeroDev') return zeroDevAddress;
+    else if (selectedWallet === 'pkpEthers') return pkpEthersAddress;
+    else return zeroDevAddress;
+  }
   const chainIds = [
     ...zeroDevMainnetChainIds,
     ...zeroDevTestnetChainIds,
@@ -47,15 +53,17 @@ function Wallet() {
               <SelectWallet></SelectWallet>
               <div className="address flex">
                 <p className="text-sm text-gray-500">
-                  {truncateAddress(currentAddress)}
+                  {truncateAddress(getCurrentAddress(selectedWallet))}
                 </p>
-                <div className="dropdown dropdown-end">
+                <div className="dropdown-end dropdown">
                   <Image
                     tabIndex={0}
                     src={copyClipboardSVG}
                     alt={'copyToClipboard'}
                     onClick={() =>
-                      navigator.clipboard.writeText(currentAddress)
+                      navigator.clipboard.writeText(
+                        getCurrentAddress(selectedWallet),
+                      )
                     }
                   ></Image>
                   <ul
@@ -106,11 +114,18 @@ function Wallet() {
                 >
                   Send
                 </button>
-                <button className="btn btn-sm">Deposit</button>
+                <button
+                  className="btn btn-sm"
+                  onClick={() =>
+                    console.log(AddressStore.state.pkpEthersAddress)
+                  }
+                >
+                  Deposit
+                </button>
               </div>
             </div>
             <FetchTokens
-              address={currentAddress}
+              address={getCurrentAddress(selectedWallet)}
               chainIds={chainIds}
               quoteCurrency={'USD'}
             />
