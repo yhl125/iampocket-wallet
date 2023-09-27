@@ -1,8 +1,9 @@
 import { ERC20_ABI } from '@/abi/abi';
 import { parseEther } from '@ethersproject/units';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import {
   biconomySmartAccount,
+  pkpEthersWalletSigner,
   zeroDevSigner,
   zeroDevSignerWithERC20Gas,
 } from './ERC4337WalletUtil';
@@ -171,4 +172,64 @@ export async function biconomyErc20Transfer(
   const transactionDetails = await userOpResponse.wait();
   console.log(`Transaction done: ${transactionDetails.userOpHash}`);
   return transactionDetails.receipt;
+}
+
+export async function pkpEthersTransfer(
+  to: string,
+  amount: string,
+  chainId: number,
+  pkpPubKey: string,
+  sessionSigs: SessionSigs,
+) {
+  const pkpEthersWallet = await pkpEthersWalletSigner(
+    pkpPubKey,
+    sessionSigs,
+    chainId,
+  );
+  const transactionRequest = {
+    to,
+    value: ethers.utils.parseEther(amount),
+  };
+  const result = await pkpEthersWallet.sendTransaction(transactionRequest);
+  console.log(result)
+}
+
+export async function pkpEthersErc20Transfer(
+  tokenAddress: string,
+  recipientAddress: string,
+  amount: string,
+  chainId: number,
+  pkpPubKey: string,
+  sessionSigs: SessionSigs,
+) {
+  const pkpEthersWallet = await pkpEthersWalletSigner(
+    pkpPubKey,
+    sessionSigs,
+    chainId,
+  );
+  const provider = providerOf(chainId);
+  const feeData = await provider.getFeeData();
+
+  const token = ethers.utils.getAddress(tokenAddress);
+  const to = ethers.utils.getAddress(recipientAddress);
+  const erc20 = new ethers.Contract(token, ERC20_ABI, provider);
+  const [symbol, decimals] = await Promise.all([
+    erc20.symbol(),
+    erc20.decimals(),
+  ]);
+  const parsedAmount = ethers.utils.parseUnits(amount, decimals);
+  console.log(`Transferring ${parsedAmount} ${symbol}...`);
+  console.log(pkpEthersWallet.address);
+  const res = await pkpEthersWallet.sendTransaction({
+    to: erc20.address,
+    value: 0,
+    data: erc20.interface.encodeFunctionData('transfer', [to, parsedAmount]),
+    gasPrice: feeData.gasPrice ?? undefined,
+    maxFeePerGas: feeData.maxFeePerGas ?? undefined,
+    maxPriorityFeePerGas: feeData.maxPriorityFeePerGas ?? undefined,
+  });
+  console.log(`Transaction hash: ${res.hash}`);
+  const ev = await res.wait();
+  console.log(`Transaction done: ${ev.transactionHash}`);
+  return res;
 }
