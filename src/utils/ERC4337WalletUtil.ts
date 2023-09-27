@@ -20,18 +20,39 @@ export async function createOrRestoreERC4337Wallet(
   pkpPubKey: string,
   sessionSigs: SessionSigs,
 ) {
-  const [zeroDevWallet, biconomyWallet] = await Promise.all([
-    zeroDevSigner(pkpPubKey, sessionSigs),
-    biconomySmartAccount(pkpPubKey, sessionSigs),
-  ]);
-  const [zeroDevAddress, biconomyAddress] = await Promise.all([
-    zeroDevWallet.getAddress(),
-    biconomyWallet.getSmartAccountAddress(),
-  ]);
+  const [zeroDevWallet, biconomyWallet, eoaPkpEthersWallet] = await Promise.all(
+    [
+      zeroDevSigner(pkpPubKey, sessionSigs),
+      biconomySmartAccount(pkpPubKey, sessionSigs),
+      pkpEthersWalletSigner(pkpPubKey, sessionSigs),
+    ],
+  );
+  const [zeroDevAddress, biconomyAddress, eoaPkpEthersAddress] =
+    await Promise.all([
+      zeroDevWallet.getAddress(),
+      biconomyWallet.getSmartAccountAddress(),
+      eoaPkpEthersWallet.getAddress(),
+    ]);
   AddressStore.setZeroDevAddress(zeroDevAddress);
   AddressStore.setBiconomyAddress(biconomyAddress);
+  AddressStore.setPkpEthersAddress(eoaPkpEthersAddress);
 
   return zeroDevAddress;
+}
+
+export async function pkpEthersWalletSigner(
+  pkpPubKey: string,
+  sessionSigs: SessionSigs,
+  chainId: number = 80001,
+) {
+  const rpcUrl = EIP155_CHAINS[`eip155:${chainId}`].rpc;
+
+  const pkpEthersWalletSigner: PKPEthersWallet = new PKPEthersWallet({
+    pkpPubKey: pkpPubKey,
+    controllerSessionSigs: sessionSigs,
+    rpc: rpcUrl,
+  });
+  return pkpEthersWalletSigner;
 }
 
 export async function zeroDevSigner(

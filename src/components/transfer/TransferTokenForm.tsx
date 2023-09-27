@@ -10,6 +10,8 @@ import {
   zeroDevErc20Transfer,
   biconomyErc20Transfer,
   biconomyTransfer,
+  pkpEthersErc20Transfer,
+  pkpEthersTransfer,
 } from '@/utils/transferUtils';
 import PKPStore from '@/store/PKPStore';
 import AddressStore from '@/store/AddressStore';
@@ -42,7 +44,9 @@ function TransferTokenForm() {
     tokenList.length == 0 ? psudoToken : tokenList[0],
   );
   const router = useRouter();
-  const { zeroDevAddress, selectedWallet } = useSnapshot(AddressStore.state);
+  const { pkpEthersAddress, zeroDevAddress, selectedWallet } = useSnapshot(
+    AddressStore.state,
+  );
   const [recipientAddressOrEns, setRecipientAddressOrEns] =
     useState<string>('');
   const { currentPKP, sessionSigs } = useSnapshot(PKPStore.state);
@@ -62,7 +66,7 @@ function TransferTokenForm() {
           setTransactionLoading(false);
           router.push('/wallet');
         });
-      } else {
+      } else if (selectedWallet === 'zeroDev') {
         await zeroDevErc20Transfer(
           selectedToken.address,
           recipientAddressOrEns,
@@ -84,6 +88,17 @@ function TransferTokenForm() {
           });
           router.push('/wallet');
         });
+      } else if (selectedWallet === 'pkpEthers') {
+        await pkpEthersErc20Transfer(
+          selectedToken.address,
+          recipientAddressOrEns,
+          String(sendAmount),
+          selectedToken.chainId,
+          currentPKP!.publicKey,
+          sessionSigs!,
+        ).then(() => {
+          router.push('/wallet');
+        });
       }
     } else {
       if (selectedWallet === 'biconomy') {
@@ -97,7 +112,7 @@ function TransferTokenForm() {
           setTransactionLoading(false);
           router.push('/wallet');
         });
-      } else {
+      } else if (selectedWallet === 'zeroDev') {
         await zeroDevTransfer(
           recipientAddressOrEns,
           String(sendAmount),
@@ -118,10 +133,18 @@ function TransferTokenForm() {
           });
           router.push('/wallet');
         });
+      } else if (selectedWallet === 'pkpEthers') {
+        await pkpEthersTransfer(
+          recipientAddressOrEns,
+          String(sendAmount),
+          selectedToken.chainId,
+          currentPKP!.publicKey,
+          sessionSigs!,
+        ).then(() => router.push('/wallet'));
       }
     }
     event.preventDefault();
-  };
+  }
   const handleChecked = (event: any) => {
     setWithPM(event.target.checked);
   };
@@ -185,15 +208,17 @@ function TransferTokenForm() {
               />
               <span>{selectedToken.symbol}</span>
             </label>
-            <label className="label flex cursor-pointer justify-start">
-              <span className="label-text">With PayMaster</span>
-              <input
-                type="checkbox"
-                checked={withPM}
-                onChange={handleChecked}
-                className="checkbox ml-0.5"
-              />
-            </label>
+            {selectedWallet === 'pkpEthers' ? null : (
+              <label className="label flex cursor-pointer justify-start">
+                <span className="label-text">With PayMaster</span>
+                <input
+                  type="checkbox"
+                  checked={withPM}
+                  onChange={handleChecked}
+                  className="checkbox ml-0.5"
+                />
+              </label>
+            )}
           </div>
           {sendAmount <
           Number(
