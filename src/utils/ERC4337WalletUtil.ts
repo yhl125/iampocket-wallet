@@ -1,5 +1,8 @@
-import { getZeroDevSigner } from '@zerodevapp/sdk';
-import { SupportedGasToken } from '@zerodevapp/sdk/dist/src/types';
+import {
+  convertEthersSignerToAccountSigner,
+  ZeroDevEthersProvider,
+} from '@zerodev/sdk';
+import { SupportedGasToken } from '@zerodev/sdk/dist/types';
 import { PKPEthersWallet } from '@lit-protocol/pkp-ethers';
 import { SessionSigs } from '@lit-protocol/types';
 import { projectIdOf } from './ProviderUtil';
@@ -60,13 +63,15 @@ export async function zeroDevSigner(
   sessionSigs: SessionSigs,
   chainId: number = 80001,
 ) {
-  return getZeroDevSigner({
-    projectId: projectIdOf(chainId),
-    owner: new PKPEthersWallet({
-      pkpPubKey: pkpPubKey,
-      controllerSessionSigs: sessionSigs,
-    }),
+  const owner = new PKPEthersWallet({
+    pkpPubKey: pkpPubKey,
+    controllerSessionSigs: sessionSigs,
   });
+  const provider = await ZeroDevEthersProvider.init('ECDSA', {
+    projectId: projectIdOf(chainId),
+    owner: convertEthersSignerToAccountSigner(owner),
+  });
+  return provider.getAccountSigner();
 }
 
 export async function zeroDevSignerWithERC20Gas(
@@ -75,14 +80,22 @@ export async function zeroDevSignerWithERC20Gas(
   sessionSigs: SessionSigs,
   chainId: number = 80001,
 ) {
-  return getZeroDevSigner({
-    projectId: projectIdOf(chainId),
-    owner: new PKPEthersWallet({
-      pkpPubKey: pkpPubKey,
-      controllerSessionSigs: sessionSigs,
-    }),
-    gasToken: gasToken,
+  const owner = new PKPEthersWallet({
+    pkpPubKey: pkpPubKey,
+    controllerSessionSigs: sessionSigs,
   });
+  const providerWithERC20Gas = await ZeroDevEthersProvider.init('ECDSA', {
+    projectId: projectIdOf(chainId),
+    owner: convertEthersSignerToAccountSigner(owner),
+    opts: {
+      paymasterConfig: {
+        policy: 'TOKEN_PAYMASTER',
+        gasToken: gasToken,
+      },
+    },
+  });
+
+  return providerWithERC20Gas.getAccountSigner();
 }
 
 export async function biconomySmartAccount(

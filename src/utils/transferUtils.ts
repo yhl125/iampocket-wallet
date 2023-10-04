@@ -1,6 +1,6 @@
 import { ERC20_ABI } from '@/abi/abi';
 import { parseEther } from '@ethersproject/units';
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber, BigNumberish, ethers } from 'ethers';
 import {
   biconomySmartAccount,
   pkpEthersWalletSigner,
@@ -29,22 +29,23 @@ export async function zeroDevTransfer(
 
   const provider = providerOf(chainId);
   const feeData = await provider.getFeeData();
-
-  const target = ethers.utils.getAddress(recipientAddress);
-  const value = ethers.utils.parseEther(amount);
-  const res = await signer.sendTransaction({
-    to: target,
+  const target = ethers.utils.getAddress(recipientAddress) as `0x${string}`;
+  const value = ethers.utils.parseEther(amount).toBigInt();
+  // const res = await signer.sendUserOperation({
+  //   target: target,
+  //   value: value,
+  //   gasPrice: feeData.gasPrice ?? undefined,
+  //   maxFeePerGas: feeData.maxFeePerGas ?? undefined,
+  //   maxPriorityFeePerGas: feeData.maxPriorityFeePerGas ?? undefined,
+  //   gasLimit: 33100,
+  // });
+  const result = await signer.sendUserOperation({
+    target: target,
+    data: '0x',
     value: value,
-    gasPrice: feeData.gasPrice ?? undefined,
-    maxFeePerGas: feeData.maxFeePerGas ?? undefined,
-    maxPriorityFeePerGas: feeData.maxPriorityFeePerGas ?? undefined,
-    gasLimit: 33100,
   });
 
-  console.log(`Transaction hash: ${res.hash}`);
-  const ev = await res.wait();
-  console.log(`Transaction done: ${ev.transactionHash}`);
-  return res;
+  console.log(`Transaction hash: ${result.hash}`);
 }
 
 export async function getEstimateGas(
@@ -91,20 +92,24 @@ export async function zeroDevErc20Transfer(
   const parsedAmount = ethers.utils.parseUnits(amount, decimals);
   console.log(`Transferring ${parsedAmount} ${symbol}...`);
 
-  const res = await signer.sendTransaction({
-    to: erc20.address,
-    value: 0,
-    data: erc20.interface.encodeFunctionData('transfer', [to, parsedAmount]),
-    gasPrice: feeData.gasPrice ?? undefined,
-    maxFeePerGas: feeData.maxFeePerGas ?? undefined,
-    maxPriorityFeePerGas: feeData.maxPriorityFeePerGas ?? undefined,
-    gasLimit: 33100,
+  // const res = await signer.sendUserOperationf({
+  //   to: erc20.address,
+  //   value: 0,
+  //   data: erc20.interface.encodeFunctionData('transfer', [to, parsedAmount]),
+  //   gasPrice: feeData.gasPrice ?? undefined,
+  //   maxFeePerGas: feeData.maxFeePerGas ?? undefined,
+  //   maxPriorityFeePerGas: feeData.maxPriorityFeePerGas ?? undefined,
+  //   gasLimit: 33100,
+  // });
+  const res = await signer.sendUserOperation({
+    target: erc20.address as `0x${string}`,
+    data: erc20.interface.encodeFunctionData('transfer', [
+      to,
+      parsedAmount,
+    ]) as `0x${string}`,
   });
 
   console.log(`Transaction hash: ${res.hash}`);
-  const ev = await res.wait();
-  console.log(`Transaction done: ${ev.transactionHash}`);
-  return res;
 }
 
 export async function biconomyTransfer(
@@ -191,7 +196,7 @@ export async function pkpEthersTransfer(
     value: ethers.utils.parseEther(amount),
   };
   const result = await pkpEthersWallet.sendTransaction(transactionRequest);
-  console.log(result)
+  console.log(result);
 }
 
 export async function pkpEthersErc20Transfer(
