@@ -77,15 +77,15 @@ function TransferTokenForm() {
           selectedToken.chainId,
         ).then((res) => {
           setTransactionLoading(false);
-          TransactionModalStore.open({
-            hash: res.hash,
-            from: res.from,
-            to: recipientAddressOrEns,
-            value: res.value.toString(),
-            tokenName: selectedToken.name,
-            network: res.chainId.toString(),
-            amount: String(sendAmount),
-          });
+          // TransactionModalStore.open({
+          //   hash: res.hash,
+          //   from: res.from,
+          //   to: recipientAddressOrEns,
+          //   value: res.value.toString(),
+          //   tokenName: selectedToken.name,
+          //   network: res.chainId.toString(),
+          //   amount: String(sendAmount),
+          // });
           router.push('/wallet');
         });
       } else if (selectedWallet === 'pkpEthers') {
@@ -122,15 +122,15 @@ function TransferTokenForm() {
           selectedToken.chainId,
         ).then((res) => {
           setTransactionLoading(false);
-          TransactionModalStore.open({
-            hash: res.hash,
-            from: res.from,
-            to: recipientAddressOrEns,
-            value: res.value.toString(),
-            tokenName: selectedToken.name,
-            network: res.chainId.toString(),
-            amount: String(sendAmount),
-          });
+          // TransactionModalStore.open({
+          //   hash: res.hash,
+          //   from: res.from,
+          //   to: recipientAddressOrEns,
+          //   value: res.value.toString(),
+          //   tokenName: selectedToken.name,
+          //   network: res.chainId.toString(),
+          //   amount: String(sendAmount),
+          // });
           router.push('/wallet');
         });
       } else if (selectedWallet === 'pkpEthers') {
