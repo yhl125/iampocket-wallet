@@ -11,9 +11,10 @@ function Home() {
   const router = useRouter();
   useEffect(() => {
     if (zeroDevAddress != '') router.push('/wallet');
+    else router.push('/main');
   }, [zeroDevAddress, router]);
 
-  return <MainPage />;
-};
+  // return <MainPage />;
+}
 
 export default Home;
