@@ -1,14 +1,18 @@
 import { ERC20_ABI } from '@/abi/abi';
-import { parseEther } from '@ethersproject/units';
-import { BigNumber, BigNumberish, ethers } from 'ethers';
 import {
-  biconomySmartAccount,
-  pkpEthersWalletSigner,
+  createPkpViemWalletClient,
   zeroDevSigner,
   zeroDevSignerWithERC20Gas,
 } from './ERC4337WalletUtil';
 import { SessionSigs } from '@lit-protocol/types';
-import { providerOf } from './ProviderUtil';
+import { publicClientOf } from './ClientUtil';
+import {
+  parseEther,
+  getAddress,
+  parseUnits,
+  getContract,
+  encodeFunctionData,
+} from 'viem';
 
 export async function zeroDevTransfer(
   recipientAddress: string,
@@ -27,18 +31,8 @@ export async function zeroDevTransfer(
       )
     : await zeroDevSigner(pkpPubKey, sessionSigs, chainId);
 
-  const provider = providerOf(chainId);
-  const feeData = await provider.getFeeData();
-  const target = ethers.utils.getAddress(recipientAddress) as `0x${string}`;
-  const value = ethers.utils.parseEther(amount).toBigInt();
-  // const res = await signer.sendUserOperation({
-  //   target: target,
-  //   value: value,
-  //   gasPrice: feeData.gasPrice ?? undefined,
-  //   maxFeePerGas: feeData.maxFeePerGas ?? undefined,
-  //   maxPriorityFeePerGas: feeData.maxPriorityFeePerGas ?? undefined,
-  //   gasLimit: 33100,
-  // });
+  const target = getAddress(recipientAddress) as `0x${string}`;
+  const value = parseEther(amount);
   const result = await signer.sendUserOperation({
     target: target,
     data: '0x',
@@ -46,19 +40,6 @@ export async function zeroDevTransfer(
   });
 
   console.log(`Transaction hash: ${result.hash}`);
-}
-
-export async function getEstimateGas(
-  provider: ethers.providers.JsonRpcProvider,
-  fromAddress: string,
-  toAddress: string,
-  amount: string,
-) {
-  return await provider.estimateGas({
-    from: fromAddress,
-    to: toAddress,
-    value: parseEther(amount),
-  });
 }
 
 export async function zeroDevErc20Transfer(
@@ -79,162 +60,116 @@ export async function zeroDevErc20Transfer(
       )
     : await zeroDevSigner(pkpPubKey, sessionSigs, chainId);
 
-  const provider = providerOf(chainId);
-  const feeData = await provider.getFeeData();
+  const publicClient = publicClientOf(chainId);
 
-  const token = ethers.utils.getAddress(tokenAddress);
-  const to = ethers.utils.getAddress(recipientAddress);
-  const erc20 = new ethers.Contract(token, ERC20_ABI, provider);
+  const token = getAddress(tokenAddress);
+  const to = getAddress(recipientAddress);
+  const erc20 = getContract({
+    address: token,
+    abi: ERC20_ABI,
+    publicClient: publicClient,
+  });
   const [symbol, decimals] = await Promise.all([
-    erc20.symbol(),
-    erc20.decimals(),
+    publicClient.readContract({
+      address: token,
+      abi: ERC20_ABI,
+      functionName: 'symbol',
+    }),
+    publicClient.readContract({
+      address: token,
+      abi: ERC20_ABI,
+      functionName: 'decimals',
+    }) as unknown as number,
   ]);
-  const parsedAmount = ethers.utils.parseUnits(amount, decimals);
-  console.log(`Transferring ${parsedAmount} ${symbol}...`);
 
-  // const res = await signer.sendUserOperationf({
-  //   to: erc20.address,
-  //   value: 0,
-  //   data: erc20.interface.encodeFunctionData('transfer', [to, parsedAmount]),
-  //   gasPrice: feeData.gasPrice ?? undefined,
-  //   maxFeePerGas: feeData.maxFeePerGas ?? undefined,
-  //   maxPriorityFeePerGas: feeData.maxPriorityFeePerGas ?? undefined,
-  //   gasLimit: 33100,
-  // });
-  const res = await signer.sendUserOperation({
-    target: erc20.address as `0x${string}`,
-    data: erc20.interface.encodeFunctionData('transfer', [
-      to,
-      parsedAmount,
-    ]) as `0x${string}`,
+  const parsedAmount = parseUnits(amount, decimals);
+  const erc20TransferFunctionData = encodeFunctionData({
+    abi: ERC20_ABI,
+    functionName: 'transfer',
+    args: [to, parsedAmount],
   });
 
-  console.log(`Transaction hash: ${res.hash}`);
-}
-
-export async function biconomyTransfer(
-  recipientAddress: string,
-  amount: string,
-  pkpPubKey: string,
-  sessionSigs: SessionSigs,
-  chainId: number,
-) {
-  const biconomyAccount = await biconomySmartAccount(
-    pkpPubKey,
-    sessionSigs,
-    chainId,
-  );
-  const transaction = {
-    to: recipientAddress,
-    data: '0x',
-    value: ethers.utils.parseEther(amount.toString()),
-  };
-  const userOp = await biconomyAccount.buildUserOp([transaction]);
-  const userOpResponse = await biconomyAccount.sendUserOp(userOp);
-  console.log(`userOp Hash: ${userOpResponse.userOpHash}`);
-  const transactionDetails = await userOpResponse.wait();
-  console.log(`Transaction done: ${transactionDetails.userOpHash}`);
-  return transactionDetails.receipt;
-}
-
-export async function biconomyErc20Transfer(
-  tokenAddress: string,
-  recipientAddress: string,
-  amount: string,
-  pkpPubKey: string,
-  sessionSigs: SessionSigs,
-  chainId: number,
-) {
-  const biconomyAccount = await biconomySmartAccount(
-    pkpPubKey,
-    sessionSigs,
-    chainId,
-  );
-  // generate ERC20 transfer data
-  // Encode an ERC-20 token transfer to recipient of the specified amount
-  const provider = providerOf(chainId);
-  const tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
-  let decimals = 18;
-  try {
-    decimals = await tokenContract.decimals();
-  } catch (error) {
-    throw new Error('invalid token address supplied');
-  }
-  const amountGwei = ethers.utils.parseUnits(amount, decimals);
-  const data = (
-    await tokenContract.populateTransaction.transfer(
-      recipientAddress,
-      amountGwei,
-    )
-  ).data;
-  const transaction = {
-    to: tokenAddress,
-    data,
-  };
-  const userOp = await biconomyAccount.buildUserOp([transaction]);
-  const userOpResponse = await biconomyAccount.sendUserOp(userOp);
-  console.log(`userOp Hash: ${userOpResponse.userOpHash}`);
-  const transactionDetails = await userOpResponse.wait();
-  console.log(`Transaction done: ${transactionDetails.userOpHash}`);
-  return transactionDetails.receipt;
-}
-
-export async function pkpEthersTransfer(
-  to: string,
-  amount: string,
-  chainId: number,
-  pkpPubKey: string,
-  sessionSigs: SessionSigs,
-) {
-  const pkpEthersWallet = await pkpEthersWalletSigner(
-    pkpPubKey,
-    sessionSigs,
-    chainId,
-  );
-  const transactionRequest = {
-    to,
-    value: ethers.utils.parseEther(amount),
-  };
-  const result = await pkpEthersWallet.sendTransaction(transactionRequest);
-  console.log(result);
-}
-
-export async function pkpEthersErc20Transfer(
-  tokenAddress: string,
-  recipientAddress: string,
-  amount: string,
-  chainId: number,
-  pkpPubKey: string,
-  sessionSigs: SessionSigs,
-) {
-  const pkpEthersWallet = await pkpEthersWalletSigner(
-    pkpPubKey,
-    sessionSigs,
-    chainId,
-  );
-  const provider = providerOf(chainId);
-  const feeData = await provider.getFeeData();
-
-  const token = ethers.utils.getAddress(tokenAddress);
-  const to = ethers.utils.getAddress(recipientAddress);
-  const erc20 = new ethers.Contract(token, ERC20_ABI, provider);
-  const [symbol, decimals] = await Promise.all([
-    erc20.symbol(),
-    erc20.decimals(),
-  ]);
-  const parsedAmount = ethers.utils.parseUnits(amount, decimals);
   console.log(`Transferring ${parsedAmount} ${symbol}...`);
-  console.log(pkpEthersWallet.address);
-  const res = await pkpEthersWallet.sendTransaction({
+  const result = await signer.sendUserOperation({
+    target: erc20.address,
+    data: erc20TransferFunctionData,
+  });
+
+  console.log(`Transacion Hash: ${result.hash}`);
+}
+
+export async function pkpViemTransfer(
+  to: `0x${string}`,
+  amount: string,
+  chainId: number,
+  pkpPubKey: string,
+  sessionSigs: SessionSigs,
+) {
+  const walletClient = createPkpViemWalletClient(
+    pkpPubKey,
+    sessionSigs,
+    chainId,
+  );
+  const hash = await walletClient.sendTransaction({
+    account: walletClient.account!,
+    to: to,
+    value: parseEther(amount),
+    chain: walletClient.chain,
+  });
+  console.log(hash);
+}
+
+export async function pkpViemErc20Transfer(
+  tokenAddress: string,
+  recipientAddress: string,
+  amount: string,
+  chainId: number,
+  pkpPubKey: string,
+  sessionSigs: SessionSigs,
+) {
+  const publicClient = publicClientOf(chainId);
+  const pkpWalletClient = createPkpViemWalletClient(
+    pkpPubKey,
+    sessionSigs,
+    chainId,
+  );
+  //Get gasPrice, maxFeePerGas, maxPriorityFeePerGas
+  // const { maxFeePerGas, maxPriorityFeePerGas, gasPrice } =
+  //   await publicClient.estimateFeesPerGas();
+
+  //Get ERC-20 Token Contract and Functions or transfer
+  const token = getAddress(tokenAddress);
+  const to = getAddress(recipientAddress);
+  const erc20 = getContract({
+    address: token,
+    abi: ERC20_ABI,
+    publicClient: publicClient,
+  });
+  const [symbol, decimals] = await Promise.all([
+    publicClient.readContract({
+      address: token,
+      abi: ERC20_ABI,
+      functionName: 'symbol',
+    }),
+    publicClient.readContract({
+      address: token,
+      abi: ERC20_ABI,
+      functionName: 'decimals',
+    }) as unknown as number,
+  ]);
+
+  const parsedAmount = parseUnits(amount, decimals);
+  const erc20TransferFunctionData = encodeFunctionData({
+    abi: ERC20_ABI,
+    functionName: 'transfer',
+    args: [to, parsedAmount],
+  });
+  console.log(`Transferring ${parsedAmount} ${symbol}...`);
+  const result = await pkpWalletClient.sendTransaction({
+    account: pkpWalletClient.account!,
     to: erc20.address,
-    value: 0,
-    data: erc20.interface.encodeFunctionData('transfer', [to, parsedAmount]),
-    gasPrice: feeData.gasPrice ?? undefined,
-    maxFeePerGas: feeData.maxFeePerGas ?? undefined,
-    maxPriorityFeePerGas: feeData.maxPriorityFeePerGas ?? undefined,
+    value: parseEther('0'),
+    data: erc20TransferFunctionData,
+    chain: pkpWalletClient.chain,
   });
-  console.log(`Transaction hash: ${res.hash}`);
-  const ev = await res.wait();
-  console.log(`Transaction done: ${ev.transactionHash}`);
-  return res;
 }

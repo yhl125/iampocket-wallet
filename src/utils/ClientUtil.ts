@@ -1,14 +1,29 @@
 import { EIP155_CHAINS } from '@/data/EIP155Data';
-import { ethers } from 'ethers';
+import { createPublicClient, http } from 'viem';
 
-export function providerOf(chainId: number) {
+import * as chains from 'viem/chains';
+
+export function getChain(chainId: number) {
+  for (const chain of Object.values(chains)) {
+    if ('id' in chain) {
+      if (chain.id === chainId) {
+        return chain;
+      }
+    }
+  }
+  throw new Error(`Chain with id ${chainId} not found`);
+}
+
+export function publicClientOf(chainId: number) {
   const rpc = EIP155_CHAINS[`eip155:${chainId}`].rpc;
   if (!rpc) {
     throw new Error(`No RPC endpoint for chainId ${chainId}`);
   }
-  return new ethers.providers.JsonRpcProvider(rpc);
+  return createPublicClient({
+    chain:getChain(chainId),
+    transport:http(rpc)
+  })
 }
-
 export function projectIdOf(chainId: number) {
   switch (chainId) {
     // Mainnet

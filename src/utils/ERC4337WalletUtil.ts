@@ -1,61 +1,64 @@
 import {
-  convertEthersSignerToAccountSigner,
-  ZeroDevEthersProvider,
+  ECDSAProvider,
 } from '@zerodev/sdk';
 import { SupportedGasToken } from '@zerodev/sdk/dist/types';
-import { PKPEthersWallet } from '@lit-protocol/pkp-ethers';
 import { SessionSigs } from '@lit-protocol/types';
-import { projectIdOf } from './ProviderUtil';
+import { getChain, projectIdOf } from './ClientUtil';
 import AddressStore from '@/store/AddressStore';
 import {
-  BiconomySmartAccount,
-  DEFAULT_ENTRYPOINT_ADDRESS,
-} from '@biconomy/account';
-import { Bundler } from '@biconomy/bundler';
-import { BiconomyPaymaster } from '@biconomy/paymaster';
-import { biconomyPaymasterOf } from './biconomyUtil';
-import { EIP155_CHAINS } from '@/data/EIP155Data';
+  PKPViemAccount,
+  convertAccountToSmartAccountSigner,
+} from '@altpd13/pkp-viem';
+import { createWalletClient, http } from 'viem';
+import { WalletClient } from 'viem';
 
 /**
  * Utilities
  */
+
+export function createPKPViemAccount(
+  pkpPubKey: string,
+  sessionSigs: SessionSigs,
+): PKPViemAccount {
+  const account: PKPViemAccount = new PKPViemAccount({
+    controllerSessionSigs: sessionSigs,
+    pkpPubKey,
+  });
+  return account;
+}
 export async function createOrRestoreERC4337Wallet(
   pkpPubKey: string,
   sessionSigs: SessionSigs,
 ) {
-  const [zeroDevWallet, biconomyWallet, eoaPkpEthersWallet] = await Promise.all(
-    [
-      zeroDevSigner(pkpPubKey, sessionSigs),
-      biconomySmartAccount(pkpPubKey, sessionSigs),
-      pkpEthersWalletSigner(pkpPubKey, sessionSigs),
-    ],
-  );
-  const [zeroDevAddress, biconomyAddress, eoaPkpEthersAddress] =
-    await Promise.all([
-      zeroDevWallet.getAddress(),
-      biconomyWallet.getSmartAccountAddress(),
-      eoaPkpEthersWallet.getAddress(),
-    ]);
+  const [zeroDevWallet, eoaPkpViemWallet] = await Promise.all([
+    zeroDevSigner(pkpPubKey, sessionSigs),
+    createPkpViemWalletClient(pkpPubKey, sessionSigs),
+  ]);
+  const [zeroDevAddress, eoaPkpViemAddress] = await Promise.all([
+    zeroDevWallet.getAddress(),
+    eoaPkpViemWallet.account!.address,
+  ]);
   AddressStore.setZeroDevAddress(zeroDevAddress);
-  AddressStore.setBiconomyAddress(biconomyAddress);
-  AddressStore.setPkpEthersAddress(eoaPkpEthersAddress);
+  AddressStore.setPkpViemAddress(eoaPkpViemAddress);
 
   return zeroDevAddress;
 }
 
-export async function pkpEthersWalletSigner(
+export function createPkpViemWalletClient(
   pkpPubKey: string,
   sessionSigs: SessionSigs,
   chainId: number = 80001,
-) {
-  const rpcUrl = EIP155_CHAINS[`eip155:${chainId}`].rpc;
-
-  const pkpEthersWalletSigner: PKPEthersWallet = new PKPEthersWallet({
-    pkpPubKey: pkpPubKey,
-    controllerSessionSigs: sessionSigs,
-    rpc: rpcUrl,
+): WalletClient {
+  const pkpViemAccount: PKPViemAccount = createPKPViemAccount(
+    pkpPubKey,
+    sessionSigs,
+  );
+  const pkpViemWalletClient = createWalletClient({
+    account: pkpViemAccount,
+    transport: http(),
+    chain: getChain(chainId),
   });
-  return pkpEthersWalletSigner;
+  return pkpViemWalletClient;
 }
 
 export async function zeroDevSigner(
@@ -63,15 +66,14 @@ export async function zeroDevSigner(
   sessionSigs: SessionSigs,
   chainId: number = 80001,
 ) {
-  const owner = new PKPEthersWallet({
-    pkpPubKey: pkpPubKey,
-    controllerSessionSigs: sessionSigs,
-  });
-  const provider = await ZeroDevEthersProvider.init('ECDSA', {
+  const account = createPKPViemAccount(pkpPubKey, sessionSigs);
+
+  const provider = await ECDSAProvider.init({
     projectId: projectIdOf(chainId),
-    owner: convertEthersSignerToAccountSigner(owner),
+    owner: convertAccountToSmartAccountSigner(account),
   });
-  return provider.getAccountSigner();
+
+  return provider;
 }
 
 export async function zeroDevSignerWithERC20Gas(
@@ -80,13 +82,10 @@ export async function zeroDevSignerWithERC20Gas(
   sessionSigs: SessionSigs,
   chainId: number = 80001,
 ) {
-  const owner = new PKPEthersWallet({
-    pkpPubKey: pkpPubKey,
-    controllerSessionSigs: sessionSigs,
-  });
-  const providerWithERC20Gas = await ZeroDevEthersProvider.init('ECDSA', {
+  const account = createPKPViemAccount(pkpPubKey, sessionSigs);
+  const providerWithERC20Gas = await ECDSAProvider.init({
     projectId: projectIdOf(chainId),
-    owner: convertEthersSignerToAccountSigner(owner),
+    owner: convertAccountToSmartAccountSigner(account),
     opts: {
       paymasterConfig: {
         policy: 'TOKEN_PAYMASTER',
@@ -94,41 +93,5 @@ export async function zeroDevSignerWithERC20Gas(
       },
     },
   });
-
-  return providerWithERC20Gas.getAccountSigner();
-}
-
-export async function biconomySmartAccount(
-  pkpPubKey: string,
-  sessionSigs: SessionSigs,
-  chainId: number = 59140,
-) {
-  // create bundler and paymaster instances
-  const bundler = new Bundler({
-    bundlerUrl: `https://bundler.biconomy.io/api/v2/${chainId}/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44`,
-    chainId: chainId,
-    entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
-  });
-  const paymaster = new BiconomyPaymaster({
-    paymasterUrl: biconomyPaymasterOf(chainId),
-    strictMode: false, // by default is true. If set to false, then paymaster and data is still sent as 0x and account will pay in native
-  });
-  const rpcUrl = EIP155_CHAINS[`eip155:${chainId}`].rpc;
-  if (!rpcUrl) {
-    throw new Error(`No RPC endpoint for chainId ${chainId}`);
-  }
-  // create biconomy smart account instance
-  const biconomySmartAccountConfig = {
-    signer: new PKPEthersWallet({
-      pkpPubKey: pkpPubKey,
-      controllerSessionSigs: sessionSigs,
-    }),
-    chainId: chainId,
-    rpcUrl: rpcUrl,
-    paymaster: paymaster, // optional
-    bundler: bundler, // optional
-    // nodeClientUrl: config.nodeClientUrl, // if needed to override
-  };
-  const biconomyAccount = new BiconomySmartAccount(biconomySmartAccountConfig);
-  return await biconomyAccount.init({ accountIndex: 0 });
+  return providerWithERC20Gas;
 }
