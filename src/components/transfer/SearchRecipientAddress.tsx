@@ -1,5 +1,5 @@
-import { ethers } from "ethers";
 import { Dispatch, SetStateAction } from "react";
+import { isAddress } from "viem";
 
 interface Props {
   setVerifyAddress: Dispatch<SetStateAction<Boolean>>;
@@ -12,7 +12,7 @@ function SearchRecipientAddress({
 }: Props) {
   const checkRecipientAddress = (recipientAddress: string): Boolean => {
     if (recipientAddress != '') {
-      const isAddressVerified = ethers.utils.isAddress(recipientAddress);
+      const isAddressVerified = isAddress(recipientAddress);
       return isAddressVerified;
     } else return false;
   };

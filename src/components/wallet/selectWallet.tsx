@@ -1,16 +1,16 @@
-import AddressStore from '@/store/AddressStore';
+import AddressStore, { selectedWalletType } from '@/store/AddressStore';
 import { truncateAddress } from '@/utils/HelperUtil';
 import { useSnapshot } from 'valtio';
 
 export default function SelectWallet() {
-  const { zeroDevAddress, biconomyAddress, pkpEthersAddress, selectedWallet } =
-    useSnapshot(AddressStore.state);
-  const getSelectedWallet = (
-    selectedWallet: 'zeroDev' | 'biconomy' | 'pkpEthers',
-  ) => {
+  const {
+    pkpViemAddress,
+    zeroDevAddress,
+    selectedWallet,
+  } = useSnapshot(AddressStore.state);
+  const getSelectedWallet = (selectedWallet: selectedWalletType) => {
     if (selectedWallet === 'zeroDev') return 'ZeroDev';
-    else if (selectedWallet === 'biconomy') return 'Biconomy';
-    else if (selectedWallet === 'pkpEthers') return 'EOA';
+    else if (selectedWallet === 'pkpViem') return 'EOA';
   };
   return (
     <div className="dropdown">
@@ -28,15 +28,9 @@ export default function SelectWallet() {
           </a>
         </li>
         <li>
-          <a onClick={() => AddressStore.setSelectedWallet('biconomy')}>
-            <span>Biconomy: </span>
-            {truncateAddress(biconomyAddress)}
-          </a>
-        </li>
-        <li>
-          <a onClick={() => AddressStore.setSelectedWallet('pkpEthers')}>
-            <span>EOA Wallet: </span>
-            {truncateAddress(pkpEthersAddress)}
+          <a onClick={() => AddressStore.setSelectedWallet('pkpViem')}>
+            <span>EOA Viem Wallet: </span>
+            {truncateAddress(pkpViemAddress)}
           </a>
         </li>
       </ul>
