@@ -76,12 +76,14 @@
 }
 
 * {
+  outline: none;
+  box-sizing: border-box;
   transition: background-color 0.23s ease-in-out 0s;
 }
 
 html {
   background-color: #121312 !important;
-  font-size: 90%;
+  /* font-size: 100%; */
 }
 
 
@@ -100,4 +102,8 @@ body {
   --spaceMedium: 32px;
   --spaceBase: 24px;
   --spaceSmall: 16px;
+}
+
+input {
+  all: initial;
 }

@@ -16,7 +16,7 @@ const CardButton = ({ title, icon, onClick, description }: IProps) => {
   return (
     <Container onClick={onClick}>
       <Icon type={icon} />
-      <Text size="tiny" $thin>
+      <Text size="body3" $thin>
         {description}
       </Text>
       <Text>{title}</Text>

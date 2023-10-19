@@ -4,87 +4,64 @@ export type SpaceType = keyof typeof space;
 export type LineHeightType = keyof typeof lineHeight;
 
 const fontSize = {
-  display: "4rem",
-  title1: "3.2rem",
-  title2: "2.4rem",
-  title3: "2.1rem",
-  body1: "1.8rem",
-  body2: "1.6rem",
-  body3: "1.4rem",
-  body4: "1.2rem",
-  large: "1.8rem",
-  regular: "1.6rem",
-  tiny: "0.9rem",
+  display: "2.5rem", // 40px
+  title1: "2rem", // 32px
+  title2: "1.5rem", // 24px
+  title3: "1.3125rem", // 21px
+  body1: "1.125rem", // 18px
+  body2: "1rem", // 16px
+  body3: "0.875rem", // 14px
+  body4: "0.75rem", // 12px
+  body5: "0.625rem" // 10px
 }
-
+const lineHeight = {
+  display: "3.375rem",
+  title1: "2.75rem",
+  title2: "2.125rem",
+  title3: "1.875rem",
+  body1: "1.75rem",
+  body2: "1.5rem",
+  body3: "1.125rem",
+  body4: "1rem",
+  body5: "0.875rem"
+}
 
 const color = {
-    textPrimary: "#fff",
-    textSecondary: "#636669",
-    textDisabled:" #636669",
-
-    primaryDark: "#0cb259", // hover
-    primaryMain: "#12ff80",
-    primaryLight:"#a1a3a7",
-
-    secondaryDark:"#636669",
-    secondaryMain: "#fff",
-    secondaryLight: "#12ff80",
-    secondaryBackground: "#303033",
-
-    borderMain: "#636669",
-    borderLight: "#303033",
-    borderBackground: "#121312",
-
-    // error-dark: #ac2c3b;
-    // error-main: #ff5f72;
-    // error-light: #ffb4bd;
-    // error-background: #2f2527;
-
-    // success-dark: #028d4c;
-    // success-main: #00b460;
-    // success-light: #81c784;
-    // success-background: #1f2920;
-    // info-dark: #52bfdc;
-    // info-main: #5fddff;
-    // info-light: #b7f0ff;
-    // info-background: #19252c;
-
-    // warning-dark: #cd674e;
-    // warning-main: #ff8061;
-    // warning-light: #ffb7a6;
-    // warning-background: #2f2318;
-
-    backgroundDefault: "#121312",
-    backgroundMain:"#121312",
-    backgroundPaper:"#1c1c1c",
-    backgroundLight: "#1b2a22",
-    backdropMain: "#636669",
-    // logo-main: #fff;
-    // logo-background: #303033;
-    // static-main: #121312;
-}
+  bg800: "#030D14",
+  bg500: "#082032",
+  bg400: "#394D5B",
+  bg300: "#6B7984",
+  bg200: "#9CA6AD",
+  bg100: "#CED2D6",
+  bg0: "#FFFFFF",
+  systemRed: "#FF3B53",
+  systemOrange: "#FE9B07",
+  systemGreen: "#06C755",
+  systemBlue: "#2580E5",
+  brandBlue700: "#004777",
+  brandBlue600: "#005F9F",
+  brandBlue500: "#0077C7",
+  brandBlue400: "#3392D2",
+  brandBlue300: "#66ADDD",
+  brandBlue200: "#99C9E9",
+  brandBlue100: "#CCE4F4",
+  brandOrange700: "#992E19",
+  brandOrange600: "#CC3D21",
+  brandOrange500: "#FF4C29",
+  brandOrange400: "#FF7054",
+  brandOrange300: "#FF947F",
+  brandOrange200: "#FFB7A9",
+  brandOrange100: "#FFDBD4",
 
 
-
-const lineHeight = {
-  display: "54px",
-  title1: "44px",
-  title2: "34px",
-  title3: "30px",
-  body1: "28px",
-  body2: "24px",
-  body3: "18px",
-  body4: "16px",
-  large: "28px",
-  regular: "24px",
-  small: "18px",
-  tiny: "16px",
+  // TODO: legacy color -> remove it
+  backgroundPaper: "#1c1c1c",
+  backgroundLight: "#1b2a22",
+  backgroundMain: "#121312",
 }
 
 const space = {
-  xxTiny: "4px",
-  xTiny: "6px",
+  xTiny: "4px",
   tiny: "8px",
   xSmall: "12px",
   small: "16px",
@@ -93,8 +70,7 @@ const space = {
   medium: "32px",
   mLarge: "40px",
   large: "48px",
-  xLarge: "52px",
-  xxLarge: "64px",
+  xLarge: "64px",
 }
 
 export type Color = keyof typeof color;

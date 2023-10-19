@@ -17,7 +17,7 @@ interface IProps {
 
 const Text = ({
   children = '',
-  color = 'textPrimary',
+  color = 'bg0',
   size = 'body3',
   $bold = false,
   $thin = false,
@@ -27,7 +27,7 @@ const Text = ({
 }: IProps) => {
   return (
     <StyledText
-      className=""
+      className={className}
       $align={$align}
       color={color}
       size={size}
@@ -41,7 +41,7 @@ const Text = ({
 
 const StyledText = styled.span<IProps>`
   font-weight: ${({ $bold, $thin }) => ($bold ? 700 : $thin ? 400 : 500)};
-  color: ${({ color }) => theme.color[color ?? 'textPrimary']};
+  color: ${({ color }) => theme.color[color ?? 'bg0']};
   font-size: ${({ size }) => theme.fontSize[size ?? 'body3']};
   line-height: ${({ size }) => theme.lineHeight[size ?? 'body3']};
   text-align: ${({ $align }) => $align};
