@@ -1,10 +1,11 @@
 'use client';
 
+import styled from 'styled-components';
+import { useRouter } from 'next/navigation';
+
 import Text from '@/components/commons/Text';
 import CardButton from '@/components/main/CardButton';
 import theme from '@/styles/theme';
-import { useRouter } from 'next/navigation';
-import styled from 'styled-components';
 
 function MainPage() {
   const router = useRouter();
@@ -75,7 +76,7 @@ const Container = styled.div`
 const Description = styled.div`
   display: flex;
   flex-direction: column;
-  row-gap: ${theme.space.xxTiny};
+  row-gap: ${theme.space.xTiny};
 `;
 
 const ButtonWrapper = styled.div`
