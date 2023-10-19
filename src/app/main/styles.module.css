@@ -1,0 +1,10 @@
+.contentWrapper {
+    background-color: var(--backgroundMain);
+    padding: var(--spaceBase);
+}
+
+.content {
+    max-width: 1440px;
+    margin: 0 auto;
+    min-height: 100vh;
+}

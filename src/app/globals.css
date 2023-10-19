@@ -75,8 +75,35 @@
   }
 }
 
+* {
+  outline: none;
+  box-sizing: border-box;
+  transition: background-color 0.23s ease-in-out 0s;
+}
+
+html {
+  background-color: #121312 !important;
+  /* font-size: 100%; */
+}
+
+
 body {
-  min-height: 100vh;
-  max-width: 360px;
-  margin: 0 auto;
+  /*
+    // Legacy styles 
+    min-height: 100vh;
+    max-width: 360px;
+    margin: 0 auto;
+  */
+  --backgroundDefault: #121312;
+  --backgroundMain:#121312;
+  --backgroundPaper:#1c1c1c;
+  --backgroundLight: #1b2a22;
+
+  --spaceMedium: 32px;
+  --spaceBase: 24px;
+  --spaceSmall: 16px;
+}
+
+input {
+  all: initial;
 }
