@@ -9,6 +9,7 @@ import Text from '@/components/commons/Text';
 import CardButton from '@/components/main/CardButton';
 import theme from '@/styles/theme';
 import Button from '@/components/commons/Button';
+import IconButton from '@/components/commons/IcButton';
 
 function MainPage() {
   const router = useRouter();
@@ -44,8 +45,15 @@ function MainPage() {
         <Button
           text="Button"
           type="secondary"
-          size="medium"
+          size="large"
           disabled
+          onClick={() => {}}
+        />
+        <IconButton
+          icon="login"
+          text="IconButton"
+          type="primary"
+          size="large"
           onClick={() => {}}
         />
       </Row>
