@@ -17,8 +17,9 @@ function SessionProposalModal() {
     Record<string, string[]>
   >({});
   const hasSelected = Object.keys(selectedAccounts).length;
-  // biconomy don't have sign features, so we don't need to use it currently
-  const { zeroDevAddress } = useSnapshot(AddressStore.state);
+  const { zeroDevAddress, pkpViemAddress, selectedWallet } = useSnapshot(
+    AddressStore.state,
+  );
   const router = useRouter();
 
   // Get proposal data and wallet address from store
@@ -48,7 +49,7 @@ function SessionProposalModal() {
   function onSelectAccount(chain: string, account: string) {
     if (selectedAccounts[chain]?.includes(account)) {
       const newSelectedAccounts = selectedAccounts[chain]?.filter(
-        (a) => a !== account
+        (a) => a !== account,
       );
       setSelectedAccounts((prev) => ({
         ...prev,
@@ -83,7 +84,7 @@ function SessionProposalModal() {
           if (requiredNamespaces[key].chains) {
             requiredNamespaces[key].chains?.map((chain) => {
               selectedAccounts[`required:${key}`].map((acc) =>
-                accounts.push(`${chain}:${acc}`)
+                accounts.push(`${chain}:${acc}`),
               );
             });
             namespaces[key] = {
@@ -96,7 +97,7 @@ function SessionProposalModal() {
           if (optionalNamespaces[key] && selectedAccounts[`optional:${key}`]) {
             optionalNamespaces[key].chains?.map((chain) => {
               selectedAccounts[`optional:${key}`].map((acc) =>
-                accounts.push(`${chain}:${acc}`)
+                accounts.push(`${chain}:${acc}`),
               );
             });
             namespaces[key] = {
@@ -105,7 +106,7 @@ function SessionProposalModal() {
               methods: optionalNamespaces[key].methods,
               events: optionalNamespaces[key].events,
               chains: namespaces[key].chains?.concat(
-                optionalNamespaces[key].chains || []
+                optionalNamespaces[key].chains || [],
               ),
             };
           }
@@ -123,7 +124,7 @@ function SessionProposalModal() {
       ConnectedAppStore.addConnectedApp(
         approvedSession.topic,
         expiryDate,
-        proposer.metadata
+        proposer.metadata,
       );
     }
     ModalStore.close();
@@ -144,14 +145,25 @@ function SessionProposalModal() {
   // Render account selection checkboxes based on chain
   function renderAccountSelection(chain: string) {
     if (isEIP155Chain(chain)) {
-      return (
-        <ProposalSelectSection
-          addresses={[zeroDevAddress]}
-          selectedAddresses={selectedAccounts[chain]}
-          onSelect={onSelectAccount}
-          chain={chain}
-        />
-      );
+      if (selectedWallet === 'zeroDev') {
+        return (
+          <ProposalSelectSection
+            addresses={[zeroDevAddress]}
+            selectedAddresses={selectedAccounts[chain]}
+            onSelect={onSelectAccount}
+            chain={chain}
+          />
+        );
+      } else if (selectedWallet === 'pkpViem') {
+        return (
+          <ProposalSelectSection
+            addresses={[pkpViemAddress]}
+            selectedAddresses={selectedAccounts[chain]}
+            onSelect={onSelectAccount}
+            chain={chain}
+          />
+        );
+      }
     }
   }
 
@@ -198,5 +210,5 @@ function SessionProposalModal() {
       </RequestModalContainer>
     </>
   );
-};
+}
 export default SessionProposalModal;
