@@ -1,31 +1,13 @@
-import {
-  ECDSAProvider,
-} from '@zerodev/sdk';
-import { SupportedGasToken } from '@zerodev/sdk/dist/types';
+import { ECDSAProvider, SupportedGasToken } from '@zerodev/sdk';
 import { SessionSigs } from '@lit-protocol/types';
-import { getChain, projectIdOf } from './ClientUtil';
+import { projectIdOf } from './ClientUtil';
 import AddressStore from '@/store/AddressStore';
+import { convertAccountToSmartAccountSigner } from '@altpd13/pkp-viem';
 import {
-  PKPViemAccount,
-  convertAccountToSmartAccountSigner,
-} from '@altpd13/pkp-viem';
-import { createWalletClient, http } from 'viem';
-import { WalletClient } from 'viem';
+  createPKPViemAccount,
+  createPkpViemWalletClient,
+} from './EOAWalletUtil';
 
-/**
- * Utilities
- */
-
-export function createPKPViemAccount(
-  pkpPubKey: string,
-  sessionSigs: SessionSigs,
-): PKPViemAccount {
-  const account: PKPViemAccount = new PKPViemAccount({
-    controllerSessionSigs: sessionSigs,
-    pkpPubKey,
-  });
-  return account;
-}
 export async function createOrRestoreERC4337Wallet(
   pkpPubKey: string,
   sessionSigs: SessionSigs,
@@ -42,23 +24,6 @@ export async function createOrRestoreERC4337Wallet(
   AddressStore.setPkpViemAddress(eoaPkpViemAddress);
 
   return zeroDevAddress;
-}
-
-export function createPkpViemWalletClient(
-  pkpPubKey: string,
-  sessionSigs: SessionSigs,
-  chainId: number = 80001,
-): WalletClient {
-  const pkpViemAccount: PKPViemAccount = createPKPViemAccount(
-    pkpPubKey,
-    sessionSigs,
-  );
-  const pkpViemWalletClient = createWalletClient({
-    account: pkpViemAccount,
-    transport: http(),
-    chain: getChain(chainId),
-  });
-  return pkpViemWalletClient;
 }
 
 export async function zeroDevSigner(

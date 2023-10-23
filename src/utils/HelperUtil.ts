@@ -30,7 +30,7 @@ export function truncateAddress(address: string) {
  */
 export function convertHexToUtf8(value: string) {
   if (isHex(value)) {
-    const fromHexStringtoUint8Array = (hexString:string) =>
+    const fromHexStringtoUint8Array = (hexString: string) =>
       Uint8Array.from(
         hexString.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16)),
       );
@@ -47,7 +47,6 @@ export function convertHexToUtf8(value: string) {
  */
 export function getSignParamsMessage(params: string[]) {
   const message = params.filter((p) => !isAddress(p))[0];
-
   return convertHexToUtf8(message);
 }
 

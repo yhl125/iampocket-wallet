@@ -12,7 +12,6 @@ import TokenList from './tokenList';
 import FetchTokens from './fetchToken';
 import useWalletWithPKP from '@/hooks/useWalletWithPKP';
 import {
-  biconomyTestnetChainIds,
   zeroDevMainnetChainIds,
   zeroDevTestnetChainIds,
 } from '@/data/EIP155Data';
@@ -34,7 +33,6 @@ function Wallet() {
   const chainIds = [
     ...zeroDevMainnetChainIds,
     ...zeroDevTestnetChainIds,
-    ...biconomyTestnetChainIds,
   ];
 
   useEffect(() => {
