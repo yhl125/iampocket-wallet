@@ -55,7 +55,7 @@
   "devDependencies": {
     "@simplewebauthn/typescript-types": "^7.4.0",
     "@svgr/webpack": "^8.1.0",
-    "@walletconnect/types": "2.10.2",
+    "@walletconnect/types": "2.9.2",
     "autoprefixer": "^10.4.14",
     "eslint-config-prettier": "^9.0.0",
     "postcss": "^8.4.27",
