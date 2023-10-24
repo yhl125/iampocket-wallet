@@ -39,7 +39,7 @@ function MainPage() {
         <Button
           text="Button"
           type="secondary"
-          size="medium"
+          size="small"
           onClick={() => {}}
         />
         <Button

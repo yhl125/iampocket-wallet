@@ -11,13 +11,11 @@ interface IProps {
   type: IconTypes;
   color?: ColorType;
   height?: SizeType;
-  width?: SizeType;
 }
 
 const Icon = ({
   type,
   height = 'body3',
-  width = 'body3',
   color = 'primaryMain',
 }: IProps) => {
   const renderIcon = () => {
@@ -29,25 +27,21 @@ const Icon = ({
     }
   };
 
-
-
   return (
-    <Container width={width} height={height} color={color}>
+    <Container height={height} color={color}>
       {renderIcon()}
     </Container>
   );
 };
 
 const Container = styled.div<{
-  width : SizeType;
   height: SizeType;
   color: ColorType;
 }>`
-  width:  ${({ width }) => theme.fontSize[width]};;
-  height: ${({ height }) => theme.fontSize[height]};
 
 
   svg {
+    height: ${({ height }) => theme.fontSize[height]};
     path {
       fill: ${({ color }) => theme.color[color]};
        object-fit: contain;
