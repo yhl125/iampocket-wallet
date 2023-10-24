@@ -9,7 +9,7 @@ import Text from '@/components/commons/Text';
 import CardButton from '@/components/main/CardButton';
 import theme from '@/styles/theme';
 import Button from '@/components/commons/Button';
-import IconButton from '@/components/commons/IcButton';
+import IconButton from '@/components/commons/IconButton';
 
 function MainPage() {
   const router = useRouter();
