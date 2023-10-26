@@ -94,6 +94,8 @@ body {
     max-width: 360px;
     margin: 0 auto;
   */
+  background-color: #121312;
+
   --backgroundDefault: #121312;
   --backgroundMain:#121312;
   --backgroundPaper:#1c1c1c;

@@ -7,6 +7,7 @@ import theme, { ColorType, SizeType } from '@/styles/theme';
 
 type ButtonSizeType = 'large' | 'medium' | 'small';
 interface IProps {
+  children?: React.ReactNode;
   text: string;
   type?: 'primary' | 'secondary' | 'tertiary';
   size?: ButtonSizeType;
@@ -16,6 +17,7 @@ interface IProps {
   style?: React.CSSProperties;
 }
 const Button = ({
+  children,
   text = '',
   size = 'medium',
   type = 'primary',
@@ -65,6 +67,7 @@ const Button = ({
       disabled={disabled}
       style={style}
     >
+      {children}
       <Text color={renderFontColor()} size={renderFontSize()}>
         {text}
       </Text>
@@ -85,6 +88,11 @@ const Container = styled.button<{
       : size === 'medium'
       ? `12px 20px`
       : `16px 24px`};
+
+  gap: ${({ size }) =>
+  size === 'small' || 'medium'
+  ? `4px`
+  : `8px`};
 
   width: 100%;
   border-radius: 5px;

@@ -3,21 +3,20 @@ import styled from 'styled-components';
 
 import AddIcon from '@/assets/icons/plus.svg';
 import LoginIcon from '@/assets/icons/login.svg';
-import theme, { ColorType } from '@/styles/theme';
+import LogoIcon from '@/assets/icons/logo.svg';
+import theme, { ColorType, SizeType } from '@/styles/theme';
 
-export type IconTypes = 'add' | 'login';
+export type IconTypes = 'add' | 'login' | 'logo';
 
 interface IProps {
   type: IconTypes;
   color?: ColorType;
-  width?: number;
-  height?: number;
+  height?: SizeType;
 }
 
 const Icon = ({
   type,
-  width = 24,
-  height = 24,
+  height = 'body3',
   color = 'primaryMain',
 }: IProps) => {
   const renderIcon = () => {
@@ -26,27 +25,29 @@ const Icon = ({
         return <AddIcon />;
       case 'login':
         return <LoginIcon />;
+      case 'logo':
+        return <LogoIcon />;
     }
   };
 
   return (
-    <Container width={width} height={height} color={color}>
+    <Container height={height} color={color}>
       {renderIcon()}
     </Container>
   );
 };
 
 const Container = styled.div<{
-  width: number;
-  height: number;
+  height: SizeType;
   color: ColorType;
 }>`
-  width: ${({ width }) => `${width}px`};
-  height: ${({ height }) => `${height}px`};
+
 
   svg {
+    height: ${({ height }) => theme.fontSize[height]};
     path {
       fill: ${({ color }) => theme.color[color]};
+       object-fit: contain;
     }
   }
 `;

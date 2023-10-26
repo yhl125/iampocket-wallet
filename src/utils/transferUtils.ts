@@ -1,9 +1,9 @@
 import { ERC20_ABI } from '@/abi/abi';
 import {
-  createPkpViemWalletClient,
   zeroDevSigner,
   zeroDevSignerWithERC20Gas,
 } from './ERC4337WalletUtil';
+import { createPkpViemWalletClient } from './EOAWalletUtil';
 import { SessionSigs } from '@lit-protocol/types';
 import { publicClientOf } from './ClientUtil';
 import {

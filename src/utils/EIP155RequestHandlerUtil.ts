@@ -13,6 +13,8 @@ import { zeroDevSigner } from './ERC4337WalletUtil';
 import { SessionSigs } from '@lit-protocol/types';
 import { keccak256 } from 'viem';
 import { serializeTransaction } from 'viem';
+import { createPkpViemWalletClient } from './EOAWalletUtil';
+import AddressStore from '@/store/AddressStore';
 
 export async function approveEIP155RequestZeroDev(
   requestEvent: SignClientTypes.EventArguments['session_request'],
@@ -21,6 +23,12 @@ export async function approveEIP155RequestZeroDev(
 ) {
   const { params, id } = requestEvent;
   const { chainId, request } = params;
+  const eoaWallet = createPkpViemWalletClient(
+    publicKey,
+    sessionSigs,
+    EIP155_CHAINS[chainId].chainId,
+  );
+
   const erc4337Wallet = await zeroDevSigner(
     publicKey,
     sessionSigs,
@@ -31,8 +39,16 @@ export async function approveEIP155RequestZeroDev(
     case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
     case EIP155_SIGNING_METHODS.ETH_SIGN:
       const message = getSignParamsMessage(request.params);
-      const signedMessage = await erc4337Wallet.signMessageWith6492(message);
-      return formatJsonRpcResult(id, signedMessage);
+      if (AddressStore.state.selectedWallet === 'zeroDev') {
+        const signedMessage = await erc4337Wallet.signMessage(message);
+        return formatJsonRpcResult(id, signedMessage);
+      } else if (AddressStore.state.selectedWallet === 'pkpViem') {
+        const signedMessage = await eoaWallet.signMessage({
+          message: message,
+          account: eoaWallet.account!,
+        });
+        return formatJsonRpcResult(id, signedMessage);
+      }
 
     case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA:
     case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V3:
@@ -41,32 +57,54 @@ export async function approveEIP155RequestZeroDev(
         domain,
         types,
         message: data,
+        primaryType,
       } = getSignTypedDataParamsData(request.params);
       // https://github.com/ethers-io/ethers.js/issues/687#issuecomment-714069471
       delete types.EIP712Domain;
-      const signedData = await erc4337Wallet.signTypedDataWith6492({
-        domain,
-        types,
-        message: data,
-        primaryType: 'EIP712Domain',
-      });
-      return formatJsonRpcResult(id, signedData);
+      if (AddressStore.state.selectedWallet === 'zeroDev') {
+        const signedData = await erc4337Wallet.signTypedDataWith6492({
+          domain,
+          types,
+          message: data,
+          primaryType: primaryType,
+        });
+        return formatJsonRpcResult(id, signedData);
+      } else if (AddressStore.state.selectedWallet === 'pkpViem') {
+        const signedData = await eoaWallet.signTypedData({
+          domain,
+          types,
+          message: data,
+          primaryType: primaryType,
+          account: eoaWallet.account!,
+        });
+        return formatJsonRpcResult(id, signedData);
+      }
 
     case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
       const sendTransaction = request.params[0];
       // below expected gas of 33100
       sendTransaction.gasLimit = 33100;
-      const result = await erc4337Wallet.sendTransaction(sendTransaction);
-      const hash = result;
-      return formatJsonRpcResult(id, hash);
+      if (AddressStore.state.selectedWallet === 'zeroDev') {
+        // ECDSA Provider Does not have signTransaction so use keccak256 to turn transaction to Uint8Array and sign it with signMessage
+        const hash = await erc4337Wallet.sendTransaction(sendTransaction);
+        return formatJsonRpcResult(id, hash);
+      } else if (AddressStore.state.selectedWallet === 'pkpViem') {
+        const hash = await eoaWallet.sendTransaction(sendTransaction);
+        return formatJsonRpcResult(id, hash);
+      }
 
     case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
       const signTransaction = request.params[0];
-      // ECDSA Provider Does not have signTransaction so use keccak256 to turn transaction to Uint8Array and sign it with signMessage
-      const signature = await erc4337Wallet.signMessageWith6492(
-        keccak256(serializeTransaction(signTransaction)),
-      );
-      return formatJsonRpcResult(id, signature);
+      if (AddressStore.state.selectedWallet === 'zeroDev') {
+        // ECDSA Provider Does not have signTransaction so use keccak256 to turn transaction to Uint8Array and sign it with signMessage
+        const signature = await erc4337Wallet.signMessageWith6492(
+          keccak256(serializeTransaction(signTransaction)),
+        );
+        return formatJsonRpcResult(id, signature);
+      } else if (AddressStore.state.selectedWallet === 'pkpViem') {
+        const signature = await eoaWallet.signTransaction(signTransaction);
+        return formatJsonRpcResult(id, signature);
+      }
 
     default:
       throw new Error(getSdkError('INVALID_METHOD').message);
