@@ -5,30 +5,35 @@ import styled from 'styled-components';
 
 import theme from '@/styles/theme';
 import Text from './commons/Text';
+import Icon from './commons/Icon';
 
 // MEMO: Global Navigation Header
 const Header = () => {
   return (
     <Container>
       <Left>
-        <Text>iamPocket</Text>
+          <Icon type="logo" color='brandBlue500' height='display'/>
+          <Text size='title2' $bold>iamPocket</Text>
       </Left>
-      <Right></Right>
+      <Right>
+      </Right>
     </Container>
   );
 };
 
 const Container = styled.header`
   width: 100%;
-  height: 50px;
-
-  background-color: ${theme.color.backgroundPaper};
-  border-bottom: 1px solid ${theme.color.borderLight};
-
-  padding: ${theme.space.small};
+  display: flex;
+  align-items: center;
+  position : fixed;
+  padding: ${theme.space.medium} ${theme.space.mLarge};
 `;
 
-const Left = styled.div``;
+const Left = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.space.tiny};;
+`;
 const Right = styled.div``;
 
 export default Header;

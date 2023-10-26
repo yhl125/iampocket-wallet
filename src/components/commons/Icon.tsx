@@ -3,9 +3,10 @@ import styled from 'styled-components';
 
 import AddIcon from '@/assets/icons/plus.svg';
 import LoginIcon from '@/assets/icons/login.svg';
+import LogoIcon from '@/assets/icons/logo.svg';
 import theme, { ColorType, SizeType } from '@/styles/theme';
 
-export type IconTypes = 'add' | 'login';
+export type IconTypes = 'add' | 'login' | 'logo';
 
 interface IProps {
   type: IconTypes;
@@ -24,6 +25,8 @@ const Icon = ({
         return <AddIcon />;
       case 'login':
         return <LoginIcon />;
+      case 'logo':
+        return <LogoIcon />;
     }
   };
 

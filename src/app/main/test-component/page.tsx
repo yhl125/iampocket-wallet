@@ -53,7 +53,7 @@ function MainPage() {
           icon="login"
           text="IconButton"
           type="primary"
-          size="large"
+          size="medium"
           onClick={() => {}}
         />
       </Row>
