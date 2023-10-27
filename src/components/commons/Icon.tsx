@@ -14,11 +14,7 @@ interface IProps {
   height?: SizeType;
 }
 
-const Icon = ({
-  type,
-  height = 'body3',
-  color = 'primaryMain',
-}: IProps) => {
+const Icon = ({ type, height = 'body3', color = 'bg0' }: IProps) => {
   const renderIcon = () => {
     switch (type) {
       case 'add':
@@ -41,13 +37,11 @@ const Container = styled.div<{
   height: SizeType;
   color: ColorType;
 }>`
-
-
   svg {
     height: ${({ height }) => theme.fontSize[height]};
     path {
       fill: ${({ color }) => theme.color[color]};
-       object-fit: contain;
+      object-fit: contain;
     }
   }
 `;

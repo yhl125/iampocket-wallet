@@ -7,7 +7,7 @@ interface IInputProps {
   value: string;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   type?: React.HTMLInputTypeAttribute;
-  size?: 'small' | 'large';
+  size?: 'small' | 'medium';
   error?: {
     message?: string;
   };
@@ -42,7 +42,7 @@ const Input = ({
       {(error?.message || info?.message) && (
         <Text
           $thin
-          size={size === 'large' ? 'body2' : 'body4'}
+          size={size === 'medium' ? 'body2' : 'body4'}
           color={error?.message ? 'systemRed' : 'systemGreen'}
         >
           {error?.message ? error?.message : info?.message}
@@ -60,27 +60,29 @@ const InputContainer = styled.div`
 
   width: 100%;
 `;
-const StyledInput = styled.input<{ size: 'small' | 'large' }>`
+const StyledInput = styled.input<{ size: 'small' | 'medium' }>`
   transition: border-color 0.1s ease;
   padding: ${({ size }) =>
-    size === 'large' ? `21px` : `${theme.space.xSmall} ${theme.space.sMedium}`};
+    size === 'medium'
+      ? `${theme.space.xSmall} ${theme.space.sMedium}`
+      : `${theme.space.tiny} ${theme.space.small}`};
 
-  background-color: ${theme.color.bg500};
-  border: 1px solid ${theme.color.bg500};
+  background-color: ${theme.color.bg80};
+  border: 1px solid ${theme.color.bg80};
   border-radius: 5px;
 
   color: ${theme.color.bg0};
   font-size: ${({ size }) =>
-    size === 'large' ? theme.fontSize.title3 : theme.fontSize.body3};
+    size === 'medium' ? theme.fontSize.body2 : theme.fontSize.body3};
   line-height: ${({ size }) =>
-    size === 'large' ? theme.lineHeight.title3 : theme.lineHeight.body3};
+    size === 'medium' ? theme.lineHeight.body2 : theme.lineHeight.body3};
 
   &::placeholder {
-    color: ${theme.color.bg200};
+    color: ${theme.color.bg20};
   }
 
   &:focus {
-    border: 1px solid ${theme.color.bg0};
+    border: 1px solid ${theme.color.brandBlue50};
   }
 `;
 

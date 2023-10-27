@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import Text from './Text';
 import theme, { ColorType, SizeType } from '@/styles/theme';
@@ -26,37 +26,43 @@ const Button = ({
   loading = false,
   style,
 }: IProps) => {
+  const [hover, setHover] = useState(false);
   const renderFontColor = (): ColorType => {
-    if (disabled) return 'bg300';
-    if (loading) return 'bg100';
+    if (disabled) return 'bg30';
+    if (loading) return 'bg10';
+    if (hover && type === 'secondary') {
+      return 'bg30';
+    }
     return 'bg0';
   };
 
   const renderButtonColor = (): ColorType => {
-    if (disabled) return 'bg800';
+    if (disabled) return 'bg50';
 
     if (type === 'primary') {
-      if (loading) return 'brandOrange600';
-      return 'brandOrange500';
+      if (loading) return 'brandBlue80';
+      if (hover) return 'brandBlue60';
+      return 'brandBlue50';
     }
 
     if (type === 'secondary') {
-      if (loading) return 'brandBlue700';
-      return 'brandBlue500';
+      if (loading) return 'bg50';
+      return 'bg100';
     }
 
     if (type === 'tertiary') {
-      if (loading) return 'bg300';
-      return 'bg500';
+      if (loading) return 'bg50';
+      if (hover) return 'bg60';
+      return 'bg80';
     }
 
-    return 'brandOrange500'; // default case
+    return 'brandBlue50';
   };
 
   const renderFontSize = (): SizeType => {
     if (size === 'large') return 'body1';
-    if (size === 'small') return 'body5';
-    return 'body3'; // medium and default
+    if (size === 'small') return 'body3';
+    return 'body2';
   };
 
   return (
@@ -66,9 +72,15 @@ const Button = ({
       onClick={onClick}
       disabled={disabled}
       style={style}
+      onMouseEnter={() => {
+        setHover(true);
+      }}
+      onMouseLeave={() => {
+        setHover(false);
+      }}
     >
       {children}
-      <Text color={renderFontColor()} size={renderFontSize()}>
+      <Text color={renderFontColor()} size={renderFontSize()} $bold>
         {text}
       </Text>
     </Container>
@@ -84,15 +96,12 @@ const Container = styled.button<{
   background-color: ${({ color }) => theme.color[color]};
   padding: ${({ size }) =>
     size === 'small'
-      ? `8px 10px`
+      ? `8px 12px`
       : size === 'medium'
       ? `12px 20px`
       : `16px 24px`};
 
-  gap: ${({ size }) =>
-  size === 'small' || 'medium'
-  ? `4px`
-  : `8px`};
+  gap: ${({ size }) => (size === 'small' || 'medium' ? `4px` : `8px`)};
 
   width: 100%;
   border-radius: 5px;
