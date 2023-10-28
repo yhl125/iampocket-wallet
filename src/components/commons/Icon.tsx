@@ -4,14 +4,30 @@ import styled from 'styled-components';
 import AddIcon from '@/assets/icons/plus.svg';
 import LoginIcon from '@/assets/icons/login.svg';
 import LogoIcon from '@/assets/icons/logo.svg';
+import DiscordIcon from '@/assets/icons/discord.svg';
+import FaceIdIcon from '@/assets/icons/faceid.svg';
+import GoogleIcon from '@/assets/icons/google.svg';
+import FingerPrintIcon from '@/assets/icons/fingerprint.svg';
+import MailIcon from '@/assets/icons/mail.svg';
+import MobileIcon from '@/assets/icons/mobile.svg';
+
 import theme, { ColorType, SizeType } from '@/styles/theme';
 
-export type IconTypes = 'add' | 'login' | 'logo';
+export type IconTypes =
+  | 'add'
+  | 'login'
+  | 'logo'
+  | 'discord'
+  | 'faceid'
+  | 'fingerprint'
+  | 'google'
+  | 'mail'
+  | 'mobile';
 
 interface IProps {
   type: IconTypes;
   color?: ColorType;
-  height?: SizeType;
+  height?: SizeType | number;
 }
 
 const Icon = ({ type, height = 'body3', color = 'bg0' }: IProps) => {
@@ -23,6 +39,18 @@ const Icon = ({ type, height = 'body3', color = 'bg0' }: IProps) => {
         return <LoginIcon />;
       case 'logo':
         return <LogoIcon />;
+      case 'discord':
+        return <DiscordIcon />;
+      case 'fingerprint':
+        return <FingerPrintIcon />;
+      case 'faceid':
+        return <FaceIdIcon />;
+      case 'google':
+        return <GoogleIcon />;
+      case 'mail':
+        return <MailIcon />;
+      case 'mobile':
+        return <MobileIcon />;
     }
   };
 
@@ -34,11 +62,12 @@ const Icon = ({ type, height = 'body3', color = 'bg0' }: IProps) => {
 };
 
 const Container = styled.div<{
-  height: SizeType;
+  height: SizeType | number;
   color: ColorType;
 }>`
   svg {
-    height: ${({ height }) => theme.fontSize[height]};
+    height: ${({ height }) =>
+      typeof height === 'number' ? height : theme.fontSize[height]};
     path {
       fill: ${({ color }) => theme.color[color]};
       object-fit: contain;

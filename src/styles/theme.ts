@@ -54,7 +54,7 @@ const color = {
   brandBlue30: "#7398F6",
   brandBlue20: "#A1BBF9",
   brandBlue10: "#A1BBF9",
-
+  transparent: "transparent",
 
   // TODO: legacy color -> remove it
   backgroundPaper: "#1c1c1c",

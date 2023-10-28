@@ -47,7 +47,7 @@ const Button = ({
 
     if (type === 'secondary') {
       if (loading) return 'bg50';
-      return 'bg100';
+      return 'transparent';
     }
 
     if (type === 'tertiary') {
@@ -78,6 +78,7 @@ const Button = ({
       onMouseLeave={() => {
         setHover(false);
       }}
+      fontColor={renderFontColor()}
     >
       {children}
       <Text color={renderFontColor()} size={renderFontSize()} $bold>
@@ -91,6 +92,7 @@ const Container = styled.button<{
   color: ColorType;
   disabled: boolean;
   size: ButtonSizeType;
+  fontColor: ColorType;
 }>`
   cursor: pointer;
   background-color: ${({ color }) => theme.color[color]};
@@ -109,6 +111,13 @@ const Container = styled.button<{
   display: flex;
   justify-content: center;
   align-items: center;
+
+  /* MEMO: for the icon button hover effect */
+  svg {
+    path {
+      fill: ${({ fontColor }) => theme.color[fontColor]};
+    }
+  }
 `;
 
 export default Button;
