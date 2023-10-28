@@ -1,9 +1,11 @@
 import { useState } from 'react';
-
-import AuthMethods from './AuthMethods';
-import EmailSMSAuth from './EmailSMSAuth';
+import styled from 'styled-components';
+import EmailSMSAuth from '../login/EmailSMSAuth';
 // import WalletMethods from './WalletMethods';
-import WebAuthn from './WebAuthn';
+import WebAuthn from '../login/WebAuthn';
+import theme from '@/styles/theme';
+import Text from '../commons/Text';
+import AuthMethods from './AuthMethods';
 // import StytchOTP from './StytchOTP';
 
 interface LoginProps {
@@ -32,8 +34,8 @@ export default function LoginMethods({
   const [view, setView] = useState<AuthView>('default');
 
   return (
-    <div className="container">
-      <div className="wrapper">
+    <Container>
+      <div>
         {error && (
           <div className="alert alert-error">
             <p>{error.message}</p>
@@ -41,20 +43,30 @@ export default function LoginMethods({
         )}
         {view === 'default' && (
           <>
-            <h1>Welcome back</h1>
-            <p>Access your Lit wallet.</p>
-            <AuthMethods
-              handleGoogleLogin={handleGoogleLogin}
-              handleDiscordLogin={handleDiscordLogin}
-              setView={setView}
-            />
-            <button
-              type="button"
-              className="btn relative mt-2 w-full normal-case"
-              onClick={signUp}
-            >
-              Need an account? Sign up
-            </button>
+            <TitleWrapper>
+              <Text size="title1" $bold>
+                Sign In
+              </Text>
+              <Text size="body2" $thin>
+                Select Sign in method
+              </Text>
+            </TitleWrapper>
+            <SocialLoginWrapper>
+              <AuthMethods
+                handleGoogleLogin={handleGoogleLogin}
+                handleDiscordLogin={handleDiscordLogin}
+                setView={setView}
+              />
+            </SocialLoginWrapper>
+            <TextLinkButton onClick={signUp}>
+              <Text size="body2" $thin>
+                Need an iamPocket?
+              </Text>
+              &nbsp;
+              <Text size="body3" color="brandBlue40">
+                Sign Up
+              </Text>
+            </TextLinkButton>
           </>
         )}
         {view === 'email' && (
@@ -88,6 +100,32 @@ export default function LoginMethods({
           />
         )}
       </div>
-    </div>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  width: 100%;
+  max-width: 600px;
+
+  padding-left: ${theme.space.medium};
+  padding-right: ${theme.space.medium};
+`;
+
+const TitleWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: ${theme.space.sMedium};
+  margin-bottom: ${theme.space.xSmall};
+`;
+
+const SocialLoginWrapper = styled.div`
+  margin-bottom: ${theme.space.medium};
+`;
+const TextLinkButton = styled.button`
+  &:hover {
+    span {
+      text-decoration: underline;
+    }
+  }
+`;
