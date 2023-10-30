@@ -3,8 +3,9 @@
 }
 
 .left {
-    width: 40vw;
+    width: 41vw;
     height: 100vh;
+    padding : 40px;
     display: flex;
     align-items: center;
     justify-content : center;
@@ -12,7 +13,7 @@
 }
 
 .right {
-    width: 60vw;
+    width: 59vw;
     height: 100vh;
     display: flex;
     align-items: center;

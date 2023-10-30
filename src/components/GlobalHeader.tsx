@@ -12,7 +12,7 @@ const Header = () => {
   return (
     <Container>
       <Left>
-          <Icon type="logo" color='brandBlue500' height='display'/>
+          <Icon type="logo" color='brandBlue50' height='display'/>
           <Text size='title2' $bold>iamPocket</Text>
       </Left>
       <Right>
