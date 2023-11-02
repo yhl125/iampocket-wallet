@@ -33,3 +33,13 @@
     color: #0077C7;
 }
 
+@media (max-width:768px) { 
+    .left {
+      display: none;
+    }
+
+    .right {
+        width: 100vw;
+      }
+  }
+
