@@ -28,7 +28,7 @@ const Container = styled.div`
   cursor: pointer;
   display: flex;
   padding: ${theme.space.medium};
-  background-color: ${theme.color.backgroundPaper};
+  background-color: ${theme.color.bg100};
 
   border-radius: 5px;
 
@@ -38,7 +38,6 @@ const Container = styled.div`
 
   &:hover,
   &:active {
-    background-color: ${theme.color.backgroundLight};
   }
 `;
 
