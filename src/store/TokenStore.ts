@@ -1,7 +1,7 @@
 import { proxyWithLocalStorage } from '@/utils/StoreUtil';
 
 export interface IResponseToken {
-  chainId:number,
+  chainId: number;
   address: string;
   name: string;
   symbol: string;
@@ -26,21 +26,13 @@ const tokenListState = proxyWithLocalStorage<TokenListState>('TokenListState', {
 
 const TokenStore = {
   tokenListState,
-  addTokens(responseTokens: IResponseToken[]) {
-    // Update ChainId while iterating through responseTokenList
-    let chainId:number
-    const newTokens = responseTokens.map((token) => {
-      chainId = token.chainId
-      return {
-        ...token,
-      };
-    });
-    // remove same chainId tokens from tokenListState
+  addTokens(responseTokens: IResponseToken[], chainIds: number[]) {
+    // remove same chainIds tokens from tokenListState
     tokenListState.tokenList = tokenListState.tokenList.filter(
-      (token) => token.chainId !== chainId
+      (token) => !chainIds.includes(token.chainId),
     );
     // add new tokens to tokenListState
-    tokenListState.tokenList = tokenListState.tokenList.concat(newTokens);
+    tokenListState.tokenList = tokenListState.tokenList.concat(responseTokens);
   },
 };
 

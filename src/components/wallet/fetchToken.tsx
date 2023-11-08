@@ -48,8 +48,8 @@ interface FetchTokensProps {
 }
 
 function FetchToken(props: IProps) {
-  // Poll every 30 seconds
-  const pollInterval = 30 * 1000;
+  // Poll every 5 seconds
+  const pollInterval = 5 * 1000;
   const { data } = useQuery(query, {
     variables: {
       address: props.address,
@@ -59,7 +59,10 @@ function FetchToken(props: IProps) {
     pollInterval,
   });
   if (data) {
-    TokenStore.addTokens(data.findEvmTokenBalance as IResponseToken[]);
+    TokenStore.addTokens(
+      data.findEvmTokenBalance as IResponseToken[],
+      props.chainIds,
+    );
   }
 }
 
