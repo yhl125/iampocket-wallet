@@ -12,7 +12,7 @@ interface IProps {
   text: string;
   icon: IconTypes;
   onClick: (e?: React.MouseEvent<HTMLElement>) => void;
-  type?: 'primary' | 'secondary' | 'tertiary';
+  type?: 'primary' | 'secondary';
   size?: IconButtonSizeType;
   disabled?: boolean;
   loading?: boolean;
@@ -39,8 +39,8 @@ const IconButton = ({
 
   const renderIconSize = (): SizeType | number => {
     if (size === 'large') return 24;
-    if (size === 'small') return 16;
-    return 20; // medium and default
+    if (size === 'medium') return 20;
+    return 16; // small
   };
 
   return (

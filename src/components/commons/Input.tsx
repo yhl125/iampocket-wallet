@@ -2,6 +2,7 @@ import React, { ChangeEventHandler } from 'react';
 import styled from 'styled-components';
 import Text from './Text';
 import theme from '@/styles/theme';
+import Button from './Button';
 
 interface IInputProps {
   value: string;
@@ -16,6 +17,8 @@ interface IInputProps {
   };
   placeholder?: string;
   style?: React.CSSProperties;
+  prefixComponent?: React.ReactElement; // TODO: left component (e.g. SearchInput)
+  suffixComponent?: React.ReactElement; // right component (e.g. Button)
 }
 
 const Input = ({
@@ -27,50 +30,67 @@ const Input = ({
   info = undefined,
   placeholder,
   style,
+  prefixComponent,
+  suffixComponent,
 }: IInputProps) => {
   return (
-    <InputContainer>
-      <StyledInput
-        value={value}
-        onChange={onChange}
-        size={size}
-        type={type}
-        placeholder={placeholder}
-        style={style}
-        maxLength={15}
-      />
+    <Container>
+      <InputWrapper size={size}>
+        <PrefixContent>{prefixComponent}</PrefixContent>
+        <StyledInput
+          value={value}
+          onChange={onChange}
+          size={size}
+          type={type}
+          placeholder={placeholder}
+          style={style}
+          maxLength={15}
+        />
+        <SuffixContent>{suffixComponent}</SuffixContent>
+      </InputWrapper>
       {(error?.message || info?.message) && (
         <Text
           $thin
-          size={size === 'medium' ? 'body2' : 'body4'}
+          size={size === 'medium' ? 'body3' : 'body4'}
           color={error?.message ? 'systemRed' : 'systemGreen'}
         >
           {error?.message ? error?.message : info?.message}
         </Text>
       )}
-    </InputContainer>
+    </Container>
   );
 };
 
-const InputContainer = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
 
-  row-gap: ${theme.space.tiny};
+  row-gap: ${theme.space.xTiny};
 
   width: 100%;
 `;
-const StyledInput = styled.input<{ size: 'small' | 'medium' }>`
+const PrefixContent = styled.div``;
+const SuffixContent = styled.div`
+  padding-right: ${theme.space.xTiny};
+`;
+const InputWrapper = styled.div<{ size: 'small' | 'medium' }>`
   transition: border-color 0.1s ease;
-  padding: ${({ size }) =>
-    size === 'medium'
-      ? `${theme.space.xSmall} ${theme.space.sMedium}`
-      : `${theme.space.tiny} ${theme.space.small}`};
+  padding-left: ${({ size }) =>
+    size === 'medium' ? `${theme.space.sMedium}` : `${theme.space.small}`};
 
-  background-color: ${theme.color.bg80};
-  border: 1px solid ${theme.color.bg80};
+  height: ${({ size }) => (size === 'medium' ? '51px' : '40px')};
+
+  border: 1px solid ${theme.color.bg50};
   border-radius: 5px;
+  background-color: transparent;
+  &:focus {
+    border: 1px solid ${theme.color.brandBlue50};
+  }
 
+  display: flex;
+  align-items: center;
+`;
+const StyledInput = styled.input<{ size: 'small' | 'medium' }>`
   color: ${theme.color.bg0};
   font-size: ${({ size }) =>
     size === 'medium' ? theme.fontSize.body2 : theme.fontSize.body3};
@@ -79,10 +99,6 @@ const StyledInput = styled.input<{ size: 'small' | 'medium' }>`
 
   &::placeholder {
     color: ${theme.color.bg20};
-  }
-
-  &:focus {
-    border: 1px solid ${theme.color.brandBlue50};
   }
 `;
 
