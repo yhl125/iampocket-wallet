@@ -1,17 +1,15 @@
-import { useMediaQuery } from "react-responsive"
-import { useEffect, useState } from "react";
+import { useMediaQuery } from 'react-responsive';
+import { useEffect, useState } from 'react';
 
-export const usePc=()=>{
-  
+export const usePc = () => {
   const [isPc, setIsPc] = useState(false);
   const pc = useMediaQuery({
-      query : "(min-width:768px)"
+    query: '(min-width:768px)',
   });
 
-  useEffect(()=>{
+  useEffect(() => {
     setIsPc(pc);
-  },[pc]);
+  }, [pc]);
 
-  return isPc
-}
-
+  return isPc;
+};
