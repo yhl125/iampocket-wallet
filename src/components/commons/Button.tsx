@@ -9,11 +9,11 @@ type ButtonSizeType = 'large' | 'medium' | 'small';
 interface IProps {
   children?: React.ReactNode;
   text: string;
-  type?: 'primary' | 'secondary' | 'tertiary';
+  type?: 'primary' | 'secondary';
   size?: ButtonSizeType;
   onClick: (e?: React.MouseEvent<HTMLElement>) => void;
   disabled?: boolean;
-  loading?: boolean;
+  loading?: boolean; // is loading props useable?
   style?: React.CSSProperties;
 }
 const Button = ({
@@ -28,32 +28,27 @@ const Button = ({
 }: IProps) => {
   const [hover, setHover] = useState(false);
   const renderFontColor = (): ColorType => {
-    if (disabled) return 'bg30';
-    if (loading) return 'bg10';
-    if (hover && type === 'secondary') {
-      return 'bg30';
+    if (disabled) {
+      if (type === 'primary') return 'bg30';
+      if (type === 'secondary') return 'bg50';
     }
+
     return 'bg0';
   };
 
   const renderButtonColor = (): ColorType => {
-    if (disabled) return 'bg50';
-
     if (type === 'primary') {
+      if (disabled) return 'bg50';
       if (loading) return 'brandBlue80';
       if (hover) return 'brandBlue60';
       return 'brandBlue50';
     }
 
     if (type === 'secondary') {
-      if (loading) return 'bg50';
-      return 'transparent';
-    }
-
-    if (type === 'tertiary') {
-      if (loading) return 'bg50';
-      if (hover) return 'bg60';
-      return 'bg80';
+      if (disabled) return 'transparent';
+      if (loading) return 'bg80';
+      if (hover) return 'bg70';
+      return 'transparent'; // default
     }
 
     return 'brandBlue50';
@@ -69,8 +64,9 @@ const Button = ({
     <Container
       color={renderButtonColor()}
       size={size}
+      type={type}
       onClick={onClick}
-      disabled={disabled}
+      disabled={disabled || loading}
       style={style}
       onMouseEnter={() => {
         setHover(true);
@@ -81,7 +77,7 @@ const Button = ({
       fontColor={renderFontColor()}
     >
       {children}
-      <Text color={renderFontColor()} size={renderFontSize()} $bold>
+      <Text color={renderFontColor()} size={renderFontSize()}>
         {text}
       </Text>
     </Container>
@@ -93,17 +89,18 @@ const Container = styled.button<{
   disabled: boolean;
   size: ButtonSizeType;
   fontColor: ColorType;
+  type: 'primary' | 'secondary';
 }>`
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   background-color: ${({ color }) => theme.color[color]};
   padding: ${({ size }) =>
     size === 'small'
-      ? `8px 12px`
+      ? `12px 12px`
       : size === 'medium'
-      ? `12px 20px`
-      : `16px 24px`};
+      ? `16px 24px`
+      : `16px 32px`};
 
-  gap: ${({ size }) => (size === 'small' || 'medium' ? `4px` : `8px`)};
+  gap: 4px;
 
   width: 100%;
   border-radius: 5px;
@@ -118,6 +115,12 @@ const Container = styled.button<{
       fill: ${({ fontColor }) => theme.color[fontColor]};
     }
   }
+
+  ${({ type }) =>
+    type === 'secondary' &&
+    css`
+      border: 1px solid ${theme.color.bg50};
+    `}
 `;
 
 export default Button;

@@ -66,8 +66,10 @@ const Container = styled.div<{
   color: ColorType;
 }>`
   svg {
+    width: ${({ height }) =>
+      typeof height === 'number' ? `${height}px` : theme.fontSize[height]};
     height: ${({ height }) =>
-      typeof height === 'number' ? height : theme.fontSize[height]};
+      typeof height === 'number' ? `${height}px` : theme.fontSize[height]};
     path {
       fill: ${({ color }) => theme.color[color]};
       object-fit: contain;

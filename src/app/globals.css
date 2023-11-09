@@ -96,9 +96,6 @@ body {
   background-color: #121312;
 
   --backgroundDefault: #121312;
-  --backgroundMain:#121312;
-  --backgroundPaper:#1c1c1c;
-  --backgroundLight: #1b2a22;
 
   --spaceMedium: 32px;
   --spaceBase: 24px;
@@ -119,11 +116,8 @@ body {
   --bg10: #DADDDF;
   --bg0: #FFFFFF;
   --systemRed: #FF0D38;
-  --systemRedAlpha30: rgba(255, 13, 56, 0.30);
   --systemOrange: #FE9B07;
-  --systemOrangeAlpha30: rgba(254, 155, 7, 0.30);
   --systemGreen: #06C755;
-  --systemGreenAlpha30: rgba(6, 199, 85, 0.30);
   --systemBlue: #2580E5;
   --brandBlue90: #041130;
   --brandBlue80: #082260;
@@ -134,6 +128,7 @@ body {
   --brandBlue30: #7398F6;
   --brandBlue20: #A1BBF9;
   --brandBlue10: #A1BBF9;
+  --transparent: "transparent";
 }
 
 input {

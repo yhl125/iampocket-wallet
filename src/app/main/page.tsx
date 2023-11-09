@@ -6,47 +6,59 @@ import { useRouter } from 'next/navigation';
 import Text from '@/components/commons/Text';
 import CardButton from '@/components/main/CardButton';
 import theme from '@/styles/theme';
+import Button from '@/components/commons/Button';
+import Icon from '@/components/commons/Icon';
+import IconButton from '@/components/commons/IconButton';
+import Input from '@/components/commons/Input';
+import { useState } from 'react';
 
 function MainPage() {
   const router = useRouter();
 
+  const [inputTestValue, setInputTestValue] = useState('');
+
   return (
     <Container>
-      <Text size="title3" color="backgroundMain" $bold>
-        Welcome to iamPocket
-      </Text>
-      <Description>
-        <Text size="body4" color="backgroundMain" $thin>
-          Wallet for all
-        </Text>
-        <Text size="body4" color="backgroundMain" $thin>
-          Wallet for you
-        </Text>
-      </Description>
-      <ButtonWrapper>
-        <CardButton
-          icon="login"
-          title="Login"
-          description="Already have an account?"
-          onClick={() => {
-            router.push('/login');
+      <Row>
+        <Input
+          value={inputTestValue}
+          onChange={(e) => {
+            setInputTestValue(e.target.value);
+          }}
+          size="medium"
+          placeholder="Search"
+          error={{
+            message: 'not enough balance',
+          }}
+          suffixComponent={
+            <Button
+              size="small"
+              text="Resend Code"
+              type="primary"
+              onClick={() => {}}
+            />
+          }
+        />
+        <br />
+        <br />
+        <Input
+          value={inputTestValue}
+          onChange={(e) => {
+            setInputTestValue(e.target.value);
+          }}
+          size="small"
+          placeholder="Search"
+          error={{
+            message: 'not enough balance',
           }}
         />
-        <CardButton
-          icon="add"
-          title="Sign up"
-          description="Need an account?"
-          onClick={() => {
-            router.push('/signup');
-          }}
-        />
-      </ButtonWrapper>
+      </Row>
     </Container>
   );
 }
 
 const Container = styled.div`
-  background: linear-gradient(-90deg, #10ff84, #5fddff);
+  /* background: linear-gradient(-90deg, #10ff84, #5fddff);
   background-size: 200% 200%;
 
   animation: gradientAnimation 5s ease infinite;
@@ -61,16 +73,15 @@ const Container = styled.div`
     100% {
       background-position: 0% 50%;
     }
-  }
+  } */
 
-  border-radius: 5px;
-  padding: ${theme.space.medium};
-  width: 50%;
-  height: 50%;
+  background-color: black;
 
   display: flex;
   flex-direction: column;
   row-gap: ${theme.space.small};
+
+  padding: 50px;
 `;
 
 const Description = styled.div`
@@ -79,6 +90,11 @@ const Description = styled.div`
   row-gap: ${theme.space.xTiny};
 `;
 
+const Row = styled.div`
+  display: flex;
+  flex-direction: column;
+  column-gap: 10px;
+`;
 const ButtonWrapper = styled.div`
   display: flex;
   column-gap: ${theme.space.small};
