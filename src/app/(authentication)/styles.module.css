@@ -9,7 +9,7 @@
     display: flex;
     align-items: center;
     justify-content : center;
-    background-color: var(--bg90);
+    background-color: var(--bg80);
 }
 
 .right {
@@ -18,7 +18,7 @@
     display: flex;
     align-items: center;
     justify-content : center;
-    background-color: var(--bg70);
+    background-color: var(--bg90);
 }
 
 .title {
