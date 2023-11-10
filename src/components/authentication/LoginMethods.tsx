@@ -69,6 +69,13 @@ export default function LoginMethods({
             </TextLinkButton>
           </>
         )}
+        {view === 'webauthn' && (
+          <WebAuthn
+            start={'authenticate'}
+            authWithWebAuthn={authWithWebAuthn}
+            setView={setView}
+          />
+        )}
         {view === 'email' && (
           <EmailSMSAuth
             method={'email'}
@@ -92,13 +99,6 @@ export default function LoginMethods({
             setView={setView}
           />
         )} */}
-        {view === 'webauthn' && (
-          <WebAuthn
-            start={'authenticate'}
-            authWithWebAuthn={authWithWebAuthn}
-            setView={setView}
-          />
-        )}
       </div>
     </Container>
   );

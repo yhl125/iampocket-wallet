@@ -52,11 +52,6 @@ export default function SignUpMethods({
             <Text size="body2" $thin>
               Select Sign up method.
             </Text>
-            <Text size="body2" $thin color="bg20">
-              Create a wallet that is secured by accounts you already have. With
-              Lit-powered MPC wallets, you won&apos;t have to worry about seed
-              phrases or browser extensions.
-            </Text>
           </TitleWrapper>
 
           <SocialLoginWrapper>
@@ -72,10 +67,18 @@ export default function SignUpMethods({
             </Text>
             &nbsp;
             <Text size="body3" color="brandBlue40">
-              Log in
+              Sign in
             </Text>
           </TextLinkButton>
         </>
+      )}
+      {view === 'webauthn' && (
+        <WebAuthn
+          start={'register'}
+          authWithWebAuthn={authWithWebAuthn}
+          setView={setView}
+          registerWithWebAuthn={registerWithWebAuthn}
+        />
       )}
       {view === 'email' && (
         <EmailSMSAuth
@@ -100,14 +103,6 @@ export default function SignUpMethods({
             setView={setView}
           />
         )} */}
-      {view === 'webauthn' && (
-        <WebAuthn
-          start={'register'}
-          authWithWebAuthn={authWithWebAuthn}
-          setView={setView}
-          registerWithWebAuthn={registerWithWebAuthn}
-        />
-      )}
     </Container>
   );
 }

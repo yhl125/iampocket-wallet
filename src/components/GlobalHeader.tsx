@@ -12,7 +12,6 @@ import Icon from './commons/Icon';
 const Header = () => {
   const isPc = usePc();
 
-  console.log(isPc);
   return (
     <Container isPc={isPc}>
       <Left>
