@@ -1,17 +1,26 @@
 'use client';
 
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Text from './Text';
-import theme from '@/styles/theme';
+import theme, { ColorType } from '@/styles/theme';
 
 interface IProps {
+  text: string;
   onClick: () => void;
   size: 'large' | 'medium' | 'small';
   children: React.ReactNode;
   disabled?: boolean;
 }
 
-const TextButton = ({ onClick, size, children, disabled = false }: IProps) => {
+const TextButton = ({
+  text = '',
+  onClick,
+  size = 'medium',
+  children,
+  disabled = false,
+}: IProps) => {
+  const [hover, setHover] = useState(false);
   const getTextSize = () => {
     switch (size) {
       case 'large':
@@ -24,6 +33,12 @@ const TextButton = ({ onClick, size, children, disabled = false }: IProps) => {
     }
   };
 
+  const renderFontColor = (): ColorType => {
+    if (disabled) return 'bg60';
+    if (hover) return 'bg0';
+    return 'bg30';
+  };
+
   return (
     <Container
       disabled={disabled}
@@ -31,22 +46,50 @@ const TextButton = ({ onClick, size, children, disabled = false }: IProps) => {
         if (disabled) return;
         onClick();
       }}
+      onMouseEnter={() => {
+        setHover(true);
+      }}
+      onMouseLeave={() => {
+        setHover(false);
+      }}
+      fontColor={renderFontColor()}
     >
+      {children}
       <StyledText
+        text={text}
         size={getTextSize()}
         color={disabled ? 'bg60' : 'bg30'}
         disabled={disabled}
       >
-        {children}
+        {text}
       </StyledText>
     </Container>
   );
 };
 
-const Container = styled.button<{ disabled: boolean }>`
+const Container = styled.button<{
+  disabled: boolean;
+  fontColor: ColorType;
+}>`
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'cursor')};
+
+  gap: 4px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* MEMO: for the icon button hover effect */
+  div {
+    svg {
+      path {
+        fill: ${({ fontColor }) => theme.color[fontColor]};
+      }
+    }
+  }
 `;
-const StyledText = styled(Text)<{ disabled: boolean }>`
+const StyledText = styled(Text)<{ disabled: boolean; text: string }>`
+  display: ${({ text }) => text === '' && `none`};
   &:hover {
     color: ${({ disabled }) => (disabled ? theme.color.bg60 : theme.color.bg0)};
   }

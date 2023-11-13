@@ -77,9 +77,9 @@ const Button = ({
       fontColor={renderFontColor()}
     >
       {children}
-      <Text color={renderFontColor()} size={renderFontSize()}>
+      <StyledText text={text} color={renderFontColor()} size={renderFontSize()}>
         {text}
-      </Text>
+      </StyledText>
     </Container>
   );
 };
@@ -121,6 +121,10 @@ const Container = styled.button<{
     css`
       border: 1px solid ${theme.color.bg50};
     `}
+`;
+
+const StyledText = styled(Text)<{text:string}>`
+  display: ${({ text }) => text === ""&& `none`};
 `;
 
 export default Button;

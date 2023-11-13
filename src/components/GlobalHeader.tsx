@@ -5,8 +5,9 @@ import styled from 'styled-components';
 import { usePathname } from 'next/navigation';
 import theme from '@/styles/theme';
 import { usePc } from '@/hooks/usePc';
-import Text from './commons/Text';
+import IconButton from './commons/IconButton';
 import Icon from './commons/Icon';
+import IconTextButton from './commons/IconTextButton';
 
 // MEMO: Global Navigation Header
 const Header = () => {
@@ -21,12 +22,59 @@ const Header = () => {
           height={isPc ? 'display' : 'title1'}
         />
         {
-          (pathName === `/wallet`)
-          &&
-          <HeaderButtonWrapper>버튼 버튼 버튼</HeaderButtonWrapper>
+        pathName != (`/login`||`/signup`) && 
+        isPc &&
+          <HeaderButtonWrapper>
+            <IconTextButton
+              text="wallet"
+              size="large"
+              icon="wallet"
+              onClick={() => {
+                return;
+              }}
+            />
+             <IconTextButton
+              text="Trading"
+              size="large"
+              icon="trade"
+              onClick={() => {
+                return;
+              }}
+            />
+             <IconTextButton
+              text="Chatting"
+              size="large"
+              icon="chat"
+              onClick={() => {
+                return;
+              }}
+            />
+             <IconTextButton
+              text="Settings"
+              size="large"
+              icon="setting"
+              onClick={() => {
+                return;
+              }}
+            />
+          </HeaderButtonWrapper>
         }
       </Left>
-      <Right></Right>
+      <Right>{
+         pathName != (`/login`||`/signup`) && 
+         !isPc &&
+         <IconButton
+         text=''
+         icon="menu"
+         size="small"
+         type="secondary"
+         onClick={() => {
+          return;
+        }}
+       />
+        }
+     
+      </Right>
     </Container>
   );
 };
@@ -34,6 +82,9 @@ const Header = () => {
 const Container = styled.header<{ isPc: boolean }>`
   width: 100%;
   display: flex;
+
+
+  justify-content:space-between;
   align-items: center;
   position: fixed;
   padding: ${(props) =>
@@ -42,14 +93,18 @@ const Container = styled.header<{ isPc: boolean }>`
       : `${theme.space.small} ${theme.space.sMedium}`};
 `;
 
+
+
 const HeaderButtonWrapper = styled.div`
-  gap: 40px;
+display:flex;
+  gap: ${theme.space.mLarge};
+  width: 100%;
 `;
 
 const Left = styled.div`
   display: flex;
   align-items: center;
-  gap: ${theme.space.tiny};
+  gap: ${theme.space.mLarge};
 `;
 const Right = styled.div``;
 

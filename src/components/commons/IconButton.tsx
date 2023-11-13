@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import styled, { css } from 'styled-components';
-import theme, { ColorType, SizeType } from '@/styles/theme';
+import { ColorType, SizeType } from '@/styles/theme';
 import Icon, { IconTypes } from './Icon';
 import Button from './Button';
 
