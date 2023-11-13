@@ -18,10 +18,8 @@ export default function LoginView() {
   const mounted = useIsMounted();
   const {
     authMethod,
-    // authWithEthWallet,
-    authWithOTP,
     authWithWebAuthn,
-    authWithStytch,
+    // authWithStytch,
     loading: authLoading,
     error: authError,
   } = useAuthenticate(redirectUri);
@@ -134,10 +132,8 @@ export default function LoginView() {
       <LoginMethods
         handleGoogleLogin={handleGoogleLogin}
         handleDiscordLogin={handleDiscordLogin}
-        // authWithEthWallet={authWithEthWallet}
-        authWithOTP={authWithOTP}
         authWithWebAuthn={authWithWebAuthn}
-        authWithStytch={authWithStytch}
+        // authWithStytch={authWithStytch}
         signUp={() => router.replace('/signup')}
         error={error}
       />

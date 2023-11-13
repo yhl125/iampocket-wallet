@@ -1,4 +1,4 @@
-import { PKPViemAccount } from '@altpd13/pkp-viem';
+import { PKPViemAccount } from 'pkp-viem';
 import { SessionSigs } from '@lit-protocol/types';
 import { getChain } from './ClientUtil';
 import { WalletClient, createWalletClient, http } from 'viem';

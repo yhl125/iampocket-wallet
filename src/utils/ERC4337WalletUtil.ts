@@ -1,12 +1,14 @@
-import { ECDSAProvider, SupportedGasToken } from '@zerodev/sdk';
+import { ECDSAProvider, SupportedGasToken, convertWalletClientToAccountSigner } from '@zerodev/sdk';
 import { SessionSigs } from '@lit-protocol/types';
 import { projectIdOf } from './ClientUtil';
 import AddressStore from '@/store/AddressStore';
-import { convertAccountToSmartAccountSigner } from '@altpd13/pkp-viem';
+import { PKPViemAccount } from 'pkp-viem';
 import {
   createPKPViemAccount,
   createPkpViemWalletClient,
 } from './EOAWalletUtil';
+import { createWalletClient, http } from 'viem';
+import { polygonMumbai } from 'viem/chains';
 
 export async function createOrRestoreERC4337Wallet(
   pkpPubKey: string,
@@ -16,6 +18,7 @@ export async function createOrRestoreERC4337Wallet(
     zeroDevSigner(pkpPubKey, sessionSigs),
     createPkpViemWalletClient(pkpPubKey, sessionSigs),
   ]);
+  
   const [zeroDevAddress, eoaPkpViemAddress] = await Promise.all([
     zeroDevWallet.getAddress(),
     eoaPkpViemWallet.account!.address,
@@ -59,4 +62,13 @@ export async function zeroDevSignerWithERC20Gas(
     },
   });
   return providerWithERC20Gas;
+}
+
+function convertAccountToSmartAccountSigner(account: PKPViemAccount) {
+  const walletClient = createWalletClient({
+    account,
+    chain: polygonMumbai,
+    transport: http(),
+  });
+  return convertWalletClientToAccountSigner(walletClient);
 }
