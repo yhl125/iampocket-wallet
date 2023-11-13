@@ -7,24 +7,14 @@ import { AuthMethod } from '@lit-protocol/types';
 import {
   authenticateWithGoogle,
   authenticateWithDiscord,
-  authenticateWithEthWallet,
   authenticateWithWebAuthn,
-  authenticateWithOTP,
-  authenticateWithStytch,
+  // authenticateWithStytch,
 } from '../utils/lit';
-// import { useConnect } from 'wagmi';
 
 export default function useAuthenticate(redirectUri?: string) {
   const [authMethod, setAuthMethod] = useState<AuthMethod>();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error>();
-
-  // wagmi hook
-  // const { connectAsync } = useConnect({
-  //   onError: (err: unknown) => {
-  //     setError(err as Error);
-  //   },
-  // });
 
   /**
    * Handle redirect from Google OAuth
@@ -67,38 +57,6 @@ export default function useAuthenticate(redirectUri?: string) {
   }, [redirectUri]);
 
   /**
-   * Authenticate with Ethereum wallet
-   */
-  // const authWithEthWallet = useCallback(
-  //   async (connector: any): Promise<void> => {
-  //     setLoading(true);
-  //     setError(undefined);
-  //     setAuthMethod(undefined);
-
-  //     try {
-  //       const { account, connector: activeConnector } = await connectAsync(
-  //         connector
-  //       );
-  //       const signer = await activeConnector.getSigner();
-  //       const signMessage = async (message: string) => {
-  //         const sig = await signer.signMessage(message);
-  //         return sig;
-  //       };
-  //       const result: AuthMethod = await authenticateWithEthWallet(
-  //         account,
-  //         signMessage
-  //       );
-  //       setAuthMethod(result);
-  //     } catch (err) {
-  //       setError(err);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   },
-  //   [connectAsync]
-  // );
-
-  /**
    * Authenticate with WebAuthn credential
    */
   const authWithWebAuthn = useCallback(
@@ -120,46 +78,28 @@ export default function useAuthenticate(redirectUri?: string) {
   );
 
   /**
-   * Authenticate with OTP
-   */
-  const authWithOTP = useCallback(async (code: string): Promise<void> => {
-    setLoading(true);
-    setError(undefined);
-    setAuthMethod(undefined);
-
-    try {
-      const result: AuthMethod = (await authenticateWithOTP(code)) as any;
-      setAuthMethod(result);
-    } catch (err: any) {
-      setError(err);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  /**
    * Authenticate with Stytch
    */
-  const authWithStytch = useCallback(
-    async (accessToken: string, userId?: string): Promise<void> => {
-      setLoading(true);
-      setError(undefined);
-      setAuthMethod(undefined);
+  // const authWithStytch = useCallback(
+  //   async (accessToken: string, userId?: string): Promise<void> => {
+  //     setLoading(true);
+  //     setError(undefined);
+  //     setAuthMethod(undefined);
 
-      try {
-        const result: AuthMethod = (await authenticateWithStytch(
-          accessToken,
-          userId,
-        )) as any;
-        setAuthMethod(result);
-      } catch (err: any) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [],
-  );
+  //     try {
+  //       const result: AuthMethod = (await authenticateWithStytch(
+  //         accessToken,
+  //         userId,
+  //       )) as any;
+  //       setAuthMethod(result);
+  //     } catch (err: any) {
+  //       setError(err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   },
+  //   [],
+  // );
 
   useEffect(() => {
     // Check if user is redirected from social login
@@ -175,10 +115,8 @@ export default function useAuthenticate(redirectUri?: string) {
   }, [redirectUri, authWithGoogle, authWithDiscord]);
 
   return {
-    // authWithEthWallet,
     authWithWebAuthn,
-    authWithOTP,
-    authWithStytch,
+    // authWithStytch,
     authMethod,
     loading,
     error,

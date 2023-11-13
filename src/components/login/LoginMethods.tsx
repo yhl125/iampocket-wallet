@@ -1,31 +1,24 @@
 import { useState } from 'react';
 
 import AuthMethods from './AuthMethods';
-import EmailSMSAuth from './EmailSMSAuth';
-// import WalletMethods from './WalletMethods';
 import WebAuthn from './WebAuthn';
+import { AuthView } from './SignUpMethods';
 // import StytchOTP from './StytchOTP';
 
 interface LoginProps {
   handleGoogleLogin: () => Promise<void>;
   handleDiscordLogin: () => Promise<void>;
-  // authWithEthWallet: any;
-  authWithOTP: any;
   authWithWebAuthn: any;
-  authWithStytch: any;
+  // authWithStytch: any;
   signUp: any;
   error?: Error;
 }
 
-type AuthView = 'default' | 'email' | 'phone' | 'wallet' | 'webauthn';
-
 export default function LoginMethods({
   handleGoogleLogin,
   handleDiscordLogin,
-  // authWithEthWallet,
-  authWithOTP,
   authWithWebAuthn,
-  authWithStytch,
+  // authWithStytch,
   signUp,
   error,
 }: LoginProps) {
@@ -57,28 +50,8 @@ export default function LoginMethods({
             </button>
           </>
         )}
-        {view === 'email' && (
-          <EmailSMSAuth
-            method={'email'}
-            setView={setView}
-            authWithOTP={authWithOTP}
-          />
-        )}
-        {view === 'phone' && (
-          <EmailSMSAuth
-            method={'phone'}
-            setView={setView}
-            authWithOTP={authWithOTP}
-          />
-        )}
         {/* {view === 'phone' && (
           <StytchOTP authWithStytch={authWithStytch} setView={setView} />
-        )} */}
-        {/* {view === 'wallet' && (
-          <WalletMethods
-            authWithEthWallet={authWithEthWallet}
-            setView={setView}
-          />
         )} */}
         {view === 'webauthn' && (
           <WebAuthn

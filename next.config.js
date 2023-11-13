@@ -8,9 +8,6 @@ const nextConfig = {
       },
     ],
   },
-  experimental: {
-    appDir: true,
-  },
   webpack: (config, { isServer,webpack }) => {
     config.plugins.push(
       // Remove node: from import specifiers, because Next.js does not yet support node: scheme
