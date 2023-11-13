@@ -2,7 +2,7 @@
 
 import React from 'react';
 import styled from 'styled-components';
-
+import { usePathname } from 'next/navigation';
 import theme from '@/styles/theme';
 import { usePc } from '@/hooks/usePc';
 import Text from './commons/Text';
@@ -11,7 +11,7 @@ import Icon from './commons/Icon';
 // MEMO: Global Navigation Header
 const Header = () => {
   const isPc = usePc();
-
+  const pathName = usePathname();
   return (
     <Container isPc={isPc}>
       <Left>
@@ -20,7 +20,11 @@ const Header = () => {
           color="brandBlue50"
           height={isPc ? 'display' : 'title1'}
         />
-        <HeaderButtonWrapper></HeaderButtonWrapper>
+        {
+          (pathName === `/wallet`)
+          &&
+          <HeaderButtonWrapper>버튼 버튼 버튼</HeaderButtonWrapper>
+        }
       </Left>
       <Right></Right>
     </Container>
