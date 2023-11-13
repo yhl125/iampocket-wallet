@@ -35,17 +35,18 @@ const Input = ({
 }: IInputProps) => {
   return (
     <Container>
-      <InputWrapper size={size}>
-        <PrefixContent>{prefixComponent}</PrefixContent>
-        <StyledInput
-          value={value}
-          onChange={onChange}
-          size={size}
-          type={type}
-          placeholder={placeholder}
-          style={style}
-          maxLength={15}
-        />
+      <InputWrapper size={size} className="input-wrapper">
+        <Left>
+          <PrefixContent>{prefixComponent}</PrefixContent>
+          <StyledInput
+            value={value}
+            onChange={onChange}
+            size={size}
+            type={type}
+            placeholder={placeholder}
+            style={style}
+          />
+        </Left>
         <SuffixContent>{suffixComponent}</SuffixContent>
       </InputWrapper>
       {(error?.message || info?.message) && (
@@ -68,6 +69,12 @@ const Container = styled.div`
   row-gap: ${theme.space.xTiny};
 
   width: 100%;
+  .input-wrapper:focus-within {
+    border: 1px solid ${theme.color.brandBlue50};
+  }
+`;
+const Left = styled.div`
+  flex: 1;
 `;
 const PrefixContent = styled.div``;
 const SuffixContent = styled.div`
@@ -83,14 +90,13 @@ const InputWrapper = styled.div<{ size: 'small' | 'medium' }>`
   border: 1px solid ${theme.color.bg50};
   border-radius: 5px;
   background-color: transparent;
-  &:focus {
-    border: 1px solid ${theme.color.brandBlue50};
-  }
 
   display: flex;
   align-items: center;
+  justify-content: space-between;
 `;
 const StyledInput = styled.input<{ size: 'small' | 'medium' }>`
+  width: 100%;
   color: ${theme.color.bg0};
   font-size: ${({ size }) =>
     size === 'medium' ? theme.fontSize.body2 : theme.fontSize.body3};
