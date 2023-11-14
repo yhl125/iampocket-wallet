@@ -1,6 +1,11 @@
 import { IRelayPKP } from '@lit-protocol/types';
 import { useState } from 'react';
+import styled from 'styled-components';
+
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import Button from '../commons/Button';
+import Text from '../commons/Text';
+import theme from '@/styles/theme';
 
 interface AccountSelectionProp {
   accounts: IRelayPKP[];
@@ -22,15 +27,20 @@ export default function AccountSelection({
   }
 
   return (
-    <div className="container">
-      <div className="wrapper">
-        {error && (
-          <div className="alert alert-error">
-            <p>{error.message}</p>
-          </div>
-        )}
-        <h1>Choose your account</h1>
-        <p>Continue with one of your accounts.</p>
+    <Container>
+      {error && (
+        <div className="alert alert-error">
+          <p>{error.message}</p>
+        </div>
+      )}
+
+      <Text size="title1" $bold>
+        Choose your account
+      </Text>
+      <FormWrapper>
+        <Text size="body2" color="bg20" $thin>
+          Continue with one of your accounts.
+        </Text>
         <form onSubmit={handleSubmit} className="form">
           <RadioGroup
             className="accounts-wrapper"
@@ -56,16 +66,43 @@ export default function AccountSelection({
                   className="account-item__label"
                   htmlFor={account.ethAddress}
                 >
-                  {account.ethAddress.toLowerCase()}
+                  <Text size="body2" color="bg50" $thin>
+                    {' '}
+                    {account.ethAddress.toLowerCase()}
+                  </Text>
                 </label>
+                \
               </div>
             ))}
           </RadioGroup>
-          <button type="submit" className="btn btn-primary">
-            Continue
-          </button>
+          <ButtonWrapper>
+            <Button
+              text="Submit"
+              size="large"
+              type="primary"
+              onClick={handleSubmit}
+            />
+          </ButtonWrapper>
         </form>
-      </div>
-    </div>
+      </FormWrapper>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  width: 100%;
+  max-width: 600px;
+  padding-left: ${theme.space.medium};
+  padding-right: ${theme.space.medium};
+`;
+
+const FormWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: ${theme.space.sMedium};
+  margin-top: ${theme.space.sMedium};
+`;
+
+const ButtonWrapper = styled.div`
+  margin-top: ${theme.space.medium};
+`;

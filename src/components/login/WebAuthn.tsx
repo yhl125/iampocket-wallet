@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { AuthView } from './SignUpMethods';
 import styled from 'styled-components';
+
+import { AuthView } from './SignUpMethods';
 import theme from '@/styles/theme';
 import Text from '../commons/Text';
 import Button from '../commons/Button';
 import IconTextButton from '../commons/IconTextButton';
+import { LoadingWithCopy } from '@/components/Loading';
 
 type WebAuthnStep = 'register' | 'authenticate';
 
@@ -40,17 +42,10 @@ export default function WebAuthn({
 
   if (loading) {
     return (
-      <>
-        {error && (
-          <div className="alert alert-error">
-            <p>{error.message}</p>
-          </div>
-        )}
-        <div className="loader-container">
-          <div className="loader"></div>
-          <Text size="body2">Follow the prompts to continue...</Text>
-        </div>
-      </>
+      <LoadingWithCopy
+        copy={'Follow the prompts to continue...'}
+        error={error}
+      />
     );
   }
 

@@ -107,7 +107,6 @@ export default function LoginMethods({
 const Container = styled.div`
   width: 100%;
   max-width: 600px;
-
   padding-left: ${theme.space.medium};
   padding-right: ${theme.space.medium};
 `;
