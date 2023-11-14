@@ -21,9 +21,7 @@ const Header = () => {
           color="brandBlue50"
           height={isPc ? 'display' : 'title1'}
         />
-        {
-        pathName != (`/login`||`/signup`) && 
-        isPc &&
+        {pathName != `/login` && pathName != `/signup` && isPc && (
           <HeaderButtonWrapper>
             <IconTextButton
               text="wallet"
@@ -33,7 +31,7 @@ const Header = () => {
                 return;
               }}
             />
-             <IconTextButton
+            <IconTextButton
               text="Trading"
               size="large"
               icon="trade"
@@ -41,7 +39,7 @@ const Header = () => {
                 return;
               }}
             />
-             <IconTextButton
+            <IconTextButton
               text="Chatting"
               size="large"
               icon="chat"
@@ -49,7 +47,7 @@ const Header = () => {
                 return;
               }}
             />
-             <IconTextButton
+            <IconTextButton
               text="Settings"
               size="large"
               icon="setting"
@@ -58,22 +56,20 @@ const Header = () => {
               }}
             />
           </HeaderButtonWrapper>
-        }
+        )}
       </Left>
-      <Right>{
-         pathName != (`/login`||`/signup`) && 
-         !isPc &&
-         <IconButton
-         text=''
-         icon="menu"
-         size="small"
-         type="secondary"
-         onClick={() => {
-          return;
-        }}
-       />
-        }
-     
+      <Right>
+        {pathName != `/login` && pathName != `/signup` && !isPc && (
+          <IconButton
+            text=""
+            icon="menu"
+            size="small"
+            type="secondary"
+            onClick={() => {
+              return;
+            }}
+          />
+        )}
       </Right>
     </Container>
   );
@@ -83,8 +79,7 @@ const Container = styled.header<{ isPc: boolean }>`
   width: 100%;
   display: flex;
 
-
-  justify-content:space-between;
+  justify-content: space-between;
   align-items: center;
   position: fixed;
   padding: ${(props) =>
@@ -93,10 +88,8 @@ const Container = styled.header<{ isPc: boolean }>`
       : `${theme.space.small} ${theme.space.sMedium}`};
 `;
 
-
-
 const HeaderButtonWrapper = styled.div`
-display:flex;
+  display: flex;
   gap: ${theme.space.mLarge};
   width: 100%;
 `;

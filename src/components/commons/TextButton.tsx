@@ -9,7 +9,7 @@ interface IProps {
   text: string;
   onClick: () => void;
   size: 'large' | 'medium' | 'small';
-  children: React.ReactNode;
+  children?: React.ReactNode;
   disabled?: boolean;
 }
 
@@ -74,10 +74,14 @@ const Container = styled.button<{
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'cursor')};
 
   gap: 4px;
-  width: 100%;
+
   display: flex;
   justify-content: center;
   align-items: center;
+
+  span {
+    color: ${({ fontColor }) => theme.color[fontColor]};
+  }
 
   /* MEMO: for the icon button hover effect */
   div {
@@ -90,9 +94,6 @@ const Container = styled.button<{
 `;
 const StyledText = styled(Text)<{ disabled: boolean; text: string }>`
   display: ${({ text }) => text === '' && `none`};
-  &:hover {
-    color: ${({ disabled }) => (disabled ? theme.color.bg60 : theme.color.bg0)};
-  }
 `;
 
 export default TextButton;

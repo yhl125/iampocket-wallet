@@ -15,6 +15,7 @@ import WalletIcon from '@/assets/icons/wallet.svg';
 import TradeIcon from '@/assets/icons/trade.svg';
 import ChatIcon from '@/assets/icons/chat.svg';
 import SettingIcon from '@/assets/icons/setting.svg';
+import LeftArrowIcon from '@/assets/icons/leftarrow.svg';
 
 import theme, { ColorType, SizeType } from '@/styles/theme';
 
@@ -32,7 +33,8 @@ export type IconTypes =
   | 'wallet'
   | 'trade'
   | 'chat'
-  | 'setting';
+  | 'setting'
+  | 'leftarrow';
 
 interface IProps {
   type: IconTypes;
@@ -71,6 +73,8 @@ const Icon = ({ type, height = 'body3', color = 'bg0' }: IProps) => {
         return <ChatIcon />;
       case 'setting':
         return <SettingIcon />;
+      case 'leftarrow':
+        return <LeftArrowIcon />;
     }
   };
 

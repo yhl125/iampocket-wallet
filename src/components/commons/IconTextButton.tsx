@@ -30,7 +30,7 @@ const IconTextButton = ({
   };
 
   return (
-    <TextButton text={text} onClick={onClick} size={size}>
+    <TextButton text={text} onClick={onClick} size={size} disabled={disabled}>
       <Icon
         type={icon}
         color={disabled ? 'bg60' : 'bg30'}

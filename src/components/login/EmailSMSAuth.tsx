@@ -6,6 +6,7 @@ import theme from '@/styles/theme';
 import Text from '../commons/Text';
 import Input from '../commons/Input';
 import Button from '../commons/Button';
+import IconTextButton from '../commons/IconTextButton';
 
 type OtpMethod = 'email' | 'phone';
 
@@ -55,7 +56,7 @@ const EmailSMSAuth = ({ method, setView, authWithOTP }: EmailSMSAuthProps) => {
         Sign Up with {method}
       </Text>
       <EmailSmsAuthWrapper>
-        <FormWrapper>
+        <FirstFormWrapper>
           <Text size="body2" color="bg20" $thin>
             Enter your {method}
             <br />A verification code will be sent to your {method}.
@@ -70,7 +71,6 @@ const EmailSMSAuth = ({ method, setView, authWithOTP }: EmailSMSAuthProps) => {
               placeholder={
                 method === 'email' ? 'Your email' : 'Your phone number'
               }
-              style={{ display: 'flex', justifyContent: 'space-between' }}
               suffixComponent={
                 <Button
                   size="small"
@@ -82,24 +82,23 @@ const EmailSMSAuth = ({ method, setView, authWithOTP }: EmailSMSAuthProps) => {
               }
             />
           </form>
-        </FormWrapper>
-        {/* {isSended && ( */}
-        <FormWrapper>
+        </FirstFormWrapper>
+
+        <SecondFormWrapper isSended={isSended}>
           <Text size="body2" color="bg20" $thin>
             Verify your {method}
           </Text>
           <form id="codeForm" onSubmit={handleAuth}>
-            <Input
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              size="medium"
-              type="code"
-              placeholder="Verification code"
-              style={{
-                display: 'flex',
-                marginBottom: `${theme.space.medium}`,
-              }}
-            />
+            <InputWrapper>
+              <Input
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                size="medium"
+                type="code"
+                placeholder="Verification code"
+                style={{ visibility: isSended ? `visible` : `hidden` }}
+              />
+            </InputWrapper>
             <Button
               text="Verify"
               size="large"
@@ -107,12 +106,15 @@ const EmailSMSAuth = ({ method, setView, authWithOTP }: EmailSMSAuthProps) => {
               onClick={handleAuth}
             />
           </form>
-        </FormWrapper>
-        {/* )} */}
+        </SecondFormWrapper>
       </EmailSmsAuthWrapper>
-      <button onClick={() => setView('default')} className="btn	 btn-link">
-        Back
-      </button>
+
+      <IconTextButton
+        text="Back"
+        size="small"
+        icon="leftarrow"
+        onClick={() => setView('default')}
+      />
     </>
   );
 };
@@ -124,11 +126,20 @@ const EmailSmsAuthWrapper = styled.div`
   row-gap: ${theme.space.medium};
   margin-bottom: ${theme.space.large};
 `;
+const InputWrapper = styled.div`
+  margin-bottom: ${theme.space.medium};
+`;
 
-const FormWrapper = styled.div`
+const FirstFormWrapper = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: ${theme.space.tiny};
+`;
+
+const SecondFormWrapper = styled(FirstFormWrapper)<{ isSended: boolean }>`
+  transition: opacity 0.7s ease;
+  opacity: ${({ isSended }) => (isSended ? 1 : 0.2)};
+  pointer-events: ${({ isSended }) => (isSended ? `auto` : `none`)};
 `;
 
 export default EmailSMSAuth;

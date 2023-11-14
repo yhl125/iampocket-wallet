@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import theme from '@/styles/theme';
 import Text from '../commons/Text';
 import Button from '../commons/Button';
+import IconTextButton from '../commons/IconTextButton';
 
 type WebAuthnStep = 'register' | 'authenticate';
 
@@ -100,13 +101,21 @@ export default function WebAuthn({
           </WebAuthWrapper>
         </>
       )}
-
-      <button onClick={() => setView('default')} className="btn	 btn-link">
-        Back
-      </button>
+      <ButtonWrapper>
+        <IconTextButton
+          text="Back"
+          size="small"
+          icon="leftarrow"
+          onClick={() => setView('default')}
+        />
+      </ButtonWrapper>
     </>
   );
 }
+
+const ButtonWrapper = styled.div`
+  margin-top: ${theme.space.large};
+`;
 
 const WebAuthWrapper = styled.div`
   display: flex;
