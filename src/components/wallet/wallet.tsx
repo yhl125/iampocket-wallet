@@ -30,18 +30,15 @@ function Wallet() {
     else if (selectedWallet === 'pkpViem') return pkpViemAddress;
     else return zeroDevAddress;
   }
-  const chainIds = [
-    ...zeroDevMainnetChainIds,
-    ...zeroDevTestnetChainIds,
-  ];
+  const chainIds = [...zeroDevMainnetChainIds, ...zeroDevTestnetChainIds];
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   return (
-    mounted && (
-      <>
+    <>
+      {mounted && (
         <div className="wallet">
           <div className="wallet-header relative flex items-center justify-center p-4">
             <div className="wallet-address flex flex-col items-center">
@@ -70,7 +67,7 @@ function Wallet() {
                 </div>
               </div>
             </div>
-            <div className="dropdown-end dropdown absolute right-0 top-0 py-2">
+            <div className="dropdown dropdown-end absolute right-0 top-0 py-2">
               <label
                 tabIndex={0}
                 className="setting-button btn btn-square btn-ghost"
@@ -120,8 +117,8 @@ function Wallet() {
             <TokenList />
           </div>
         </div>
-      </>
-    )
+      )}
+    </>
   );
 }
 
