@@ -1,11 +1,10 @@
-import { SessionSigs } from '@lit-protocol/types';
 import { proxyWithLocalStorage } from '@/utils/StoreUtil';
-import { IRelayPKP } from '@lit-protocol/types';
+import { IRelayPKP, SessionSigs } from '@lit-protocol/types';
 
 /**
  * Types
  */
-interface PKPState {
+export interface PKPState {
   isAuthenticated: boolean;
   currentPKP?: IRelayPKP;
   sessionSigs?: SessionSigs;

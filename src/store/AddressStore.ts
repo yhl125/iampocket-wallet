@@ -4,7 +4,7 @@ export type selectedWalletType = 'zeroDev' | 'pkpViem';
 /**
  * Types
  */
-interface State {
+export interface WalletState {
   zeroDevAddress: string;
   pkpViemAddress: string;
   selectedWallet: selectedWalletType;
@@ -13,7 +13,7 @@ interface State {
 /**
  * State
  */
-const state = proxyWithLocalStorage<State>('AddressState', {
+const state = proxyWithLocalStorage<WalletState>('AddressState', {
   zeroDevAddress: '',
   pkpViemAddress: '',
   selectedWallet: 'zeroDev',
