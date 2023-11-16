@@ -130,7 +130,7 @@ export default function QuoteView({
       <div>Buy Token Name: {buyTokenInfo?.name}</div>
       <div>Buy Token Address: {price?.buyTokenAddress}</div>
       <div>
-        Amount to Buy:{' '}
+        Amount to Buy:
         {erc20BalanceToReadable(price!.buyAmount, buyTokenInfo!.decimals)}
       </div>
       {walletState.selectedWallet === 'zeroDev' ? (

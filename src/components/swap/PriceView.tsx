@@ -26,7 +26,7 @@ export default function PriceView({
   setChainId,
 }: {
   price: IPrice | undefined;
-  setPrice: (price: any) => void;
+  setPrice: (price: IPrice | undefined) => void;
   setFinalize: (finalize: boolean) => void;
   setSellToken: (sellToken: IResponseToken) => void;
   buyToken: IBuyTokenInfo | undefined;
@@ -144,7 +144,7 @@ export default function PriceView({
   }, [buyTokenAddress, chainId]);
 
   useEffect(() => {
-    setPrice(priceData.findSwapPrice);
+    setPrice(priceData ? priceData.findSwapPrice : undefined);
   }, [priceData, setPrice]);
 
   useEffect(() => {
@@ -163,6 +163,10 @@ export default function PriceView({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [buyTokenAddress, sellTokenAddress]);
 
+  /**
+   * Query Price if user finished interacting with sellTokenAddress,buyTokenAddress and sellAmount,buyAmount
+   * This code will keep requesting query if both buy,sell token address is filled and if user changes the sellAmount or buyAmount
+   */
   useEffect(() => {
     if (
       isAddress(sellTokenAddress) &&
@@ -228,9 +232,7 @@ export default function PriceView({
     sellTokenDecimals,
     buyToken,
   ]);
-  useEffect(() => {
-    console.log(price);
-  }, [price]);
+
   return (
     <form>
       <div>
