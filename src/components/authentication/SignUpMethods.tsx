@@ -49,7 +49,7 @@ export default function SignUpMethods({
             <Text size="title1" $bold>
               Sign Up
             </Text>
-            <Text size="body2" $thin>
+            <Text size="body2" color="bg20" $thin>
               Select Sign up method.
             </Text>
           </TitleWrapper>

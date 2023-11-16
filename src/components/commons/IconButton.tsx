@@ -43,7 +43,15 @@ const IconButton = ({
   };
 
   return (
-    <Button text={text} type={type} onClick={onClick} size={size} style={style}>
+    <Button
+      text={text}
+      type={type}
+      onClick={onClick}
+      size={size}
+      style={style}
+      disabled={disabled}
+      loading={loading}
+    >
       <Icon type={icon} color={renderIconColor()} height={renderIconSize()} />
       {children}
     </Button>

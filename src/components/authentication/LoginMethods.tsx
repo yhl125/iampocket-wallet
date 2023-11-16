@@ -47,7 +47,7 @@ export default function LoginMethods({
               <Text size="title1" $bold>
                 Sign In
               </Text>
-              <Text size="body2" $thin>
+              <Text size="body2" color="bg20" $thin>
                 Select Sign in method
               </Text>
             </TitleWrapper>
