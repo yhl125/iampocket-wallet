@@ -60,6 +60,7 @@ export default function AuthMethods({
             icon="mobile"
             size="small"
             type="secondary"
+            disabled
             onClick={() => setView('phone')}
           />
           <IconButton
@@ -67,6 +68,7 @@ export default function AuthMethods({
             icon="mail"
             size="small"
             type="secondary"
+            disabled
             onClick={() => setView('email')}
           />
         </OtherLoginWrapper>

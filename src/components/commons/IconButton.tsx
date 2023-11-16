@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import styled, { css } from 'styled-components';
-import theme, { ColorType, SizeType } from '@/styles/theme';
+import { ColorType, SizeType } from '@/styles/theme';
 import Icon, { IconTypes } from './Icon';
 import Button from './Button';
 
@@ -44,7 +43,15 @@ const IconButton = ({
   };
 
   return (
-    <Button text={text} type={type} onClick={onClick} size={size} style={style}>
+    <Button
+      text={text}
+      type={type}
+      onClick={onClick}
+      size={size}
+      style={style}
+      disabled={disabled}
+      loading={loading}
+    >
       <Icon type={icon} color={renderIconColor()} height={renderIconSize()} />
       {children}
     </Button>

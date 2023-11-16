@@ -10,6 +10,12 @@ import GoogleIcon from '@/assets/icons/google.svg';
 import FingerPrintIcon from '@/assets/icons/fingerprint.svg';
 import MailIcon from '@/assets/icons/mail.svg';
 import MobileIcon from '@/assets/icons/mobile.svg';
+import MenuIcon from '@/assets/icons/menu.svg';
+import WalletIcon from '@/assets/icons/wallet.svg';
+import TradeIcon from '@/assets/icons/trade.svg';
+import ChatIcon from '@/assets/icons/chat.svg';
+import SettingIcon from '@/assets/icons/setting.svg';
+import LeftArrowIcon from '@/assets/icons/leftarrow.svg';
 
 import theme, { ColorType, SizeType } from '@/styles/theme';
 
@@ -22,7 +28,13 @@ export type IconTypes =
   | 'fingerprint'
   | 'google'
   | 'mail'
-  | 'mobile';
+  | 'mobile'
+  | 'menu'
+  | 'wallet'
+  | 'trade'
+  | 'chat'
+  | 'setting'
+  | 'leftarrow';
 
 interface IProps {
   type: IconTypes;
@@ -51,6 +63,18 @@ const Icon = ({ type, height = 'body3', color = 'bg0' }: IProps) => {
         return <MailIcon />;
       case 'mobile':
         return <MobileIcon />;
+      case 'menu':
+        return <MenuIcon />;
+      case 'wallet':
+        return <WalletIcon />;
+      case 'trade':
+        return <TradeIcon />;
+      case 'chat':
+        return <ChatIcon />;
+      case 'setting':
+        return <SettingIcon />;
+      case 'leftarrow':
+        return <LeftArrowIcon />;
     }
   };
 

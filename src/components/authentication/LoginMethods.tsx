@@ -47,7 +47,7 @@ export default function LoginMethods({
               <Text size="title1" $bold>
                 Sign In
               </Text>
-              <Text size="body2" $thin>
+              <Text size="body2" color="bg20" $thin>
                 Select Sign in method
               </Text>
             </TitleWrapper>
@@ -68,6 +68,13 @@ export default function LoginMethods({
               </Text>
             </TextLinkButton>
           </>
+        )}
+        {view === 'webauthn' && (
+          <WebAuthn
+            start={'authenticate'}
+            authWithWebAuthn={authWithWebAuthn}
+            setView={setView}
+          />
         )}
         {view === 'email' && (
           <EmailSMSAuth
@@ -92,13 +99,6 @@ export default function LoginMethods({
             setView={setView}
           />
         )} */}
-        {view === 'webauthn' && (
-          <WebAuthn
-            start={'authenticate'}
-            authWithWebAuthn={authWithWebAuthn}
-            setView={setView}
-          />
-        )}
       </div>
     </Container>
   );
@@ -107,7 +107,6 @@ export default function LoginMethods({
 const Container = styled.div`
   width: 100%;
   max-width: 600px;
-
   padding-left: ${theme.space.medium};
   padding-right: ${theme.space.medium};
 `;
