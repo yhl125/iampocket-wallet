@@ -302,6 +302,7 @@ export default function PriceView({
           pkpState={pkpState}
           price={price}
           chainId={chainId}
+          takerAddress={walletState.pkpViemAddress}
         />
       )}
     </form>
@@ -314,15 +315,37 @@ function ApporveOrReviewButtonEOA({
   pkpState,
   price,
   chainId,
+  takerAddress,
 }: {
   onClick: () => void;
   isBalanceSufficient: () => boolean;
   pkpState: PKPState;
   price?: IPrice;
   chainId: number;
+  takerAddress: string;
 }) {
   const [isApproveLoading, setIsApproveLoading] = useState(false);
-  const [needApprove, setNeedApproved] = useState(true);
+  const [needApprove, setNeedApprove] = useState(true);
+
+  const checkAllowance = useCallback(async () => {
+    const publicClient = publicClientOf(chainId);
+    const allowance = (await publicClient.readContract({
+      address: price!.sellTokenAddress,
+      abi: ERC20_ABI,
+      functionName: 'allowance',
+      args: [takerAddress, price!.AllownaceTarget],
+    })) as bigint;
+    if (allowance === 0n || allowance < BigInt(price!.sellAmount)) {
+      console.log(allowance);
+      setNeedApprove(true);
+    } else if (
+      allowance === BigInt(price!.sellAmount) ||
+      allowance > BigInt(price!.sellAmount)
+    ) {
+      console.log(allowance);
+      setNeedApprove(false);
+    }
+  }, [price]);
   async function setSellTokenApprove() {
     setIsApproveLoading(true);
     const pkpWalletClient = createPkpViemWalletClient(
@@ -344,11 +367,14 @@ function ApporveOrReviewButtonEOA({
       })
       .then((res) => {
         setIsApproveLoading(false);
-        setNeedApproved(false);
+        setNeedApprove(false);
         console.log(res);
         return res;
       });
   }
+  useEffect(() => {
+    checkAllowance();
+  }, [checkAllowance, price]);
   if (
     needApprove &&
     price?.AllownaceTarget !== '0x0000000000000000000000000000000000000000' &&
