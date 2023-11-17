@@ -20,9 +20,9 @@ export default function ChatMain() {
 
   if (!keys) {
     let mainKeys = null;
-    const mainPrivateKey = localStorage.getItem(`MAIN_PRIVATE_KEY`);
-    const mainPublicKey = localStorage.getItem(`MAIN_PUBLIC_KEY`);
-    const address = localStorage.getItem('WALLET_ADDRESS');
+    const mainPrivateKey = localStorage.getItem(`Web3MQ-Main-PrivateKey`);
+    const mainPublicKey = localStorage.getItem(`Web3MQ-Main-PublicKey`);
+    const address = localStorage.getItem('Web3MQ-WalletAddress');
     if (mainPublicKey && mainPrivateKey && address) {
       mainKeys = {
         publicKey: mainPublicKey,

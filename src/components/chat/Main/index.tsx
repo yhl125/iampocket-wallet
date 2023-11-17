@@ -6,11 +6,11 @@ import {
   MessageHeader,
   MessageList,
   MessageInput,
-  Notification,
   Window,
   useChatContext
 } from '@web3mq/react-components';
 import MsgInput from '../MsgInput';
+import Notification from '../Notification';
 
 import './index.css';
 
@@ -28,7 +28,7 @@ const Main = () => {
           <MessageConsole Input={<MessageInput Input={MsgInput} />} />
         </Window>
       </Channel>
-      {/* <Notification /> */}
+      <Notification />
     </>
   )
 };
