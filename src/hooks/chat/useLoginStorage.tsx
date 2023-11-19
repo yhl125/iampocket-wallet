@@ -28,10 +28,10 @@ const useLoginStorage = () => {
     const didKey = localStorage.getItem('Web3MQ-DID-key') || undefined;
     const fastUrl = await Client.init({
       connectUrl: sessionStorage.getItem('Web3MQ-FastUrl'),
-      app_key: 'app_key',
+      app_key: 'vAUJTFXbBZRkEDRE',
       didKey,
       tempPubkey,
-      env: getEnv(),
+      env: 'dev',
     });
     sessionStorage.setItem('Web3MQ-FastUrl', fastUrl);
     setFastUrl(fastUrl);
