@@ -16,13 +16,29 @@ import AddressStore from '@/store/AddressStore';
 import SearchRecipientAddress from './SearchRecipientAddress';
 import { erc20BalanceToReadable } from '@/utils/ERC20Util';
 
+import Text from '../../components/commons/Text';
+import Input from '../../components/commons/Input';
+import Button from '../commons/Button';
+import styled from 'styled-components';
+import theme from '@/styles/theme';
+import DropDown from '../commons/DropDown';
+import CheckBox from '../commons/CheckBox';
+import Icon from '../commons/Icon';
+
 function TransferTokenForm() {
-  const [transactionLoading, setTransactionLoading] = useState<boolean>(false);
-  const { tokenList } = useSnapshot(TokenStore.tokenListState);
-  const [withPM, setWithPM] = useState<boolean>(false);
-  const [verifyAddress, setVerifyAddress] = useState<Boolean>(false);
+  const [isTransactionLoading, setIsTransactionLoading] =
+    useState<boolean>(false);
+  const [isCheckedPM, setIsCheckedPM] = useState<boolean>(false);
+  const [isVerifiedAddress, setIsVerifiedAddress] = useState<boolean>(false);
+
   const [sendAmount, setSendAmount] = useState<number>(0);
+<<<<<<< Updated upstream
   const psudoToken: IResponseToken = {
+=======
+  const { tokenList } = useSnapshot(TokenStore.tokenListState);
+
+  const psudoToken: TokenState = {
+>>>>>>> Stashed changes
     address: '',
     name: 'Token',
     symbol: 'Token',
@@ -49,19 +65,19 @@ function TransferTokenForm() {
   const { currentPKP, sessionSigs } = useSnapshot(PKPStore.state);
 
   async function handleSubmit(event: any) {
-    setTransactionLoading(true);
+    setIsTransactionLoading(true);
     if (!selectedToken.nativeToken) {
       if (selectedWallet === 'zeroDev') {
         await zeroDevErc20Transfer(
           selectedToken.address,
           recipientAddressOrEns,
           String(sendAmount),
-          withPM,
+          isCheckedPM,
           currentPKP!.publicKey,
           sessionSigs!,
           selectedToken.chainId,
         ).then((res) => {
-          setTransactionLoading(false);
+          setIsTransactionLoading(false);
           //TODO: Add transaction pending state and modal for transaction result
           // TransactionModalStore.open({
           //   hash: res.hash,
@@ -92,13 +108,13 @@ function TransferTokenForm() {
         await zeroDevTransfer(
           recipientAddressOrEns,
           String(sendAmount),
-          withPM,
+          isCheckedPM,
           currentPKP!.publicKey,
           sessionSigs!,
           selectedToken.chainId,
         ).then((res) => {
           //TODO: Add transaction pending state and modal for transaction result
-          setTransactionLoading(false);
+          setIsTransactionLoading(false);
           // TransactionModalStore.open({
           //   hash: res.hash,
           //   from: res.from,
@@ -122,10 +138,17 @@ function TransferTokenForm() {
       event.preventDefault();
     }
   }
+
   const handleChecked = (event: any) => {
-    setWithPM(event.target.checked);
+    setIsCheckedPM(event.target.checked);
+    console.log(isCheckedPM);
   };
+<<<<<<< Updated upstream
   const handleTokenListClick = (token: IResponseToken) => {
+=======
+
+  const handleTokenListClick = (token: TokenState) => {
+>>>>>>> Stashed changes
     setSelectedToken(token);
   };
 
@@ -133,22 +156,68 @@ function TransferTokenForm() {
     if (!zeroDevAddress) router.push('/wallet');
   }, [router, zeroDevAddress]);
   return (
-    <>
+    <Container>
       <SearchRecipientAddress
-        setVerifyAddress={setVerifyAddress}
+        setIsVerifiedAddress={setIsVerifiedAddress}
         setRecipientAddressOrEns={setRecipientAddressOrEns}
       ></SearchRecipientAddress>
-      <Conditional showWhen={verifyAddress}>
-        <div>
-          <div>
-            <span>Your Asset: </span>
-            <span>
-              {selectedToken.name}{' '}
-              {erc20BalanceToReadable(
-                selectedToken.balance,
-                selectedToken.decimals,
-              )}
-            </span>
+
+      <TransferWrapper isVerifiedAddress={isVerifiedAddress}>
+        <AmountWrapper>
+          <AmountTextWrapper>
+            <Text size="title3" color="bg40">
+              Amount
+            </Text>
+            <BalanceTextWrapper>
+              <Text size="body3">Your Balance:</Text>
+              <Text size="body3">
+                {erc20BalanceToReadable(
+                  selectedToken.balance,
+                  selectedToken.decimals,
+                )}
+                {selectedToken.name}{' '}
+              </Text>
+            </BalanceTextWrapper>
+          </AmountTextWrapper>
+
+          <AmountInputWrapper>
+            <Input
+              value={String(sendAmount)}
+              onChange={(e: any) => setSendAmount(e.target.value)}
+              size="medium"
+              type="text"
+              placeholder="0.0"
+              style={{ visibility: isVerifiedAddress ? `visible` : `hidden` }}
+              suffixComponent={
+                <Button
+                  size="small"
+                  text="MAX"
+                  type="primary"
+                  onClick={() => {}}
+                />
+              }
+            />
+
+            {/* <span>{selectedToken.symbol}</span> */}
+            <AmountDropDownWrapper>
+              <DropDown
+                content={tokenList}
+                selectDataState={selectedToken}
+                setSelectDataState={setSelectedToken}
+                iconKey="logoUrl"
+                nameKey="name"
+                size="medium"
+              >
+                {tokenList.map((token: any, idx: number) => (
+                  <ul key={idx} onClick={() => handleTokenListClick(token)}>
+                    {' '}
+                    {token.name}{' '}
+                    {erc20BalanceToReadable(token.balance, token.decimals)}
+                  </ul>
+                ))}
+              </DropDown>
+            </AmountDropDownWrapper>
+            {/* 
             <div className="dropdown">
               <label tabIndex={0} className="btn m-1">
                 Show Token List
@@ -170,53 +239,164 @@ function TransferTokenForm() {
                   <></>
                 )}
               </ul>
-            </div>
-          </div>
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Enter amount</span>
-            </label>
-            <label className="input-group">
-              <input
-                onChange={(e: any) => setSendAmount(e.target.value)}
-                type="text"
-                placeholder="0.0"
-                className="input input-bordered"
-              />
-              <span>{selectedToken.symbol}</span>
-            </label>
-            {selectedWallet === 'pkpViem' ? null : (
-              <label className="label flex cursor-pointer justify-start">
-                <span className="label-text">With PayMaster</span>
-                <input
-                  type="checkbox"
-                  checked={withPM}
+            </div> */}
+          </AmountInputWrapper>
+        </AmountWrapper>
+
+        <GasWrapper>
+          {selectedWallet === 'pkpViem' ? null : (
+            <PaymasterWrapper>
+              <PaymasterCheckBoxWrapper>
+                <Text size="title3" color={isCheckedPM ? 'bg0' : 'bg40'}>
+                  Paymaster
+                </Text>
+                <CheckBox
+                  checked={isCheckedPM}
                   onChange={handleChecked}
-                  className="checkbox ml-0.5"
-                />
-              </label>
-            )}
-          </div>
-          {sendAmount <
-          Number(
-            erc20BalanceToReadable(
-              selectedToken.balance,
-              selectedToken.decimals,
-            ),
-          ) ? (
-            <button className="btn" onClick={handleSubmit}>
-              Send
-            </button>
-          ) : (
-            <button className="btn" disabled>
-              Send
-            </button>
+                ></CheckBox>
+              </PaymasterCheckBoxWrapper>
+              <PaymasterDropDownWrapper isCheckedPM={isCheckedPM}>
+                <DropDown size="small">
+                  {tokenList.map((data: any) => (
+                    <ul key={data.key}>{data}</ul>
+                  ))}
+                </DropDown>
+              </PaymasterDropDownWrapper>
+            </PaymasterWrapper>
           )}
-        </div>
-      </Conditional>
-      {transactionLoading ? <>Transaction In Progress...</> : null}
-    </>
+          <EstimatedGasBoxWrapper>
+            <EstimatedGasTextWrapper>
+              <Text size="body2" color="bg40">
+                Estimated GAS
+              </Text>
+              <Icon type="gas" color="bg40" height="title3" />
+            </EstimatedGasTextWrapper>
+            <Text>0.0000000012</Text>
+          </EstimatedGasBoxWrapper>
+        </GasWrapper>
+
+        <Button
+          text={
+            isTransactionLoading
+              ? 'Transaction In Progress...'
+              : sendAmount <
+                Number(
+                  erc20BalanceToReadable(
+                    selectedToken.balance,
+                    selectedToken.decimals,
+                  ),
+                )
+              ? 'Send'
+              : 'Enter Amount'
+          }
+          size="large"
+          type="primary"
+          disabled={
+            isTransactionLoading
+              ? true
+              : sendAmount <
+                Number(
+                  erc20BalanceToReadable(
+                    selectedToken.balance,
+                    selectedToken.decimals,
+                  ),
+                )
+              ? false
+              : true
+          }
+          onClick={handleSubmit}
+        />
+      </TransferWrapper>
+    </Container>
   );
 }
+
+const Container = styled.div``;
+
+const TransferWrapper = styled.div<{ isVerifiedAddress: boolean }>`
+  display: flex;
+  flex-direction: column;
+  transition: opacity 0.7s ease;
+  row-gap: ${theme.space.medium};
+  margin-top: ${theme.space.medium};
+  opacity: ${({ isVerifiedAddress }) => (isVerifiedAddress ? 1 : 0.2)};
+  pointer-events: ${({ isVerifiedAddress }) =>
+    isVerifiedAddress ? `auto` : `none`};
+`;
+
+const AmountWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: ${theme.space.xTiny};
+`;
+
+const AmountTextWrapper = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+`;
+
+const BalanceTextWrapper = styled.div`
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+`;
+
+const AmountInputWrapper = styled.div`
+  display: flex;
+  gap: ${theme.space.xTiny};
+`;
+
+const AmountDropDownWrapper = styled.div`
+  width: 40%;
+`;
+
+// const InputWrapper = styled.div`
+//   width: 70%;
+// `;
+// const DropDownWrapper = styled.div`
+//   width: 30%;
+// `;
+const GasWrapper = styled.div`
+  display: flex;
+  gap: ${theme.space.small};
+`;
+
+const PaymasterWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.space.xSmall};
+`;
+
+const PaymasterCheckBoxWrapper = styled.div`
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: ${theme.space.xSmall};
+`;
+
+const PaymasterDropDownWrapper = styled.div<{ isCheckedPM: boolean }>`
+  transition: opacity 0.7s ease;
+  opacity: ${({ isCheckedPM }) => (isCheckedPM ? 1 : 0.2)};
+  pointer-events: ${({ isCheckedPM }) => (isCheckedPM ? `auto` : `none`)};
+`;
+
+const EstimatedGasBoxWrapper = styled.div`
+  gap: ${theme.space.xTiny};
+  border: 1px solid ${theme.color.bg50};
+  padding: ${theme.space.xSmall} ${theme.space.sMedium};
+  display: flex;
+  width: 44%;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 5px;
+  background-color: transparent;
+`;
+
+const EstimatedGasTextWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
 
 export default TransferTokenForm;
