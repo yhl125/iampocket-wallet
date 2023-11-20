@@ -7,7 +7,7 @@ import Text from '@/components/commons/Text';
 import CardButton from '@/components/main/CardButton';
 import theme from '@/styles/theme';
 import Button from '@/components/commons/Button';
-// import CheckBox from '@/components/commons/CheckBox';
+import CheckBox from '@/components/commons/CheckBox';
 import Icon from '@/components/commons/Icon';
 import Input from '@/components/commons/Input';
 import { useState } from 'react';

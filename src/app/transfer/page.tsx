@@ -3,8 +3,6 @@
 import { useRouter } from 'next/navigation';
 import TransferTokenForm from '@/components/transfer/TransferTokenForm';
 import Text from '../../components/commons/Text';
-import Input from '../../components/commons/Input';
-import Button from '../../components/commons/Button';
 import IconTextButton from '../../components/commons/IconTextButton';
 import styled from 'styled-components';
 import theme from '@/styles/theme';

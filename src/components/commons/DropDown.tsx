@@ -56,6 +56,8 @@ const DropDown = ({
     return 'brandBlue60';
   };
 
+  console.log(contents)
+
   return (
     <Container size={size}>
       <DropDownButton
@@ -97,7 +99,7 @@ const DropDown = ({
           >
             <ContentWrapper>
               <Image
-                src={content[iconKey]}
+                src={(content[iconKey]==='') ? `https://bin.bnbstatic.com/image/admin_mgs_image_upload/20201110/87496d50-2408-43e1-ad4c-78b47b448a6a.png`: content[iconKey]}
                 width={20}
                 height={20}
                 alt={'chain logo'}

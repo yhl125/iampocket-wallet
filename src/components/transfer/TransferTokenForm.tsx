@@ -1,6 +1,5 @@
 'use client';
 
-import Conditional from '@/components/ConditionalRender';
 import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import TokenStore, { IResponseToken } from '@/store/TokenStore';
@@ -22,7 +21,7 @@ import Button from '../commons/Button';
 import styled from 'styled-components';
 import theme from '@/styles/theme';
 import DropDown from '../commons/DropDown';
-// import CheckBox from '../commons/CheckBox';
+import CheckBox from '../commons/CheckBox';
 import Icon from '../commons/Icon';
 
 function TransferTokenForm() {
@@ -245,10 +244,9 @@ function TransferTokenForm() {
                 <Text size="title3" color={isCheckedPM ? 'bg0' : 'bg40'}>
                   Paymaster
                 </Text>
-                {/* <CheckBox
-                  checked={isCheckedPM}
-                  onChange={handleChecked}
-                ></CheckBox> */}
+                <CheckBox
+                  setCheckState={setIsCheckedPM}
+                ></CheckBox>
               </PaymasterCheckBoxWrapper>
               <PaymasterDropDownWrapper isCheckedPM={isCheckedPM}>
                 {/* <DropDown size="small">
