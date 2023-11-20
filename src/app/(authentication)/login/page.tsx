@@ -7,7 +7,7 @@ import useSession from '@/hooks/useSession';
 import useAccounts from '@/hooks/useAccounts';
 import { ORIGIN, signInWithDiscord, signInWithGoogle } from '@/utils/lit';
 import { LoadingWithCopy } from '@/components/Loading';
-import LoginMethods from '@/components/login/LoginMethods';
+import LoginMethods from '@/components/authentication/LoginMethods';
 import AccountSelection from '@/components/login/AccountSelection';
 import CreateAccount from '@/components/login/CreateAccount';
 import PKPStore from '@/store/PKPStore';

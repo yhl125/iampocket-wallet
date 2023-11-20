@@ -1,12 +1,16 @@
+import styled from 'styled-components';
+
+import Text from '../components/commons/Text';
+import theme from '@/styles/theme';
+
 export function Loading() {
   return (
     <div
-      className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+      className="inline-block h-16 w-16 animate-spin rounded-full border-[8px] border-current border-t-transparent text-blue-600 dark:text-blue-500"
       role="status"
+      aria-label="loading"
     >
-      <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-        Loading...
-      </span>
+      <span className="sr-only">Loading...</span>
     </div>
   );
 }
@@ -14,12 +18,11 @@ export function Loading() {
 export function LoadingSmall() {
   return (
     <div
-      className="inline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+      className="inline-block h-6 w-6 animate-spin rounded-full border-[3px] border-current border-t-transparent text-blue-600 dark:text-blue-500"
       role="status"
+      aria-label="loading"
     >
-      <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-        Loading...
-      </span>
+      <span className="sr-only">Loading...</span>
     </div>
   );
 }
@@ -31,14 +34,29 @@ interface LoadingProps {
 
 export function LoadingWithCopy({ copy, error }: LoadingProps) {
   return (
-    <div className="flex flex-col items-center gap-2">
+    <Container>
       {error && (
         <div className="alert alert-error">
           <p>{error.message}</p>
         </div>
       )}
-      <div className="loading loading-spinner loading-lg"></div>
-      <p>{copy}</p>
-    </div>
+      <div
+        className="inline-block h-16 w-16 animate-spin rounded-full border-[8px] border-current border-t-transparent text-blue-600 dark:text-blue-500"
+        role="status"
+        aria-label="loading"
+      >
+        <span className="sr-only">Loading...</span>
+      </div>
+      <Text size="title3" color="bg20">
+        {copy}
+      </Text>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: ${theme.space.small};
+`;

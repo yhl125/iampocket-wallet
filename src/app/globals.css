@@ -75,8 +75,62 @@
   }
 }
 
+* {
+  outline: none;
+  box-sizing: border-box;
+  transition: background-color 0.23s ease-in-out 0s;
+}
+
+html {
+  background-color: var(--bg70) !important;
+}
+
+
 body {
-  min-height: 100vh;
-  max-width: 360px;
-  margin: 0 auto;
+  /*
+    // Legacy styles 
+    min-height: 100vh;
+    max-width: 360px;
+    margin: 0 auto;
+  */
+  background-color: #121312;
+
+  --backgroundDefault: #121312;
+
+  --spaceMedium: 32px;
+  --spaceBase: 24px;
+  --spaceSmall: 16px;
+
+
+
+  /* iamPocket Design System */
+  --bg100: #000000;
+  --bg90: #0E1113;
+  --bg80: #1C2226;
+  --bg70: #2B323A;
+  --bg60: #39434D;
+  --bg50: #475460;
+  --bg40: #6C7680;
+  --bg30: #9198A0;
+  --bg20: #B5BBBF;
+  --bg10: #DADDDF;
+  --bg0: #FFFFFF;
+  --systemRed: #FF0D38;
+  --systemOrange: #FE9B07;
+  --systemGreen: #06C755;
+  --systemBlue: #2580E5;
+  --brandBlue90: #041130;
+  --brandBlue80: #082260;
+  --brandBlue70: #0D3290;
+  --brandBlue60: #1143C0;
+  --brandBlue50: #1554F0;
+  --brandBlue40: #4476F3;
+  --brandBlue30: #7398F6;
+  --brandBlue20: #A1BBF9;
+  --brandBlue10: #A1BBF9;
+  --transparent: "transparent";
+}
+
+input {
+  all: initial;
 }
