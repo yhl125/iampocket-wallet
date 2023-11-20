@@ -30,17 +30,13 @@ function Wallet() {
     else if (selectedWallet === 'pkpViem') return pkpViemAddress;
     else return zeroDevAddress;
   }
-  const chainIds = [
-    ...zeroDevMainnetChainIds,
-    ...zeroDevTestnetChainIds,
-  ];
+  const chainIds = [...zeroDevMainnetChainIds, ...zeroDevTestnetChainIds];
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   return (
-    
   mounted && (
     <>
       <div className="wallet">
@@ -122,7 +118,7 @@ function Wallet() {
         </div>
       </div>
     </>
-  )
+    )
   );
 }
 

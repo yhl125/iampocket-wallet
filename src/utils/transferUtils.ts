@@ -1,8 +1,5 @@
 import { ERC20_ABI } from '@/abi/abi';
-import {
-  zeroDevSigner,
-  zeroDevSignerWithERC20Gas,
-} from './ERC4337WalletUtil';
+import { zeroDevSigner, zeroDevSignerWithERC20Gas } from './ERC4337WalletUtil';
 import { createPkpViemWalletClient } from './EOAWalletUtil';
 import { SessionSigs } from '@lit-protocol/types';
 import { publicClientOf } from './ClientUtil';
@@ -74,12 +71,12 @@ export async function zeroDevErc20Transfer(
       address: token,
       abi: ERC20_ABI,
       functionName: 'symbol',
-    }),
+    }) as Promise<string>,
     publicClient.readContract({
       address: token,
       abi: ERC20_ABI,
       functionName: 'decimals',
-    }) as unknown as number,
+    }) as Promise<number>,
   ]);
 
   const parsedAmount = parseUnits(amount, decimals);
@@ -94,7 +91,6 @@ export async function zeroDevErc20Transfer(
     target: erc20.address,
     data: erc20TransferFunctionData,
   });
-
   console.log(`Transacion Hash: ${result.hash}`);
 }
 
@@ -150,12 +146,12 @@ export async function pkpViemErc20Transfer(
       address: token,
       abi: ERC20_ABI,
       functionName: 'symbol',
-    }),
+    }) as Promise<string>,
     publicClient.readContract({
       address: token,
       abi: ERC20_ABI,
       functionName: 'decimals',
-    }) as unknown as number,
+    }) as Promise<number>,
   ]);
 
   const parsedAmount = parseUnits(amount, decimals);
