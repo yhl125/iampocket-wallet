@@ -27,7 +27,7 @@ import Icon from '../commons/Icon';
 function TransferTokenForm() {
   const [isTransactionLoading, setIsTransactionLoading] =
     useState<boolean>(false);
-  const { tokenList } = useSnapshot(TokenStore.tokenListState);
+  const { tokenList } = useSnapshot<any>(TokenStore.tokenListState);
   const [isCheckedPM, setIsCheckedPM] = useState<boolean>(false);
   const [isVerifiedAddress, setIsVerifiedAddress] = useState<boolean>(false);
 
@@ -138,16 +138,12 @@ function TransferTokenForm() {
     setIsCheckedPM(event.target.checked);
     console.log(isCheckedPM);
   };
-  const handleTokenListClick = (token: IResponseToken) => {
-    setSelectedToken(token);
-  };
 
   useEffect(() => {
     if (!zeroDevAddress) router.push('/wallet');
   }, [router, zeroDevAddress]);
 
-
-  console.log(Array(setSelectedToken))
+  console.log(Array(setSelectedToken));
   return (
     <Container>
       <SearchRecipientAddress
@@ -203,7 +199,7 @@ function TransferTokenForm() {
             {/* <span>{selectedToken.symbol}</span> */}
             <AmountDropDownWrapper>
               <DropDown
-                contents={Array(tokenList)}
+                contents={tokenList}
                 selectContentState={selectedToken}
                 setSelectContentState={setSelectedToken}
                 iconKey="logoUrl"
@@ -211,29 +207,6 @@ function TransferTokenForm() {
                 size="medium"
               ></DropDown>
             </AmountDropDownWrapper>
-            {/* 
-            <div className="dropdown">
-              <label tabIndex={0} className="btn m-1">
-                Show Token List
-              </label>
-              <ul
-                tabIndex={0}
-                className="menu dropdown-content rounded-box z-[1] w-52 bg-base-100 p-2 shadow"
-              >
-                {tokenList.length != 0 ? (
-                  tokenList.map((token, idx) => (
-                    <li key={idx} onClick={() => handleTokenListClick(token)}>
-                      <a>
-                        {token.name}{' '}
-                        {erc20BalanceToReadable(token.balance, token.decimals)}
-                      </a>
-                    </li>
-                  ))
-                ) : (
-                  <></>
-                )}
-              </ul>
-            </div> */}
           </AmountInputWrapper>
         </AmountWrapper>
 
@@ -244,16 +217,17 @@ function TransferTokenForm() {
                 <Text size="title3" color={isCheckedPM ? 'bg0' : 'bg40'}>
                   Paymaster
                 </Text>
-                <CheckBox
-                  setCheckState={setIsCheckedPM}
-                ></CheckBox>
+                <CheckBox checkState={isCheckedPM} setCheckState={setIsCheckedPM}></CheckBox>
               </PaymasterCheckBoxWrapper>
               <PaymasterDropDownWrapper isCheckedPM={isCheckedPM}>
-                {/* <DropDown size="small">
-                  {tokenList.map((data: any) => (
-                    <ul key={data.key}>{data}</ul>
-                  ))}
-                </DropDown> */}
+              <DropDown
+                contents={tokenList}
+                selectContentState={selectedToken}
+                setSelectContentState={setSelectedToken}
+                iconKey="logoUrl"
+                nameKey="name"
+                size="small"
+              ></DropDown>
               </PaymasterDropDownWrapper>
             </PaymasterWrapper>
           )}
@@ -346,12 +320,6 @@ const AmountDropDownWrapper = styled.div`
   width: 60%;
 `;
 
-// const InputWrapper = styled.div`
-//   width: 70%;
-// `;
-// const DropDownWrapper = styled.div`
-//   width: 30%;
-// `;
 const GasWrapper = styled.div`
   display: flex;
   gap: ${theme.space.small};

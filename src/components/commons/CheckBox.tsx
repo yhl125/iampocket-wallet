@@ -9,24 +9,26 @@ import Icon, { IconTypes } from './Icon';
 
 interface IProps {
   disabled?: boolean;
-  setCheckState : React.Dispatch<React.SetStateAction<boolean>>;
+  checkState: boolean;
+  setCheckState: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const CheckBox = ({ disabled = false, setCheckState }: IProps) => {
-  const [isChecked, setIsChecked] = useState<boolean>(false);
-
+const CheckBox = ({
+  disabled = false,
+  checkState = false,
+  setCheckState,
+}: IProps) => {
   return (
     <CheckboxWrapper>
       <HiddenCheckbox
         type="checkbox"
         id="checkBoxId"
-        checked={isChecked}
+        checked={checkState}
         onChange={() => {
-          setIsChecked(!isChecked);
-          setCheckState(isChecked);
+          setCheckState(!checkState);
         }}
       />
-      <StyledCheckbox htmlFor="checkBoxId" isChecked={isChecked}>
-        {isChecked ? <Icon type="check" color="bg0" height="body1" /> : null}
+      <StyledCheckbox htmlFor="checkBoxId" checkState={checkState}>
+        {checkState ? <Icon type="check" color="bg0" height="body1" /> : null}
       </StyledCheckbox>
     </CheckboxWrapper>
   );
@@ -45,11 +47,11 @@ const HiddenCheckbox = styled.input`
   width: 0;
 `;
 
-const StyledCheckbox = styled.label<{ isChecked: boolean }>`
-  background: ${({ isChecked }) =>
-    isChecked ? `${theme.color.brandBlue50}` : `${theme.color.bg90}`};
-  border: ${({ isChecked }) =>
-    isChecked ? `none` : `  1px solid ${theme.color.bg50};`};
+const StyledCheckbox = styled.label<{ checkState: boolean }>`
+  background: ${({ checkState }) =>
+    checkState ? `${theme.color.brandBlue50}` : `${theme.color.bg90}`};
+  border: ${({ checkState }) =>
+    checkState ? `none` : `  1px solid ${theme.color.bg50};`};
 
   display: flex;
   align-items: center;
