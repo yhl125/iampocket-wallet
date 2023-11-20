@@ -23,20 +23,20 @@ export default function Login(props: IProps) {
   const { zeroDevAddress, pkpViemAddress, selectedWallet } = useSnapshot(
     AddressStore.state,
   );
-  function getCurrentAddress() {
-    if (selectedWallet === 'zeroDev') return zeroDevAddress;
-    else if (selectedWallet === 'pkpViem') return pkpViemAddress;
-    else return zeroDevAddress;
-  }
+  // function getCurrentAddress() {
+  //   if (selectedWallet === 'zeroDev') return zeroDevAddress;
+  //   else if (selectedWallet === 'pkpViem') return pkpViemAddress;
+  //   else return zeroDevAddress;
+  // }
   const { handleLoginEvent, keys = null, fastUrl } = props;
   const isResetPassword = false;
 
   const {
-    mainKeys,
+    // mainKeys,
     getUserAccount,
-    userAccount,
-    setMainKeys,
-    setUserAccount,
+    // userAccount,
+    // setMainKeys,
+    // setUserAccount,
     confirmPassword,
     login,
     register,
@@ -49,26 +49,26 @@ export default function Login(props: IProps) {
 
   useEffect(() => {
     if (fastUrl) {
-      getAccount('metamask', getCurrentAddress());
-    }
-  });
-
-  const getAccount = async (didType?: WalletType, didValue?: string) => {
-    const { address, userExist } = await getUserAccount(didType, didValue);
-    if (address) {
-      if (userExist) {
-        if (isResetPassword) {
-          setView('reset_password');
+      const getAccount = async (didType?: WalletType, didValue?: string) => {
+        const { address, userExist } = await getUserAccount(didType, didValue);
+        if (address) {
+          if (userExist) {
+            if (isResetPassword) {
+              setView('reset_password');
+            } else {
+              setView('login');
+            }
+          } else {
+            setView('sign_up');
+          }
         } else {
-          setView('login');
+          setView('error');
         }
-      } else {
-        setView('sign_up');
-      }
-    } else {
-      setView('error');
+      };
+      getAccount('metamask', pkpViemAddress);
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fastUrl, isResetPassword, pkpViemAddress, view]);
 
   const submitLogin = async (password: string) => {
     confirmPassword.current = password;
