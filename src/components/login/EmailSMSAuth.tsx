@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { sendOTPCode } from '@/utils/lit';
+// import { sendOTPCode } from '@/utils/lit';
 import { AuthView } from './SignUpMethods';
 import theme from '@/styles/theme';
 import Text from '../commons/Text';
@@ -28,7 +28,7 @@ const EmailSMSAuth = ({ method, setView, authWithOTP }: EmailSMSAuthProps) => {
     setSendLoading(true);
     setSendError(undefined);
     try {
-      await sendOTPCode(userId);
+      // await sendOTPCode(userId);
       setIsSended(true);
     } catch (err: any) {
       setSendError(err);

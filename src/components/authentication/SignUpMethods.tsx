@@ -13,10 +13,10 @@ interface SignUpProps {
   handleGoogleLogin: () => Promise<void>;
   handleDiscordLogin: () => Promise<void>;
   // authWithEthWallet: any;
-  authWithOTP: any;
+  // authWithOTP: any;
   registerWithWebAuthn: any;
   authWithWebAuthn: any;
-  authWithStytch: any;
+  // authWithStytch: any;
   goToLogin: any;
   error?: Error;
 }
@@ -27,10 +27,10 @@ export default function SignUpMethods({
   handleGoogleLogin,
   handleDiscordLogin,
   // authWithEthWallet,
-  authWithOTP,
+  // authWithOTP,
   registerWithWebAuthn,
   authWithWebAuthn,
-  authWithStytch,
+  // authWithStytch,
   goToLogin,
   error,
 }: SignUpProps) {
@@ -80,7 +80,7 @@ export default function SignUpMethods({
           registerWithWebAuthn={registerWithWebAuthn}
         />
       )}
-      {view === 'email' && (
+      {/* {view === 'email' && (
         <EmailSMSAuth
           method={'email'}
           setView={setView}
@@ -93,7 +93,7 @@ export default function SignUpMethods({
           setView={setView}
           authWithOTP={authWithOTP}
         />
-      )}
+      )} */}
       {/* {view === 'phone' && (
           <StytchOTP authWithStytch={authWithStytch} setView={setView} />
         )} */}
