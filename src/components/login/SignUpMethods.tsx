@@ -14,8 +14,7 @@ interface SignUpProps {
   error?: Error;
 }
 
-// export type AuthView = 'default' | 'email' | 'phone' | 'wallet' | 'webauthn';
-export type AuthView = 'default' | 'webauthn';
+export type AuthView = 'default' | 'email' | 'phone' | 'wallet' | 'webauthn';
 
 export default function SignUpMethods({
   handleGoogleLogin,

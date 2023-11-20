@@ -12,10 +12,10 @@ import {
   signInWithGoogle,
 } from '@/utils/lit';
 import { AuthMethodType } from '@lit-protocol/constants';
-import SignUpMethods from '@/components/login/SignUpMethods';
 import { LoadingWithCopy } from '@/components/Loading';
 import PKPStore from '@/store/PKPStore';
 import { useIsMounted } from '@/hooks/useIsMounted';
+import SignUpMethods from '@/components/authentication/SignUpMethods';
 
 export default function SignUpView() {
   const redirectUri = ORIGIN + '/signup';

@@ -1,4 +1,4 @@
-import { CodeBlock, codepen } from 'react-code-blocks';
+import { CodeBlock } from 'react-code-blocks';
 
 /**
  * Types
@@ -15,7 +15,6 @@ function RequestDataCard({ data }: IProps) {
     text: JSON.stringify(data, null, 2),
     language: 'json',
     showLineNumbers: false,
-    theme: codepen,
   };
   return (
     <>
