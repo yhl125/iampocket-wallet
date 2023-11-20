@@ -23,10 +23,8 @@ export default function SignUpView() {
 
   const {
     authMethod,
-    // authWithEthWallet,
-    authWithOTP,
     authWithWebAuthn,
-    authWithStytch,
+    // authWithStytch,
     loading: authLoading,
     error: authError,
   } = useAuthenticate(redirectUri);
@@ -112,11 +110,9 @@ export default function SignUpView() {
       <SignUpMethods
         handleGoogleLogin={handleGoogleLogin}
         handleDiscordLogin={handleDiscordLogin}
-        // authWithEthWallet={authWithEthWallet}
-        authWithOTP={authWithOTP}
         registerWithWebAuthn={registerWithWebAuthn}
         authWithWebAuthn={authWithWebAuthn}
-        authWithStytch={authWithStytch}
+        // authWithStytch={authWithStytch}
         goToLogin={() => router.push('/login')}
         error={error}
       />

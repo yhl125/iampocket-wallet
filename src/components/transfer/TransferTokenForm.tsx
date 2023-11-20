@@ -3,7 +3,7 @@
 import Conditional from '@/components/ConditionalRender';
 import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
-import TokenStore, { TokenState } from '@/store/TokenStore';
+import TokenStore, { IResponseToken } from '@/store/TokenStore';
 import { useRouter } from 'next/navigation';
 import {
   zeroDevTransfer,
@@ -22,7 +22,7 @@ function TransferTokenForm() {
   const [withPM, setWithPM] = useState<boolean>(false);
   const [verifyAddress, setVerifyAddress] = useState<Boolean>(false);
   const [sendAmount, setSendAmount] = useState<number>(0);
-  const psudoToken: TokenState = {
+  const psudoToken: IResponseToken = {
     address: '',
     name: 'Token',
     symbol: 'Token',
@@ -125,7 +125,7 @@ function TransferTokenForm() {
   const handleChecked = (event: any) => {
     setWithPM(event.target.checked);
   };
-  const handleTokenListClick = (token: TokenState) => {
+  const handleTokenListClick = (token: IResponseToken) => {
     setSelectedToken(token);
   };
 

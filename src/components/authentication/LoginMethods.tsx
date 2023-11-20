@@ -6,28 +6,24 @@ import WebAuthn from '../login/WebAuthn';
 import theme from '@/styles/theme';
 import Text from '../commons/Text';
 import AuthMethods from './AuthMethods';
+
+import { AuthView } from './SignUpMethods';
 // import StytchOTP from './StytchOTP';
 
 interface LoginProps {
   handleGoogleLogin: () => Promise<void>;
   handleDiscordLogin: () => Promise<void>;
-  // authWithEthWallet: any;
-  authWithOTP: any;
   authWithWebAuthn: any;
-  authWithStytch: any;
+  // authWithStytch: any;
   signUp: any;
   error?: Error;
 }
 
-type AuthView = 'default' | 'email' | 'phone' | 'wallet' | 'webauthn';
-
 export default function LoginMethods({
   handleGoogleLogin,
   handleDiscordLogin,
-  // authWithEthWallet,
-  authWithOTP,
   authWithWebAuthn,
-  authWithStytch,
+  // authWithStytch,
   signUp,
   error,
 }: LoginProps) {
@@ -76,27 +72,14 @@ export default function LoginMethods({
             setView={setView}
           />
         )}
-        {view === 'email' && (
+        {/* {view === 'phone' && (
+          <StytchOTP authWithStytch={authWithStytch} setView={setView} />
+        )} */}
+        {/* {view === 'email' && (
           <EmailSMSAuth
             method={'email'}
             setView={setView}
             authWithOTP={authWithOTP}
-          />
-        )}
-        {view === 'phone' && (
-          <EmailSMSAuth
-            method={'phone'}
-            setView={setView}
-            authWithOTP={authWithOTP}
-          />
-        )}
-        {/* {view === 'phone' && (
-          <StytchOTP authWithStytch={authWithStytch} setView={setView} />
-        )} */}
-        {/* {view === 'wallet' && (
-          <WalletMethods
-            authWithEthWallet={authWithEthWallet}
-            setView={setView}
           />
         )} */}
       </div>
