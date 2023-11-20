@@ -16,7 +16,6 @@ import TradeIcon from '@/assets/icons/trade.svg';
 import ChatIcon from '@/assets/icons/chat.svg';
 import SettingIcon from '@/assets/icons/setting.svg';
 import LeftArrowIcon from '@/assets/icons/leftarrow.svg';
-import NoneIcon from '@/assets/icons/none.svg';
 import DownArrowIcon from '@/assets/icons/downarrow.svg';
 import CheckIcon from '@/assets/icons/check.svg';
 import GasIcon from '@/assets/icons/gas.svg';
@@ -39,7 +38,6 @@ export type IconTypes =
   | 'chat'
   | 'setting'
   | 'leftarrow'
-  | 'none'
   | 'downarrow'
   | 'check'
   | 'gas';
@@ -83,8 +81,6 @@ const Icon = ({ type, height = 'body3', color = 'bg0' }: IProps) => {
         return <SettingIcon />;
       case 'leftarrow':
         return <LeftArrowIcon />;
-      case 'none':
-        return <NoneIcon />;
       case 'downarrow':
         return <DownArrowIcon />;
       case 'check':

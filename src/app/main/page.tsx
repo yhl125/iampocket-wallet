@@ -7,7 +7,7 @@ import Text from '@/components/commons/Text';
 import CardButton from '@/components/main/CardButton';
 import theme from '@/styles/theme';
 import Button from '@/components/commons/Button';
-import CheckBox from '@/components/commons/CheckBox';
+// import CheckBox from '@/components/commons/CheckBox';
 import Icon from '@/components/commons/Icon';
 import Input from '@/components/commons/Input';
 import { useState } from 'react';
@@ -15,7 +15,6 @@ import DropDown from '@/components/commons/DropDown';
 import TokenList from '@/components/wallet/tokenList';
 import { useSnapshot } from 'valtio';
 import TokenStore from '@/store/TokenStore';
-import { TokenState } from '@/store/TokenStore';
 
 function MainPage() {
   const router = useRouter();
@@ -96,15 +95,15 @@ function MainPage() {
           }}
         />
         <DropDown
-          content={tokenList}
-          selectDataState={dropDownTestValue}
-          setSelectDataState={setDropDownTestValue}
+          contents={tokenList}
+          selectContentState={dropDownTestValue}
+          setSelectContentState={setDropDownTestValue}
           iconKey="logoUrl"
           nameKey="name"
-          size="small"
+          size="medium"
         ></DropDown>
         <Text>{dropDownTestValue.name}</Text>
-        <CheckBox></CheckBox>
+        {/* <CheckBox></CheckBox> */}
       </Row>
     </Container>
   );

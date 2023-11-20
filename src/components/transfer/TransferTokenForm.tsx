@@ -22,23 +22,19 @@ import Button from '../commons/Button';
 import styled from 'styled-components';
 import theme from '@/styles/theme';
 import DropDown from '../commons/DropDown';
-import CheckBox from '../commons/CheckBox';
+// import CheckBox from '../commons/CheckBox';
 import Icon from '../commons/Icon';
 
 function TransferTokenForm() {
   const [isTransactionLoading, setIsTransactionLoading] =
     useState<boolean>(false);
+  const { tokenList } = useSnapshot(TokenStore.tokenListState);
   const [isCheckedPM, setIsCheckedPM] = useState<boolean>(false);
   const [isVerifiedAddress, setIsVerifiedAddress] = useState<boolean>(false);
 
   const [sendAmount, setSendAmount] = useState<number>(0);
-<<<<<<< Updated upstream
-  const psudoToken: IResponseToken = {
-=======
-  const { tokenList } = useSnapshot(TokenStore.tokenListState);
 
-  const psudoToken: TokenState = {
->>>>>>> Stashed changes
+  const psudoToken: IResponseToken = {
     address: '',
     name: 'Token',
     symbol: 'Token',
@@ -143,18 +139,16 @@ function TransferTokenForm() {
     setIsCheckedPM(event.target.checked);
     console.log(isCheckedPM);
   };
-<<<<<<< Updated upstream
   const handleTokenListClick = (token: IResponseToken) => {
-=======
-
-  const handleTokenListClick = (token: TokenState) => {
->>>>>>> Stashed changes
     setSelectedToken(token);
   };
 
   useEffect(() => {
     if (!zeroDevAddress) router.push('/wallet');
   }, [router, zeroDevAddress]);
+
+
+  console.log(Array(setSelectedToken))
   return (
     <Container>
       <SearchRecipientAddress
@@ -193,7 +187,16 @@ function TransferTokenForm() {
                   size="small"
                   text="MAX"
                   type="primary"
-                  onClick={() => {}}
+                  onClick={() => {
+                    setSendAmount(
+                      Number(
+                        erc20BalanceToReadable(
+                          selectedToken.balance,
+                          selectedToken.decimals,
+                        ),
+                      ),
+                    );
+                  }}
                 />
               }
             />
@@ -201,21 +204,13 @@ function TransferTokenForm() {
             {/* <span>{selectedToken.symbol}</span> */}
             <AmountDropDownWrapper>
               <DropDown
-                content={tokenList}
-                selectDataState={selectedToken}
-                setSelectDataState={setSelectedToken}
+                contents={Array(tokenList)}
+                selectContentState={selectedToken}
+                setSelectContentState={setSelectedToken}
                 iconKey="logoUrl"
                 nameKey="name"
                 size="medium"
-              >
-                {tokenList.map((token: any, idx: number) => (
-                  <ul key={idx} onClick={() => handleTokenListClick(token)}>
-                    {' '}
-                    {token.name}{' '}
-                    {erc20BalanceToReadable(token.balance, token.decimals)}
-                  </ul>
-                ))}
-              </DropDown>
+              ></DropDown>
             </AmountDropDownWrapper>
             {/* 
             <div className="dropdown">
@@ -250,17 +245,17 @@ function TransferTokenForm() {
                 <Text size="title3" color={isCheckedPM ? 'bg0' : 'bg40'}>
                   Paymaster
                 </Text>
-                <CheckBox
+                {/* <CheckBox
                   checked={isCheckedPM}
                   onChange={handleChecked}
-                ></CheckBox>
+                ></CheckBox> */}
               </PaymasterCheckBoxWrapper>
               <PaymasterDropDownWrapper isCheckedPM={isCheckedPM}>
-                <DropDown size="small">
+                {/* <DropDown size="small">
                   {tokenList.map((data: any) => (
                     <ul key={data.key}>{data}</ul>
                   ))}
-                </DropDown>
+                </DropDown> */}
               </PaymasterDropDownWrapper>
             </PaymasterWrapper>
           )}
@@ -279,30 +274,32 @@ function TransferTokenForm() {
           text={
             isTransactionLoading
               ? 'Transaction In Progress...'
-              : sendAmount <
-                Number(
-                  erc20BalanceToReadable(
-                    selectedToken.balance,
-                    selectedToken.decimals,
-                  ),
-                )
-              ? 'Send'
-              : 'Enter Amount'
+              : Number(sendAmount) === 0
+                ? 'Enter Amount'
+                : sendAmount >
+                    Number(
+                      erc20BalanceToReadable(
+                        selectedToken.balance,
+                        selectedToken.decimals,
+                      ),
+                    )
+                  ? 'Insufficient your balance'
+                  : 'send'
           }
           size="large"
           type="primary"
           disabled={
-            isTransactionLoading
+            isTransactionLoading ||
+            sendAmount >
+              Number(
+                erc20BalanceToReadable(
+                  selectedToken.balance,
+                  selectedToken.decimals,
+                ),
+              ) ||
+            Number(sendAmount) === 0
               ? true
-              : sendAmount <
-                Number(
-                  erc20BalanceToReadable(
-                    selectedToken.balance,
-                    selectedToken.decimals,
-                  ),
-                )
-              ? false
-              : true
+              : false
           }
           onClick={handleSubmit}
         />
@@ -348,7 +345,7 @@ const AmountInputWrapper = styled.div`
 `;
 
 const AmountDropDownWrapper = styled.div`
-  width: 40%;
+  width: 60%;
 `;
 
 // const InputWrapper = styled.div`
