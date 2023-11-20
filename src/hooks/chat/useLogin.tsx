@@ -66,7 +66,9 @@ const useLogin = (props: IProps) => {
   const walletAddress = useRef<string>('');
   const [mainKeys, setMainKeys] = useState<MainKeysType | undefined>(keys);
   const { currentPKP, sessionSigs } = useSnapshot(PKPStore.state);
-  const { selectedWallet } = useSnapshot(AddressStore.state);
+  // const { selectedWallet } = useSnapshot(AddressStore.state);
+  // Web3MQ is not working with smart contract wallet
+  const selectedWallet = 'pkpViem';
 
   const getMainKeypair = async (options: {
     password: string;

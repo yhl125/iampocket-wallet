@@ -44,8 +44,10 @@ export const FollowRequestButtonGroup: React.FC<
   const [isFollow, setIsFollow] = useState<boolean>(false);
   const [isRequest, setIsRequest] = useState<boolean>(false);
   const { currentPKP, sessionSigs } = useSnapshot(PKPStore.state);
-  const { selectedWallet } = useSnapshot(AddressStore.state);
-  
+  // const { selectedWallet } = useSnapshot(AddressStore.state);
+  // Web3MQ is not working with smart contract wallet
+  const selectedWallet = 'pkpViem';
+
   const followOperation = async (params: GetFollowSignContentParams) => {
     const { signContent, timestamp } =
       await client.contact.getFollowOperationSignContent(params);
