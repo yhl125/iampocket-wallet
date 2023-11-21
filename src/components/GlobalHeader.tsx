@@ -14,7 +14,7 @@ const Header = () => {
   const isPc = usePc();
   const pathName = usePathname();
   return (
-    <Container isPc={isPc}>
+    <Container $isPc={isPc}>
       <Left>
         <Icon
           type="logo"
@@ -75,7 +75,7 @@ const Header = () => {
   );
 };
 
-const Container = styled.header<{ isPc: boolean }>`
+const Container = styled.header<{ $isPc: boolean }>`
   width: 100%;
   display: flex;
 
@@ -83,7 +83,7 @@ const Container = styled.header<{ isPc: boolean }>`
   align-items: center;
   position: fixed;
   padding: ${(props) =>
-    props.isPc
+    props.$isPc
       ? `${theme.space.medium} ${theme.space.mLarge}`
       : `${theme.space.small} ${theme.space.sMedium}`};
 `;
