@@ -12,7 +12,7 @@ export default {
     app.stack(function Site({ stack }) {
       const site = new NextjsSite(stack, 'site', {
         customDomain: {
-          domainName: 'demo-app.iampocket.com',
+          domainName: stack.stage === "prod" ? "demo-app.iampocket.com" : "dev-app.iampocket.com",
           hostedZone: 'iampocket.com',
         },
       });
