@@ -1,3 +1,5 @@
+'use client';
+
 import { Dispatch, SetStateAction, useState } from 'react';
 import { isAddress } from 'viem';
 import styled from 'styled-components';

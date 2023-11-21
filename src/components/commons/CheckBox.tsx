@@ -1,11 +1,8 @@
-'use client';
-
-import React, { ChangeEventHandler, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
-import theme, { ColorType, SizeType } from '@/styles/theme';
-import Text from './Text';
-import Icon, { IconTypes } from './Icon';
+import theme from '@/styles/theme';
+import Icon from './Icon';
 
 interface IProps {
   disabled?: boolean;
@@ -18,7 +15,7 @@ const CheckBox = ({
   setCheckState,
 }: IProps) => {
   return (
-    <CheckboxWrapper>
+    <Container>
       <HiddenCheckbox
         type="checkbox"
         id="checkBoxId"
@@ -30,19 +27,15 @@ const CheckBox = ({
       <StyledCheckbox htmlFor="checkBoxId" checkState={checkState}>
         {checkState ? <Icon type="check" color="bg0" height="body1" /> : null}
       </StyledCheckbox>
-    </CheckboxWrapper>
+    </Container>
   );
 };
 
-const CheckboxWrapper = styled.div`
-  display: flex;
-  align-items: center;
-`;
+const Container = styled.div``;
 
 const HiddenCheckbox = styled.input`
   position: absolute;
   opacity: 0;
-  cursor: pointer;
   height: 0;
   width: 0;
 `;
@@ -52,7 +45,7 @@ const StyledCheckbox = styled.label<{ checkState: boolean }>`
     checkState ? `${theme.color.brandBlue50}` : `${theme.color.bg90}`};
   border: ${({ checkState }) =>
     checkState ? `none` : `  1px solid ${theme.color.bg50};`};
-
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -60,11 +53,6 @@ const StyledCheckbox = styled.label<{ checkState: boolean }>`
   border-radius: 50%;
   width: 24px;
   height: 24px;
-`;
-
-const CheckboxLabel = styled.label`
-  font-size: 14px;
-  margin-left: 8px;
 `;
 
 export default CheckBox;

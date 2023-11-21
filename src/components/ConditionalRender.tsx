@@ -8,7 +8,7 @@ function Conditional({
   showWhen: Boolean;
   children: ReactNode;
 }) {
- return <ConditionalWrapper showWhen>{children}</ConditionalWrapper>;
+  return <ConditionalWrapper showWhen>{children}</ConditionalWrapper>;
 }
 
 const ConditionalWrapper = styled.div<{ showWhen: boolean }>`

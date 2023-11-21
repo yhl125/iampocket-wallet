@@ -21,7 +21,7 @@ function MainPage() {
 
   const [inputTestValue, setInputTestValue] = useState('');
 
-  const tokenList : any[] = [
+  const tokenList: any[] = [
     {
       name: 'janf',
       symbol: 'Token',
@@ -55,7 +55,13 @@ function MainPage() {
   ];
 
   const [dropDownTestValue, setDropDownTestValue] = useState(() =>
-  tokenList.length === 0 ? { name: 'You dont have any Token', logoUrl: 'https://bin.bnbstatic.com/image/admin_mgs_image_upload/20201110/87496d50-2408-43e1-ad4c-78b47b448a6a.png'} : tokenList[0]
+    tokenList.length === 0
+      ? {
+          name: 'You dont have any Token',
+          logoUrl:
+            'https://bin.bnbstatic.com/image/admin_mgs_image_upload/20201110/87496d50-2408-43e1-ad4c-78b47b448a6a.png',
+        }
+      : tokenList[0],
   );
 
   console.log(dropDownTestValue);

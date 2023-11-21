@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import TokenStore, { IResponseToken } from '@/store/TokenStore';
 import { useRouter } from 'next/navigation';
+import styled from 'styled-components';
+
 import {
   zeroDevTransfer,
   zeroDevErc20Transfer,
@@ -15,11 +17,10 @@ import AddressStore from '@/store/AddressStore';
 import SearchRecipientAddress from './SearchRecipientAddress';
 import { erc20BalanceToReadable } from '@/utils/ERC20Util';
 
+import theme from '@/styles/theme';
 import Text from '../../components/commons/Text';
 import Input from '../../components/commons/Input';
 import Button from '../commons/Button';
-import styled from 'styled-components';
-import theme from '@/styles/theme';
 import DropDown from '../commons/DropDown';
 import CheckBox from '../commons/CheckBox';
 import Icon from '../commons/Icon';
@@ -134,16 +135,11 @@ function TransferTokenForm() {
     }
   }
 
-  const handleChecked = (event: any) => {
-    setIsCheckedPM(event.target.checked);
-    console.log(isCheckedPM);
-  };
-
   useEffect(() => {
     if (!zeroDevAddress) router.push('/wallet');
   }, [router, zeroDevAddress]);
 
-  console.log(Array(setSelectedToken));
+  console.log(isCheckedPM);
   return (
     <Container>
       <SearchRecipientAddress
@@ -159,7 +155,7 @@ function TransferTokenForm() {
             </Text>
             <BalanceTextWrapper>
               <Text size="body3">Your Balance:</Text>
-              <Text size="body3">
+              <Text size="body3" $thin>
                 {erc20BalanceToReadable(
                   selectedToken.balance,
                   selectedToken.decimals,
@@ -195,8 +191,6 @@ function TransferTokenForm() {
                 />
               }
             />
-
-            {/* <span>{selectedToken.symbol}</span> */}
             <AmountDropDownWrapper>
               <DropDown
                 contents={tokenList}
@@ -217,18 +211,21 @@ function TransferTokenForm() {
                 <Text size="title3" color={isCheckedPM ? 'bg0' : 'bg40'}>
                   Paymaster
                 </Text>
-                <CheckBox checkState={isCheckedPM} setCheckState={setIsCheckedPM}></CheckBox>
+                <CheckBox
+                  checkState={isCheckedPM}
+                  setCheckState={setIsCheckedPM}
+                ></CheckBox>
               </PaymasterCheckBoxWrapper>
-              <PaymasterDropDownWrapper isCheckedPM={isCheckedPM}>
-              <DropDown
-                contents={tokenList}
-                selectContentState={selectedToken}
-                setSelectContentState={setSelectedToken}
-                iconKey="logoUrl"
-                nameKey="name"
-                size="small"
-              ></DropDown>
-              </PaymasterDropDownWrapper>
+              {/* TODO : <PaymasterDropDownWrapper isCheckedPM={isCheckedPM}>
+                <DropDown
+                  contents={tokenList}
+                  selectContentState={selectedToken}
+                  setSelectContentState={setSelectedToken}
+                  iconKey="logoUrl"
+                  nameKey="name"
+                  size="small"
+                ></DropDown>
+              </PaymasterDropDownWrapper> */}
             </PaymasterWrapper>
           )}
           <EstimatedGasBoxWrapper>
@@ -238,7 +235,7 @@ function TransferTokenForm() {
               </Text>
               <Icon type="gas" color="bg40" height="title3" />
             </EstimatedGasTextWrapper>
-            <Text>0.0000000012</Text>
+            <Text $thin>0.0000000012</Text>
           </EstimatedGasBoxWrapper>
         </GasWrapper>
 
@@ -280,7 +277,9 @@ function TransferTokenForm() {
   );
 }
 
-const Container = styled.div``;
+const Container = styled.div`
+  width: 100%;
+`;
 
 const TransferWrapper = styled.div<{ isVerifiedAddress: boolean }>`
   display: flex;

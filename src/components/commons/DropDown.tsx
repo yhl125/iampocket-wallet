@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import Image from 'next/image';
 
-import theme, { ColorType, SizeType } from '@/styles/theme';
+import theme, { ColorType } from '@/styles/theme';
 import Text from './Text';
-import Icon, { IconTypes } from './Icon';
+import Icon from './Icon';
 
 interface IProps {
   size?: 'medium' | 'small';
@@ -15,7 +15,6 @@ interface IProps {
   setSelectContentState: React.Dispatch<React.SetStateAction<any>>;
   iconKey: string;
   nameKey: string;
-
   contents: any[];
 }
 const DropDown = ({
@@ -27,11 +26,10 @@ const DropDown = ({
   nameKey = '',
   contents = [],
 }: IProps) => {
-  
   const [isDropDownShowed, setIsDropDownShowed] = useState<boolean>(false);
 
-  if (contents.length ===0){
-    disabled =true
+  if (contents.length === 0) {
+    disabled = true;
   }
 
   const handleContentClick = (content: any) => {
@@ -44,19 +42,11 @@ const DropDown = ({
     return 'bg20';
   };
 
-  const renderBorderColor = (): ColorType => {
-    if (isDropDownShowed) return 'bg30';
-    if (disabled) return 'bg50';
-    return 'bg0';
-  };
-
   const renderArrowColor = (): ColorType => {
     if (isDropDownShowed) return 'brandBlue50';
     if (disabled) return 'bg50';
     return 'brandBlue60';
   };
-
-  console.log(contents)
 
   return (
     <Container size={size}>
@@ -99,7 +89,11 @@ const DropDown = ({
           >
             <ContentWrapper>
               <Image
-                src={(content[iconKey]==='') ? `https://bin.bnbstatic.com/image/admin_mgs_image_upload/20201110/87496d50-2408-43e1-ad4c-78b47b448a6a.png`: content[iconKey]}
+                src={
+                  content[iconKey] === ''
+                    ? `https://bin.bnbstatic.com/image/admin_mgs_image_upload/20201110/87496d50-2408-43e1-ad4c-78b47b448a6a.png`
+                    : content[iconKey]
+                }
                 width={20}
                 height={20}
                 alt={'chain logo'}
@@ -143,7 +137,7 @@ const DropDownButton = styled.button<{
       : `1px solid ${theme.color.bg50};`};
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   border-radius: 5px;
-  background-color: ${theme.color.bg90};
+  background-color: transparent;
   display: flex;
   align-items: center;
   justify-content: space-between;

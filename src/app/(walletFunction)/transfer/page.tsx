@@ -2,21 +2,21 @@
 
 import { useRouter } from 'next/navigation';
 import TransferTokenForm from '@/components/transfer/TransferTokenForm';
-import Text from '../../components/commons/Text';
-import IconTextButton from '../../components/commons/IconTextButton';
+import Text from '../../../components/commons/Text';
+import IconTextButton from '../../../components/commons/IconTextButton';
 import styled from 'styled-components';
 import theme from '@/styles/theme';
+import { useIsMounted } from '@/hooks/useIsMounted';
 
 function TransferToken() {
   const router = useRouter();
+  const mounted = useIsMounted();
   return (
     <Container>
       <Text size="title1" $bold>
         Send
       </Text>
-
-      <TransferTokenForm></TransferTokenForm>
-
+      {mounted && <TransferTokenForm></TransferTokenForm>}
       <ButtonWrapper>
         <IconTextButton
           text="Back"
@@ -30,11 +30,12 @@ function TransferToken() {
 }
 
 const Container = styled.div`
+  row-gap: ${theme.space.large};
   display: flex;
   flex-direction: column;
-  row-gap: ${theme.space.large};
-  width: 600px;
+  width: 100%;
 `;
 
 const ButtonWrapper = styled.div``;
+
 export default TransferToken;
