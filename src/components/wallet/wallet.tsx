@@ -37,34 +37,33 @@ function Wallet() {
   }, []);
 
   return (
-    mounted && (
-      <>
-        <div className="wallet">
-          <div className="wallet-header relative flex items-center justify-center p-4">
-            <div className="wallet-address flex flex-col items-center">
-              <SelectWallet></SelectWallet>
-              <div className="address flex">
-                <p className="text-sm text-gray-500">
-                  {truncateAddress(getCurrentAddress(selectedWallet))}
-                </p>
-                <div className="dropdown dropdown-end">
-                  <Image
-                    tabIndex={0}
-                    src={copyClipboardSVG}
-                    alt={'copyToClipboard'}
-                    onClick={() =>
-                      navigator.clipboard.writeText(
-                        getCurrentAddress(selectedWallet),
-                      )
-                    }
-                  ></Image>
-                  <ul
-                    tabIndex={0}
-                    className="menu dropdown-content rounded-box p-1 shadow"
-                  >
-                    <li>copied to clipboard!</li>
-                  </ul>
-                </div>
+  mounted && (
+    <>
+      <div className="wallet">
+        <div className="wallet-header relative flex items-center justify-center p-4">
+          <div className="wallet-address flex flex-col items-center">
+            <SelectWallet></SelectWallet>
+            <div className="address flex">
+              <p className="text-sm text-gray-500">
+                {truncateAddress(getCurrentAddress(selectedWallet))}
+              </p>
+              <div className="dropdown dropdown-end">
+                <Image
+                  tabIndex={0}
+                  src={copyClipboardSVG}
+                  alt={'copyToClipboard'}
+                  onClick={() =>
+                    navigator.clipboard.writeText(
+                      getCurrentAddress(selectedWallet),
+                    )
+                  }
+                ></Image>
+                <ul
+                  tabIndex={0}
+                  className="menu dropdown-content rounded-box p-1 shadow"
+                >
+                  <li>copied to clipboard!</li>
+                </ul>
               </div>
             </div>
             <div className="dropdown dropdown-end absolute right-0 top-0 py-2">
@@ -117,7 +116,8 @@ function Wallet() {
             <TokenList />
           </div>
         </div>
-      </>
+      </div>
+    </>
     )
   );
 }
