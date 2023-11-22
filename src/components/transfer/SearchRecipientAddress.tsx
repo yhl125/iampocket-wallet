@@ -9,11 +9,13 @@ import Text from '../commons/Text';
 import Input from '../commons/Input';
 
 interface Props {
+  isVerifiedAddress: boolean;
   setIsVerifiedAddress: Dispatch<SetStateAction<boolean>>;
   setRecipientAddressOrEns: Dispatch<SetStateAction<string>>;
 }
 
 function SearchRecipientAddress({
+  isVerifiedAddress,
   setIsVerifiedAddress,
   setRecipientAddressOrEns,
 }: Props) {
@@ -41,7 +43,12 @@ function SearchRecipientAddress({
         size="medium"
         type="text"
         placeholder="Address(0x),ENS"
-      />
+        error={
+          isVerifiedAddress || recipientAddress === ''
+            ? { message: '' }
+            : { message: 'Invalid Address' }
+        }
+      ></Input>
     </Container>
   );
 }

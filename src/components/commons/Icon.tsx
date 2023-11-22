@@ -37,8 +37,8 @@ export type IconTypes =
   | 'trade'
   | 'chat'
   | 'setting'
-  | 'leftarrow'
-  | 'downarrow'
+  | 'leftArrow'
+  | 'downArrow'
   | 'check'
   | 'gas';
 
@@ -79,9 +79,9 @@ const Icon = ({ type, height = 'body3', color = 'bg0' }: IProps) => {
         return <ChatIcon />;
       case 'setting':
         return <SettingIcon />;
-      case 'leftarrow':
+      case 'leftArrow':
         return <LeftArrowIcon />;
-      case 'downarrow':
+      case 'downArrow':
         return <DownArrowIcon />;
       case 'check':
         return <CheckIcon />;

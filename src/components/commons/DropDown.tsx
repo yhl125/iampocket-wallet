@@ -26,6 +26,8 @@ const DropDown = ({
   nameKey = '',
   contents = [],
 }: IProps) => {
+  const defaultImage: string = '/images/none.png';
+
   const [isDropDownShowed, setIsDropDownShowed] = useState<boolean>(false);
 
   if (contents.length === 0) {
@@ -60,7 +62,11 @@ const DropDown = ({
       >
         <ContentWrapper>
           <Image
-            src={selectContentState[iconKey]}
+            src={
+              selectContentState[iconKey] === ''
+                ? defaultImage
+                : selectContentState[iconKey]
+            }
             width={20}
             height={20}
             alt={'chain logo'}
@@ -75,10 +81,10 @@ const DropDown = ({
         </ContentWrapper>
 
         <Icon
-          type="downarrow"
+          type="downArrow"
           color={renderArrowColor()}
           height={size === 'medium' ? 'body3' : 'body4'}
-        />
+        ></Icon>
       </DropDownButton>
       <DropDownContents isDropDownShowed={isDropDownShowed}>
         {contents.map((content, idx) => (
@@ -89,11 +95,7 @@ const DropDown = ({
           >
             <ContentWrapper>
               <Image
-                src={
-                  content[iconKey] === ''
-                    ? `https://bin.bnbstatic.com/image/admin_mgs_image_upload/20201110/87496d50-2408-43e1-ad4c-78b47b448a6a.png`
-                    : content[iconKey]
-                }
+                src={content[iconKey] === '' ? defaultImage : content[iconKey]}
                 width={20}
                 height={20}
                 alt={'chain logo'}

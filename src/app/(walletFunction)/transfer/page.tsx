@@ -21,9 +21,9 @@ function TransferToken() {
         <IconTextButton
           text="Back"
           size="small"
-          icon="leftarrow"
+          icon="leftArrow"
           onClick={() => router.back()}
-        />
+        ></IconTextButton>
       </ButtonWrapper>
     </Container>
   );

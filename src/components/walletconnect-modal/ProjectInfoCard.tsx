@@ -23,7 +23,7 @@ function ProjectInfoCard({ metadata }: IProps) {
             alt="Tailwind-CSS-Avatar-component"
             fill
             sizes="1x"
-          />
+          ></Image>
         </div>
       </div>
       <div>

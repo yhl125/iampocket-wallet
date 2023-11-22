@@ -139,10 +139,23 @@ function TransferTokenForm() {
     if (!zeroDevAddress) router.push('/wallet');
   }, [router, zeroDevAddress]);
 
-  console.log(isCheckedPM);
+  const checkDisable = () => {
+    if (
+      isTransactionLoading ||
+      sendAmount >
+        Number(
+          erc20BalanceToReadable(selectedToken.balance, selectedToken.decimals),
+        ) ||
+      Number(sendAmount) === 0
+    )
+      return true;
+    else false;
+  };
+
   return (
     <Container>
       <SearchRecipientAddress
+        isVerifiedAddress={isVerifiedAddress}
         setIsVerifiedAddress={setIsVerifiedAddress}
         setRecipientAddressOrEns={setRecipientAddressOrEns}
       ></SearchRecipientAddress>
@@ -172,6 +185,17 @@ function TransferTokenForm() {
               size="medium"
               type="text"
               placeholder="0.0"
+              error={
+                sendAmount >
+                Number(
+                  erc20BalanceToReadable(
+                    selectedToken.balance,
+                    selectedToken.decimals,
+                  ),
+                )
+                  ? { message: 'Insufficient Your Balance' }
+                  : { message: '' }
+              }
               style={{ visibility: isVerifiedAddress ? `visible` : `hidden` }}
               suffixComponent={
                 <Button
@@ -190,7 +214,7 @@ function TransferTokenForm() {
                   }}
                 />
               }
-            />
+            ></Input>
             <AmountDropDownWrapper>
               <DropDown
                 contents={tokenList}
@@ -233,43 +257,17 @@ function TransferTokenForm() {
               <Text size="body2" color="bg40">
                 Estimated GAS
               </Text>
-              <Icon type="gas" color="bg40" height="title3" />
+              <Icon type="gas" color="bg40" height="title3"></Icon>
             </EstimatedGasTextWrapper>
-            <Text $thin>0.0000000012</Text>
+            <Text $thin>0.000000001</Text>
           </EstimatedGasBoxWrapper>
         </GasWrapper>
 
         <Button
-          text={
-            isTransactionLoading
-              ? 'Transaction In Progress...'
-              : Number(sendAmount) === 0
-                ? 'Enter Amount'
-                : sendAmount >
-                    Number(
-                      erc20BalanceToReadable(
-                        selectedToken.balance,
-                        selectedToken.decimals,
-                      ),
-                    )
-                  ? 'Insufficient your balance'
-                  : 'send'
-          }
+          text={isTransactionLoading ? 'Transaction In Progress...' : 'send'}
           size="large"
           type="primary"
-          disabled={
-            isTransactionLoading ||
-            sendAmount >
-              Number(
-                erc20BalanceToReadable(
-                  selectedToken.balance,
-                  selectedToken.decimals,
-                ),
-              ) ||
-            Number(sendAmount) === 0
-              ? true
-              : false
-          }
+          disabled={checkDisable()}
           onClick={handleSubmit}
         />
       </TransferWrapper>

@@ -20,7 +20,7 @@ const Header = () => {
           type="logo"
           color="brandBlue50"
           height={isPc ? 'display' : 'title1'}
-        />
+        ></Icon>
         {pathName != `/login` && pathName != `/signup` && isPc && (
           <HeaderButtonWrapper>
             <IconTextButton
@@ -30,7 +30,7 @@ const Header = () => {
               onClick={() => {
                 return;
               }}
-            />
+            ></IconTextButton>
             <IconTextButton
               text="Trading"
               size="large"
@@ -38,7 +38,7 @@ const Header = () => {
               onClick={() => {
                 return;
               }}
-            />
+            ></IconTextButton>
             <IconTextButton
               text="Chatting"
               size="large"
@@ -46,7 +46,7 @@ const Header = () => {
               onClick={() => {
                 return;
               }}
-            />
+            ></IconTextButton>
             <IconTextButton
               text="Settings"
               size="large"
@@ -54,7 +54,7 @@ const Header = () => {
               onClick={() => {
                 return;
               }}
-            />
+            ></IconTextButton>
           </HeaderButtonWrapper>
         )}
       </Left>

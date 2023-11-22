@@ -52,7 +52,11 @@ const IconButton = ({
       disabled={disabled}
       loading={loading}
     >
-      <Icon type={icon} color={renderIconColor()} height={renderIconSize()} />
+      <Icon
+        type={icon}
+        color={renderIconColor()}
+        height={renderIconSize()}
+      ></Icon>
       {children}
     </Button>
   );

@@ -25,14 +25,12 @@ function MainPage() {
     {
       name: 'janf',
       symbol: 'Token',
-      logoUrl:
-        'https://bin.bnbstatic.com/image/admin_mgs_image_upload/20201110/87496d50-2408-43e1-ad4c-78b47b448a6a.png',
+      logoUrl: '',
     },
     {
       name: 'janwe',
       symbol: 'Token',
-      logoUrl:
-        'https://bin.bnbstatic.com/image/admin_mgs_image_upload/20201110/3a8c9fe6-2a76-4ace-aa07-415d994de6f0.png',
+      logoUrl: '/images/none.png',
     },
     {
       name: 'qweqwe',
@@ -86,7 +84,7 @@ function MainPage() {
               onClick={() => {}}
             />
           }
-        />
+        ></Input>
         <br />
         <br />
         <Input
@@ -99,7 +97,7 @@ function MainPage() {
           error={{
             message: 'not enough balance',
           }}
-        />
+        ></Input>
         <DropDown
           contents={tokenList}
           selectContentState={dropDownTestValue}

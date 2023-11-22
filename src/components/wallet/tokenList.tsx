@@ -34,7 +34,12 @@ function TokenList() {
                       </span>
                       <div className="avatar placeholder">
                         <div className="relative w-12 rounded-full border-2 bg-neutral-focus text-neutral-content">
-                          <Image src={token.logoUrl} alt="" fill sizes="1x" />
+                          <Image
+                            src={token.logoUrl}
+                            alt=""
+                            fill
+                            sizes="1x"
+                          ></Image>
                         </div>
                       </div>
                     </div>
