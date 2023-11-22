@@ -1,20 +1,21 @@
 import { proxyWithLocalStorage } from '@/utils/StoreUtil';
 
+export type selectedWalletType = 'zeroDev' | 'pkpViem';
 /**
  * Types
  */
-interface State {
+export interface WalletState {
   zeroDevAddress: string;
-  biconomyAddress: string;
-  selectedWallet: 'zeroDev' | 'biconomy';
+  pkpViemAddress: string;
+  selectedWallet: selectedWalletType;
 }
 
 /**
  * State
  */
-const state = proxyWithLocalStorage<State>('AddressState', {
+const state = proxyWithLocalStorage<WalletState>('AddressState', {
   zeroDevAddress: '',
-  biconomyAddress: '',
+  pkpViemAddress: '',
   selectedWallet: 'zeroDev',
 });
 
@@ -26,12 +27,12 @@ const AddressStore = {
   setZeroDevAddress(zerodevAddress: string) {
     state.zeroDevAddress = zerodevAddress;
   },
-  setBiconomyAddress(biconomyAddress: string) {
-    state.biconomyAddress = biconomyAddress;
+  setPkpViemAddress(pkpViemAddress: string) {
+    state.pkpViemAddress = pkpViemAddress;
   },
-  setSelectedWallet(selectedWallet: 'zeroDev' | 'biconomy') {
+  setSelectedWallet(selectedWallet: selectedWalletType) {
     state.selectedWallet = selectedWallet;
-  }
+  },
 };
 
 export default AddressStore;

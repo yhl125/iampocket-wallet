@@ -1,0 +1,44 @@
+.contentWrapper {
+  display: flex;
+}
+
+.left {
+  width: 41vw;
+  height: 100vh;
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg80);
+}
+
+.right {
+  width: 59vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg90);
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.titleBlue {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1554f0;
+}
+
+@media (max-width: 768px) {
+  .left {
+    display: none;
+  }
+
+  .right {
+    width: 100vw;
+  }
+}

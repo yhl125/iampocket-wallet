@@ -1,5 +1,5 @@
 import { EIP155_CHAINS } from '@/data/EIP155Data';
-import TokenStore, { TokenState } from '@/store/TokenStore';
+import TokenStore, { IResponseToken } from '@/store/TokenStore';
 import { erc20BalanceToReadable } from '@/utils/ERC20Util';
 import Image from 'next/image';
 import { useSnapshot } from 'valtio';
@@ -19,7 +19,7 @@ function TokenList() {
               </tr>
             </thead>
             <tbody>
-              {tokenList.map((token: TokenState, idx: number) => (
+              {tokenList.map((token: IResponseToken, idx: number) => (
                 <tr key={idx}>
                   <td>
                     <div className="indicator">

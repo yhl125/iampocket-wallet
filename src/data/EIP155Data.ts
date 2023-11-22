@@ -119,4 +119,3 @@ export const EIP155_SIGNING_METHODS = {
 
 export const zeroDevMainnetChainIds = [10, 42161]
 export const zeroDevTestnetChainIds = [5, 80001, 421613, 420]
-export const biconomyTestnetChainIds = [59140, 1442]

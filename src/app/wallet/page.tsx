@@ -10,5 +10,5 @@ function WalletPage() {
       <Modal />
     </>
   );
-};
+}
 export default WalletPage;

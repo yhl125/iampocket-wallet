@@ -2,21 +2,22 @@
 
 export const dynamic = 'force-dynamic';
 
-import TokenStore, { ResponseToken } from '@/store/TokenStore';
+import TokenStore, { IResponseToken } from '@/store/TokenStore';
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
 const query = gql`
   query findEvmTokenBalance(
     $address: String!
-    $chainId: Int!
+    $chainIds: [Int!]!
     $quoteCurrency: QuoteCurrency!
   ) {
     findEvmTokenBalance(
       address: $address
-      chainId: $chainId
+      chainIds: $chainIds
       quoteCurrency: $quoteCurrency
     ) {
+      chainId
       address
       name
       symbol
@@ -36,7 +37,7 @@ const query = gql`
 
 interface IProps {
   address: string;
-  chainId: number;
+  chainIds: number[];
   quoteCurrency: string;
 }
 
@@ -47,32 +48,31 @@ interface FetchTokensProps {
 }
 
 function FetchToken(props: IProps) {
-  // Poll every 30 seconds
-  const pollInterval = 30 * 1000;
+  // Poll every 5 seconds
+  const pollInterval = 5 * 1000;
   const { data } = useQuery(query, {
     variables: {
       address: props.address,
-      chainId: props.chainId,
+      chainIds: props.chainIds,
       quoteCurrency: props.quoteCurrency,
     },
     pollInterval,
   });
   if (data) {
     TokenStore.addTokens(
-      data.findEvmTokenBalance as ResponseToken[],
-      props.chainId,
+      data.findEvmTokenBalance as IResponseToken[],
+      props.chainIds,
     );
   }
 }
 
 function FetchTokens(props: FetchTokensProps) {
-  props.chainIds.forEach((chainId) => {
-    FetchToken({
-      address: props.address,
-      chainId,
-      quoteCurrency: props.quoteCurrency,
-    });
+  FetchToken({
+    address: props.address,
+    chainIds: props.chainIds,
+    quoteCurrency: props.quoteCurrency,
   });
+
   return <></>;
 }
 

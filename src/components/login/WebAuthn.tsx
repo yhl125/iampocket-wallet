@@ -1,5 +1,12 @@
 import { useState } from 'react';
+import styled from 'styled-components';
+
 import { AuthView } from './SignUpMethods';
+import theme from '@/styles/theme';
+import Text from '../commons/Text';
+import Button from '../commons/Button';
+import IconTextButton from '../commons/IconTextButton';
+import { LoadingWithCopy } from '@/components/Loading';
 
 type WebAuthnStep = 'register' | 'authenticate';
 
@@ -35,17 +42,10 @@ export default function WebAuthn({
 
   if (loading) {
     return (
-      <>
-        {error && (
-          <div className="alert alert-error">
-            <p>{error.message}</p>
-          </div>
-        )}
-        <div className="loader-container">
-          <div className="loader"></div>
-          <p>Follow the prompts to continue...</p>
-        </div>
-      </>
+      <LoadingWithCopy
+        copy={'Follow the prompts to continue...'}
+        error={error}
+      />
     );
   }
 
@@ -56,47 +56,66 @@ export default function WebAuthn({
           <p>{error.message}</p>
         </div>
       )}
+
       {step === 'register' && (
         <>
-          <h1>Register with an authenticator</h1>
-          <p>
-            WebAuthn credentials enable simple and secure passwordless
-            authentication.
-          </p>
-          <div className="buttons-container">
-            <button
-              type="button"
-              className={`btn btn-outline ${loading && 'btn--loading'}`}
+          <Text size="title1" $bold>
+            Sign Up with Webauthn
+          </Text>
+          <WebAuthWrapper>
+            <Text size="body2" color="bg20" $thin>
+              Register with an authenticator. <br /> WebAuthn credentials enable
+              simple and secure passwordless authentication.
+            </Text>
+            <Button
+              text="Create a Credential"
+              size="large"
+              type="primary"
               onClick={handleRegister}
-              disabled={loading}
-            >
-              Create a credential
-            </button>
-            <button onClick={() => setView('default')} className="btn	 btn-link">
-              Back
-            </button>
-          </div>
+            />
+          </WebAuthWrapper>
         </>
       )}
       {step === 'authenticate' && (
         <>
-          <h1>Authenticate with your authenticator</h1>
-          <p>Sign in using your authenticator.</p>
-          <div className="buttons-container">
-            <button
-              type="button"
-              className={`btn btn-outline ${loading && 'btn--loading'}`}
+          <Text size="title1" $bold>
+            Sign In with Webauthn
+          </Text>
+          <WebAuthWrapper>
+            <Text size="body2" color="bg20" $thin>
+              Authenticate with your authenticator.
+              <br /> Sign in using your authenticator
+            </Text>
+
+            <Button
+              text="Sign in with authenticator"
+              size="large"
+              type="primary"
               onClick={authWithWebAuthn}
-              disabled={loading}
-            >
-              Sign in with authenticator
-            </button>
-            <button onClick={() => setView('default')} className="btn btn-link">
-              Back
-            </button>
-          </div>
+            />
+          </WebAuthWrapper>
         </>
       )}
+      <ButtonWrapper>
+        <IconTextButton
+          text="Back"
+          size="small"
+          icon="leftarrow"
+          onClick={() => setView('default')}
+        />
+      </ButtonWrapper>
     </>
   );
 }
+
+const ButtonWrapper = styled.div`
+  margin-top: ${theme.space.large};
+`;
+
+const WebAuthWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: ${theme.space.sMedium};
+  margin-top: ${theme.space.sMedium};
+  margin-bottom: ${theme.space.tiny};
+`;
