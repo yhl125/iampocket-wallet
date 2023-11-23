@@ -8,12 +8,14 @@ import {
 import { useState } from 'react';
 import { useSnapshot } from 'valtio';
 import Input from '../commons/Input';
+import { useRouter } from 'next/navigation';
 
 export default function CreateCircuit() {
   const { currentPKP, sessionSigs } = useSnapshot(PKPStore.state);
   const serverUrl =
     process.env.NEXT_PUBLIC_LIT_LISTENER_SERVER_URL || 'http://localhost:3001/';
   const [chainId, setChainId] = useState(80001);
+  const router = useRouter();
 
   function viemCircuit() {
     const transactionAction: IViemTransactionAction = {
@@ -111,6 +113,12 @@ export default function CreateCircuit() {
       </button>
       <button onClick={zeroDevCircuit} className="btn btn-primary">
         ZeroDev circuit
+      </button>
+      <button
+        onClick={() => router.push('/lit-listener/create')}
+        className="btn btn-primary"
+      >
+        Custom circuit
       </button>
     </>
   );

@@ -1,11 +1,11 @@
 'use client'
 
-import CreateCircuit from '@/components/lit-listener/create/CreateCircuit';
+import CreateCustomCircuit from '@/components/lit-listener/create/CreateCustomCircuit';
 
 function LitListenerCreatePage() {
   return (
     <>
-      <CreateCircuit />
+      <CreateCustomCircuit />
     </>
   );
 }

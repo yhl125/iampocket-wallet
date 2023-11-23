@@ -8,13 +8,14 @@ import {
   IWebhookCondition,
   IZeroDevUserOperationAction,
 } from '@lit-listener-sdk/types';
-import { set } from 'lodash';
-import { ChangeEvent, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { Address, encodeFunctionData } from 'viem';
 
-export default function CreateCircuit() {
+export default function CreateCustomCircuit() {
   const { currentPKP, sessionSigs } = useSnapshot(PKPStore.state);
+  const router = useRouter();
   const serverUrl =
     process.env.NEXT_PUBLIC_LIT_LISTENER_SERVER_URL || 'http://localhost:3001/';
   const [type, setType] = useState('Viem');
@@ -56,6 +57,7 @@ export default function CreateCircuit() {
     } else {
       createZeroDevCircuit();
     }
+    router.back();
   }
 
   function createViemCircuit() {
