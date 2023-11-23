@@ -29,7 +29,7 @@ export const litNodeClient: LitNodeClient = new LitNodeClient({
 export const litAuthClient: LitAuthClient = new LitAuthClient({
   litRelayConfig: {
     // relayUrl: 'http://localhost:3001',
-    relayApiKey: 'test-api-key',
+    relayApiKey: process.env.NEXT_PUBLIC_RELAY_API_KEY || 'test-api-key',
   },
   litNodeClient,
 });
@@ -102,7 +102,9 @@ export async function registerWebAuthn(): Promise<IRelayPKP> {
   const options = await provider.register();
 
   // Verify registration and mint PKP through relay server
-  const txHash = await provider.verifyAndMintPKPThroughRelayer(options, {permittedAuthMethodScopes:[[1]]});
+  const txHash = await provider.verifyAndMintPKPThroughRelayer(options, {
+    permittedAuthMethodScopes: [[1]],
+  });
   const response = await provider.relay.pollRequestUntilTerminalState(txHash);
   if (response.status !== 'Succeeded') {
     throw new Error('Minting failed');
@@ -221,10 +223,14 @@ export async function mintPKP(authMethod: AuthMethod): Promise<IRelayPKP> {
     // Verify registration and mint PKP through relay server
     txHash = await (
       provider as WebAuthnProvider
-    ).verifyAndMintPKPThroughRelayer(options, {permittedAuthMethodScopes:[[1]]});
+    ).verifyAndMintPKPThroughRelayer(options, {
+      permittedAuthMethodScopes: [[1]],
+    });
   } else {
     // Mint PKP through relay server
-    txHash = await provider.mintPKPThroughRelayer(authMethod, {permittedAuthMethodScopes:[[1]]});
+    txHash = await provider.mintPKPThroughRelayer(authMethod, {
+      permittedAuthMethodScopes: [[1]],
+    });
   }
 
   const response = await provider.relay.pollRequestUntilTerminalState(txHash);
