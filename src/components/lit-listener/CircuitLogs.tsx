@@ -5,9 +5,10 @@ import Text from '@/components/commons/Text';
 import { Circuit } from '@/utils/lit-listener';
 import styled from 'styled-components';
 import theme from '@/styles/theme';
+import { AuthSig, SessionSigs } from '@lit-protocol/types';
 
 export default function CircuitLogs() {
-  const { currentPKP } = useSnapshot(PKPStore.state);
+  const { currentPKP, sessionSigs } = useSnapshot(PKPStore.state);
   const serverUrl =
     process.env.NEXT_PUBLIC_LIT_LISTENER_SERVER_URL || 'http://localhost:3001/';
 
@@ -96,12 +97,67 @@ export default function CircuitLogs() {
     );
   }
 
+  function runningCircuitToComponent(circuit: Circuit) {
+    return (
+      <div key={circuit._id}>
+        <TitleWrapper>
+          <Text>id: {circuit._id}</Text>
+          <Text>name: {circuit.name}</Text>
+          <Text>description: {circuit.description}</Text>
+          <Text>type: {circuit.type}</Text>
+        </TitleWrapper>
+        {circuit.transactionLogs.map((log) => {
+          return (
+            <TitleWrapper key={log.transactionHash}>
+              <Text>transactionHash: {log.transactionHash}</Text>
+              <Text>date: {log.isoDate}</Text>
+            </TitleWrapper>
+          );
+        })}
+        <button
+          className="btn btn-primary"
+          onClick={() => stopCircuit(circuit._id, circuit.type)}
+        >
+          Stop
+        </button>
+      </div>
+    );
+  }
+
+  interface ValidateCircuitDto {
+    authSig?: AuthSig;
+    sessionSigs?: SessionSigs;
+  }
+
+  function stopCircuit(circuitId: string, type: 'viem' | 'zerodev') {
+    const body: ValidateCircuitDto = {
+      sessionSigs: sessionSigs,
+    };
+    if (type === 'viem') {
+      fetch(serverUrl + 'circuit-viem/stop/' + circuitId, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+    } else if (type === 'zerodev') {
+      fetch(serverUrl + 'circuit-zerodev/stop/' + circuitId, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+    }
+  }
+
   return (
     <div>
       <div>
         <Text>Running circuits: {runningCircuitCount}</Text>
         <div>
-          {runningCircuits.map((circuit) => circuitToComponent(circuit))}
+          {runningCircuits.map((circuit) => runningCircuitToComponent(circuit))}
         </div>
       </div>
       <div>
