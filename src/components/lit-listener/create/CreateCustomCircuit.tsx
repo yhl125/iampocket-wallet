@@ -18,17 +18,17 @@ export default function CreateCustomCircuit() {
   const router = useRouter();
   const serverUrl =
     process.env.NEXT_PUBLIC_LIT_LISTENER_SERVER_URL || 'http://localhost:3001/';
-  const [type, setType] = useState('Viem');
+  const [type, setType] = useState('ZeroDev');
   const [circuitName, setCircuitName] = useState('');
   const [circuitDescription, setCircuitDescription] = useState('');
   const [coingeckoToken, setCoingeckoToken] = useState('ethereum');
   const [matchOperator, setMatchOperator] = useState<'<' | '>'>('>');
-  const [conditionValue, setConditionValue] = useState(0);
-  const [conditionInterval, setConditionInterval] = useState(0);
+  const [conditionValue, setConditionValue] = useState(1000);
+  const [conditionInterval, setConditionInterval] = useState(10000);
   const [actionType, setActionType] = useState('transfer');
   const [actionChainId, setActionChainId] = useState(80001);
-  const [actionValue, setActionValue] = useState(0);
-  const [maxActionRun, setMaxActionRun] = useState(0);
+  const [actionValue, setActionValue] = useState(100);
+  const [maxActionRun, setMaxActionRun] = useState(2);
   const [transferToken, setTransferToken] = useState<Address>(
     '0x0000000000000000000000000000000000000000',
   );
@@ -52,6 +52,7 @@ export default function CreateCustomCircuit() {
   }
 
   function createCircuit() {
+    if (conditionInterval < 1000) { throw new Error('Interval must be at least 1 s'); }
     if (type === 'Viem') {
       createViemCircuit();
     } else {
@@ -331,7 +332,7 @@ export default function CreateCustomCircuit() {
                 id="conditionValue"
                 name="conditionValue"
                 className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                defaultValue={10000}
+                value={conditionValue}
                 onChange={(e) => setConditionValue(parseInt(e.target.value))}
               />
               <label
@@ -345,7 +346,7 @@ export default function CreateCustomCircuit() {
                 id="conditionInterval"
                 name="conditionInterval"
                 className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                defaultValue={10000}
+                value={conditionInterval}
                 onChange={(e) => setConditionInterval(parseInt(e.target.value))}
               />
             </div>
@@ -392,7 +393,7 @@ export default function CreateCustomCircuit() {
                     id="tokenInput"
                     name="tokenInput"
                     className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                    placeholder="0x0000000000000000000000000000000000000000"
+                    value={transferToken}
                     onChange={(e) =>
                       setTransferToken(e.target.value as Address)
                     }
@@ -408,7 +409,7 @@ export default function CreateCustomCircuit() {
                     id="toInput"
                     name="toInput"
                     className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                    placeholder="0x0000000000000000000000000000000000000000"
+                    value={transferTo}
                     onChange={(e) => setTransferTo(e.target.value as Address)}
                   />
                 </>
@@ -424,7 +425,7 @@ export default function CreateCustomCircuit() {
                 id="valueInput"
                 name="valueInput"
                 className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                defaultValue={10000}
+                value={actionValue}
                 onChange={(e) => setActionValue(parseInt(e.target.value))}
               />
               <label
@@ -438,7 +439,7 @@ export default function CreateCustomCircuit() {
                 id="maxActionRun"
                 name="maxActionRun"
                 className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                defaultValue={2}
+                value={maxActionRun}
                 onChange={(e) => setMaxActionRun(parseInt(e.target.value))}
               />
             </div>
