@@ -10,12 +10,12 @@ import {
   IPrice,
   IQuote,
   queryQuote,
-} from '@/utils/swapUtil';
+} from '@/utils/SwapUtil';
 import { useLazyQuery } from '@apollo/client';
 import { useSnapshot } from 'valtio';
 import { encodeFunctionData } from 'viem';
 
-export default function QuoteView({
+export default function SwapQuoteView({
   price,
   quote,
   setQuote,

@@ -2,11 +2,11 @@
 import AddressStore from '@/store/AddressStore';
 import PKPStore from '@/store/PKPStore';
 import { IResponseToken } from '@/store/TokenStore';
-import { IBuyTokenInfo, IPrice, IQuote } from '@/utils/swapUtil';
+import { IBuyTokenInfo, IPrice, IQuote } from '@/utils/SwapUtil';
 import { useState } from 'react';
 import { useSnapshot } from 'valtio';
-import QuoteView from './QuoteView';
-import PriceView from './PriceView';
+import SwapQuoteView from './SwapQuoteView';
+import SwapPriceView from './SwapPriceView';
 import { useIsMounted } from '@/hooks/useIsMounted';
 
 function SwapForm() {
@@ -28,7 +28,7 @@ function SwapForm() {
   return (
     <>
       {mounted && finalize && price ? (
-        <QuoteView
+        <SwapQuoteView
           price={price}
           quote={quote}
           setQuote={setQuote}
@@ -39,7 +39,7 @@ function SwapForm() {
           chainId={chainId}
         />
       ) : (
-        <PriceView
+        <SwapPriceView
           price={price}
           setPrice={setPrice}
           setFinalize={setFinalize}

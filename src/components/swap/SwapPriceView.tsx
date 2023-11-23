@@ -5,7 +5,7 @@ import TokenStore, { IResponseToken } from '@/store/TokenStore';
 import { publicClientOf } from '@/utils/ClientUtil';
 import { createPkpViemWalletClient } from '@/utils/EOAWalletUtil';
 import { erc20BalanceToReadable } from '@/utils/ERC20Util';
-import { IBuyTokenInfo, IPrice, queryPrice } from '@/utils/swapUtil';
+import { IBuyTokenInfo, IPrice, queryPrice } from '@/utils/SwapUtil';
 import { useLazyQuery } from '@apollo/client';
 import { useCallback, useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
@@ -13,7 +13,7 @@ import { encodeFunctionData, isAddress, parseUnits } from 'viem';
 
 //No ChainId check since there are no whole swap token list
 
-export default function PriceView({
+export default function SwapPriceView({
   price,
   setPrice,
   setFinalize,
