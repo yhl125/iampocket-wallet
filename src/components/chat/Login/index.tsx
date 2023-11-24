@@ -8,10 +8,11 @@ import AddressStore from '@/store/AddressStore';
 import { useSnapshot } from 'valtio';
 
 import './index.css';
+import { MainKeysType } from '@/utils/web3mq-utils';
 
 interface IProps {
   fastUrl: string | null;
-  keys?: any;
+  keys?: MainKeysType;
   handleLoginEvent: any;
 }
 
@@ -28,8 +29,7 @@ export default function Login(props: IProps) {
   //   else if (selectedWallet === 'pkpViem') return pkpViemAddress;
   //   else return zeroDevAddress;
   // }
-  const { handleLoginEvent, keys = null, fastUrl } = props;
-  const isResetPassword = false;
+  const { handleLoginEvent, keys, fastUrl } = props;
 
   const {
     // mainKeys,
@@ -37,14 +37,13 @@ export default function Login(props: IProps) {
     // userAccount,
     // setMainKeys,
     // setUserAccount,
-    confirmPassword,
     login,
     register,
   } = useLogin({
     client: Client,
     keys,
     handleLoginEvent,
-    isResetPassword,
+    // isResetPassword,
   });
 
   useEffect(() => {
@@ -53,7 +52,7 @@ export default function Login(props: IProps) {
         const { address, userExist } = await getUserAccount(didType, didValue);
         if (address) {
           if (userExist) {
-            if (isResetPassword) {
+            if (!keys) {
               setView('reset_password');
             } else {
               setView('login');
@@ -68,16 +67,18 @@ export default function Login(props: IProps) {
       getAccount('metamask', pkpViemAddress);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fastUrl, isResetPassword, pkpViemAddress, view]);
+  }, [fastUrl, pkpViemAddress]);
 
   const submitLogin = async (password: string) => {
-    confirmPassword.current = password;
-    await login();
+    await login(password);
   };
 
   const submitSignUp = async (password: string) => {
-    confirmPassword.current = password;
-    await register();
+    await register(password, false);
+  };
+
+  const submitResetPassword = async (password: string) => {
+    await register(password, true);
   };
 
   return (
@@ -121,6 +122,22 @@ export default function Login(props: IProps) {
                 onClick={() => submitLogin(password)}
               >
                 Login
+              </button>
+            </>
+          )}
+          {view === 'reset_password' && (
+            <>
+              <input
+                className="password_input"
+                type="password"
+                placeholder="Enter your password"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                className="btn btn-primary"
+                onClick={() => submitResetPassword(password)}
+              >
+                Reset password
               </button>
             </>
           )}

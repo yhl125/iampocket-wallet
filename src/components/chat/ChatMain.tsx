@@ -9,6 +9,7 @@ import {
 import useLoginStorage from '@/hooks/chat/useLoginStorage';
 import Login from './Login';
 import Main from './Main';
+import { MainKeysType } from '@/utils/web3mq-utils';
 
 export default function ChatMain() {
   const { keys, fastestUrl, initClient, logout, handleLoginEvent } =
@@ -19,7 +20,7 @@ export default function ChatMain() {
   }, [initClient]);
 
   if (!keys) {
-    let mainKeys = null;
+    let mainKeys: MainKeysType | undefined = undefined;
     const mainPrivateKey = localStorage.getItem(`Web3MQ-Main-PrivateKey`);
     const mainPublicKey = localStorage.getItem(`Web3MQ-Main-PublicKey`);
     const address = localStorage.getItem('Web3MQ-WalletAddress');

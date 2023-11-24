@@ -4,18 +4,13 @@ import AddressStore from '@/store/AddressStore';
 import { signMessage } from '@/utils/SignMessage';
 import { useSnapshot } from 'valtio';
 import PKPStore from '@/store/PKPStore';
+import { MainKeysType } from '@/utils/web3mq-utils';
 
 export type LoginEventType = 'login' | 'register' | 'error';
 export type LoginEventDataType = {
   type: LoginEventType;
   msg: string;
   data: LoginResType | RegisterResType | null;
-};
-
-export type MainKeysType = {
-  publicKey: string;
-  privateKey: string;
-  walletAddress: string;
 };
 
 export type UserAccountType = {
@@ -62,7 +57,6 @@ const useLogin = (props: IProps) => {
   const [userAccount, setUserAccount] = useState<UserAccountType | undefined>(
     account,
   );
-  const confirmPassword = useRef<string>('');
   const walletAddress = useRef<string>('');
   const [mainKeys, setMainKeys] = useState<MainKeysType | undefined>(keys);
   const { currentPKP, sessionSigs } = useSnapshot(PKPStore.state);
@@ -88,10 +82,7 @@ const useLogin = (props: IProps) => {
       selectedWallet,
     );
     const { publicKey, secretKey } =
-      await client.register.getMainKeypairBySignature(
-        signature,
-        confirmPassword.current,
-      );
+      await client.register.getMainKeypairBySignature(signature, password);
     return { publicKey, secretKey };
   };
 
@@ -119,13 +110,17 @@ const useLogin = (props: IProps) => {
     };
   };
 
-  const register = async (nickname?: string): Promise<void> => {
+  const register = async (
+    password: string,
+    isResetPassword: boolean,
+    nickname?: string,
+  ): Promise<void> => {
     if (!userAccount) {
       return;
     }
     const { address, userid, walletType } = userAccount;
     const { publicKey, secretKey } = await getMainKeypair({
-      password: confirmPassword.current,
+      password: password,
       did_value: address,
       did_type: walletType,
     });
@@ -136,6 +131,7 @@ const useLogin = (props: IProps) => {
       didValue: address,
     });
     await commonRegister({
+      password,
       mainPublicKey: publicKey,
       mainPrivateKey: secretKey,
       userid,
@@ -143,10 +139,11 @@ const useLogin = (props: IProps) => {
       didValue: address,
       signature,
       nickname,
+      isResetPassword,
     });
   };
 
-  const login = async () => {
+  const login = async (password: string) => {
     if (!userAccount) {
       return;
     }
@@ -162,7 +159,7 @@ const useLogin = (props: IProps) => {
     }
     if (!localMainPublicKey || !localMainPrivateKey) {
       const { publicKey, secretKey } = await getMainKeypair({
-        password: confirmPassword.current,
+        password: password,
         did_value: address,
         did_type: walletType,
       });
@@ -171,6 +168,7 @@ const useLogin = (props: IProps) => {
     }
 
     await commonLogin({
+      password,
       mainPrivateKey: localMainPrivateKey,
       mainPublicKey: localMainPublicKey,
       userid,
@@ -209,6 +207,7 @@ const useLogin = (props: IProps) => {
   };
 
   const commonLogin = async (options: {
+    password: string;
     mainPublicKey: string;
     mainPrivateKey: string;
     userid: string;
@@ -225,7 +224,6 @@ const useLogin = (props: IProps) => {
       mainPublicKey,
     } = await client.register.login({
       ...options,
-      password: confirmPassword.current,
     });
 
     handleLoginEvent({
@@ -246,6 +244,7 @@ const useLogin = (props: IProps) => {
   };
 
   const commonRegister = async (options: {
+    password: string;
     mainPublicKey: string;
     mainPrivateKey: string;
     userid: string;
@@ -254,8 +253,10 @@ const useLogin = (props: IProps) => {
     signature: string;
     didPubkey?: string;
     nickname?: string;
+    isResetPassword: boolean;
   }) => {
     const {
+      password,
       userid,
       mainPublicKey,
       mainPrivateKey,
@@ -275,7 +276,7 @@ const useLogin = (props: IProps) => {
       avatar_url: `https://cdn.stamp.fyi/avatar/${didValue}?s=300`,
       signature,
     };
-    if (isResetPassword) {
+    if (options.isResetPassword) {
       await client.register.resetPassword(params);
     } else {
       await client.register.register(params);
@@ -292,6 +293,7 @@ const useLogin = (props: IProps) => {
       },
     });
     await commonLogin({
+      password,
       mainPrivateKey,
       mainPublicKey,
       didType,
@@ -306,7 +308,6 @@ const useLogin = (props: IProps) => {
     userAccount,
     setMainKeys,
     setUserAccount,
-    confirmPassword,
     login,
     register,
   };
