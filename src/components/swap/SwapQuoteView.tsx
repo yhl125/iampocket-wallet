@@ -5,12 +5,7 @@ import TokenStore, { IResponseToken } from '@/store/TokenStore';
 import { createPkpViemWalletClient } from '@/utils/EOAWalletUtil';
 import { erc20BalanceToReadable } from '@/utils/ERC20Util';
 import { zeroDevSigner } from '@/utils/ERC4337WalletUtil';
-import {
-  IBuyTokenInfo,
-  IPrice,
-  IQuote,
-  queryQuote,
-} from '@/utils/SwapUtil';
+import { IBuyTokenInfo, IPrice, IQuote, queryQuote } from '@/utils/SwapUtil';
 import { useLazyQuery } from '@apollo/client';
 import { useSnapshot } from 'valtio';
 import { encodeFunctionData } from 'viem';
@@ -64,6 +59,7 @@ export default function SwapQuoteView({
     const signer = await zeroDevSigner(
       pkpState.currentPKP?.publicKey!,
       pkpState.sessionSigs!,
+      price!.chainId,
     );
     const quoteResponse: IQuote = (await getQuote()).data.findSwapQuote;
     setQuote(quoteResponse);
