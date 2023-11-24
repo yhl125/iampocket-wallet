@@ -10,6 +10,14 @@ import { useLazyQuery } from '@apollo/client';
 import { useCallback, useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { encodeFunctionData, isAddress, parseUnits } from 'viem';
+import DropDown from '../commons/DropDown';
+
+import Text from '@/components/commons/Text';
+import Icon from '@/components/commons/Icon';
+import Input from '../commons/Input';
+import styled from 'styled-components';
+import theme from '@/styles/theme';
+import Button from '../commons/Button';
 
 //No ChainId check since there are no whole swap token list
 
@@ -36,6 +44,22 @@ export default function PriceView({
   chainId: number;
   setChainId: (chainId: number) => void;
 }) {
+  const psudoToken: IResponseToken = {
+    address: '',
+    name: 'Token',
+    symbol: 'Token',
+    decimals: 18,
+    logoUrl: '',
+    nativeToken: false,
+    type: '',
+    balance: '0',
+    quote: 0,
+    prettyQuote: '0',
+    quoteRate: 0,
+    quoteRate24hAgo: 0,
+    chainId: 80001,
+  };
+
   const { tokenList } = useSnapshot(TokenStore.tokenListState);
 
   const [sellAmount, setSellAmount] = useState('');
@@ -49,6 +73,10 @@ export default function PriceView({
   const [sellTokenDecimals, setSellTokenDecimals] = useState(1);
 
   const [sellTokenSymbol, setSellTokenSymbol] = useState('');
+
+  const [selectedChain, setSelectedChain] = useState(() =>
+    tokenList.length == 0 ? psudoToken : tokenList[0],
+  );
 
   const parsedSellAmount =
     sellAmount && tradeDirection === 'sell'
@@ -234,8 +262,23 @@ export default function PriceView({
   ]);
 
   return (
-    <form>
-      <div>
+    <Container>
+      <ChainWrapper>
+        <Text size="body1" color="bg40">
+          Select Chain
+        </Text>
+        <DropDownWrapper>
+          <DropDown
+            contents={tokenList}
+            selectContentState={selectedChain}
+            setSelectContentState={setSelectedChain}
+            iconKey="logoUrl"
+            nameKey="name"
+            size="medium"
+          />
+        </DropDownWrapper>
+      </ChainWrapper>
+      {/* <div>
         Chain ID:
         <input
           type="text"
@@ -244,8 +287,31 @@ export default function PriceView({
             setChainId(Number(e.target.value));
           }}
         ></input>
-      </div>
-      <div>
+      </div> */}
+
+      <InputWrapper>
+        <DropDownWrapper>
+          <DropDown
+            contents={tokenList}
+            selectContentState={selectedChain}
+            setSelectContentState={setSelectedChain}
+            iconKey="logoUrl"
+            nameKey="name"
+            size="medium"
+          />
+        </DropDownWrapper>
+        <StyledInput
+          type="text"
+          dir="rtl"
+          value={sellTokenAddress}
+          onChange={(e) => {
+            setSellTokenAddress(e.target.value);
+          }}
+          placeholder="0"
+        />
+      </InputWrapper>
+
+      {/* <div>
         Sell Token:
         <input
           type="text"
@@ -254,8 +320,8 @@ export default function PriceView({
             setSellTokenAddress(e.target.value);
           }}
         ></input>
-      </div>
-      <div>
+      </div> */}
+      {/* <div>
         Sell Amount:
         <input
           type="text"
@@ -266,7 +332,38 @@ export default function PriceView({
           }}
         ></input>
         {sellTokenSymbol}
-      </div>
+      </div> */}
+      <DividerWrapper>
+        <Divider />
+        <IconWrapper>
+          <Icon type="swap" height={40} />
+        </IconWrapper>
+      </DividerWrapper>
+
+      <InputWrapper>
+        <DropDownWrapper>
+          <DropDown
+            contents={tokenList}
+            selectContentState={selectedChain}
+            setSelectContentState={setSelectedChain}
+            iconKey="logoUrl"
+            nameKey="name"
+            size="medium"
+          />
+        </DropDownWrapper>
+        <StyledInput
+          type="text"
+          dir="rtl"
+          value={buyAmount}
+          onChange={(e) => {
+            setTradeDirection('buy');
+            setBuyAmount(e.target.value);
+          }}
+          placeholder="0"
+        />
+      </InputWrapper>
+
+      {/* 
       <div>
         Buy Token:
         <input
@@ -276,8 +373,8 @@ export default function PriceView({
             setBuyTokenAddress(e.target.value);
           }}
         ></input>
-      </div>
-      <div>
+      </div> */}
+      {/* <div>
         Buy Amount:
         <input
           type="text"
@@ -288,7 +385,8 @@ export default function PriceView({
           }}
         ></input>
         {buyToken ? buyToken.symbol : null}
-      </div>
+      </div> */}
+
       {walletState.selectedWallet === 'zeroDev' ? (
         <ReviewButton4337
           price={price}
@@ -305,9 +403,69 @@ export default function PriceView({
           takerAddress={walletState.pkpViemAddress}
         />
       )}
-    </form>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  row-gap: ${theme.space.medium};
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+const ChainWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 100%;
+  row-gap : ${theme.space.xTiny};
+`;
+
+const InputWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const DropDownWrapper = styled.div`
+  width: 30%;
+`;
+const StyledInput = styled.input`
+  width: 100%;
+  color: ${theme.color.bg0};
+  font-size: ${theme.fontSize.title1};
+  line-height: ${theme.lineHeight.title1};
+  font-weight: 700;
+  &::placeholder {
+    color: ${theme.color.bg30};
+  }
+`;
+
+const DividerWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin : 30px 0px;
+`;
+const IconWrapper = styled.div`
+  background-color: ${theme.color.bg50};
+  border-radius: 50%;
+  padding: 10px;
+  transform: rotate(-90deg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+`;
+
+const Divider = styled.div`
+  background-color: ${theme.color.bg50};
+  height: 1px;
+  width: 100%;
+  position: relative;
+`;
 
 function ApporveOrReviewButtonEOA({
   onClick,
@@ -382,14 +540,16 @@ function ApporveOrReviewButtonEOA({
   ) {
     return isBalanceSufficient() ? (
       <div>
-        <button
+        <Button
+          size="large"
+          type="primary"
           onClick={async (e) => {
             e.preventDefault();
             await setSellTokenApprove();
           }}
         >
           {isApproveLoading ? '...Approving' : 'Approve'}
-        </button>
+        </Button>
       </div>
     ) : (
       <div>
@@ -399,11 +559,21 @@ function ApporveOrReviewButtonEOA({
   } else {
     return isBalanceSufficient() ? (
       <div>
-        <button onClick={onClick}>Review Trade</button>
+        <Button
+          text="Review Trade"
+          size="large"
+          type="primary"
+          onClick={onClick}
+        />
       </div>
     ) : (
       <div>
-        <button>InSufficient Balance</button>
+        <Button
+          text="InSufficient Balance"
+          size="large"
+          type="primary"
+          onClick={onClick}
+        />
       </div>
     );
   }
@@ -422,11 +592,21 @@ function ReviewButton4337({
     price?.AllownaceTarget !== '0x0000000000000000000000000000000000000000' &&
     price !== undefined ? (
     <div>
-      <button onClick={onClick}>Review Trade</button>
+      <Button
+        text=" Review Trade"
+        size="large"
+        type="primary"
+        onClick={onClick}
+      />
     </div>
   ) : (
     <div>
-      <button>InSufficient Balance</button>
+      <Button
+        text="InSufficient Balance"
+        size="large"
+        type="primary"
+        onClick={onClick}
+      />
     </div>
   );
 }

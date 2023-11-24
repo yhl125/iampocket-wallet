@@ -1,22 +1,21 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import TransferTokenForm from '@/components/transfer/TransferTokenForm';
-import Text from '../../../components/commons/Text';
-import IconTextButton from '../../../components/commons/IconTextButton';
 import styled from 'styled-components';
-import theme from '@/styles/theme';
-import { useIsMounted } from '@/hooks/useIsMounted';
+import { useRouter } from 'next/navigation';
 
-function TransferToken() {
+import Text from '@/components/commons/Text';
+import IconTextButton from '@/components/commons/IconTextButton';
+import SwapForm from '@/components/swap/SwapForm';
+import theme from '@/styles/theme';
+
+function Swap() {
   const router = useRouter();
-  const mounted = useIsMounted();
   return (
     <Container>
       <Text size="title1" $bold>
-        Send
+        Swap
       </Text>
-      {mounted && <TransferTokenForm />}
+      <SwapForm />
       <ButtonWrapper>
         <IconTextButton
           text="Back"
@@ -38,4 +37,4 @@ const Container = styled.div`
 
 const ButtonWrapper = styled.div``;
 
-export default TransferToken;
+export default Swap;
