@@ -71,7 +71,7 @@ const DropDown = ({
             height={20}
             alt={'chain logo'}
             className="mask mask-circle"
-          ></Image>
+          />
           <Text
             color={renderFontColor()}
             size={size === 'medium' ? 'body2' : 'body3'}
@@ -84,7 +84,7 @@ const DropDown = ({
           type="downArrow"
           color={renderArrowColor()}
           height={size === 'medium' ? 'body3' : 'body4'}
-        ></Icon>
+        />
       </DropDownButton>
       <DropDownContents isDropDownShowed={isDropDownShowed}>
         {contents.map((content, idx) => (
@@ -100,7 +100,7 @@ const DropDown = ({
                 height={20}
                 alt={'chain logo'}
                 className="mask mask-circle"
-              ></Image>
+              />
               <Text
                 color={renderFontColor()}
                 size={size === 'medium' ? 'body2' : 'body3'}

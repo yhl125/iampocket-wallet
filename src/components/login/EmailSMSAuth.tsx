@@ -80,7 +80,7 @@ const EmailSMSAuth = ({ method, setView, authWithOTP }: EmailSMSAuthProps) => {
                   disabled={sendLoading}
                 />
               }
-            ></Input>
+            />
           </form>
         </FirstFormWrapper>
 
@@ -97,7 +97,7 @@ const EmailSMSAuth = ({ method, setView, authWithOTP }: EmailSMSAuthProps) => {
                 type="code"
                 placeholder="Verification code"
                 style={{ visibility: isSended ? `visible` : `hidden` }}
-              ></Input>
+              />
             </InputWrapper>
             <Button
               text="Verify"
@@ -114,7 +114,7 @@ const EmailSMSAuth = ({ method, setView, authWithOTP }: EmailSMSAuthProps) => {
         size="small"
         icon="leftArrow"
         onClick={() => setView('default')}
-      ></IconTextButton>
+      />
     </>
   );
 };

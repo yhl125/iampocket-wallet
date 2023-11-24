@@ -56,7 +56,7 @@ function WalletConnectPage() {
               size="medium"
               type="text"
               placeholder="e.g. wc:a281567bb3e4..."
-            ></Input>
+            />
           </WalletConnectInputWrapper>
           <Button
             text={!uri ? 'Enter URI' : loading ? 'Connecting...' : 'Connect'}
@@ -72,7 +72,7 @@ function WalletConnectPage() {
             size="small"
             icon="leftArrow"
             onClick={() => router.back()}
-          ></IconTextButton>
+          />
         </ButtonWrapper>
       </Container>
       <Modal />

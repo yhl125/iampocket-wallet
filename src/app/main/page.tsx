@@ -84,7 +84,7 @@ function MainPage() {
               onClick={() => {}}
             />
           }
-        ></Input>
+        />
         <br />
         <br />
         <Input
@@ -97,7 +97,7 @@ function MainPage() {
           error={{
             message: 'not enough balance',
           }}
-        ></Input>
+        />
         <DropDown
           contents={tokenList}
           selectContentState={dropDownTestValue}
@@ -105,9 +105,9 @@ function MainPage() {
           iconKey="logoUrl"
           nameKey="name"
           size="medium"
-        ></DropDown>
+        />
         <Text>{dropDownTestValue.name}</Text>
-        {/* <CheckBox></CheckBox> */}
+        {/* <CheckBox/>*/}
       </Row>
     </Container>
   );

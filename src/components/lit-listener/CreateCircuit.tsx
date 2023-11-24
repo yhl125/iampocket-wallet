@@ -105,7 +105,7 @@ export default function CreateCircuit() {
         onChange={(e) => setChainId(parseInt(e.target.value))}
         size="medium"
         placeholder="Chain ID"
-      ></Input>
+      />
       <button onClick={viemCircuit} className="btn btn-primary">
         Viem circuit
       </button>

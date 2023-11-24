@@ -35,7 +35,7 @@ const IconTextButton = ({
         type={icon}
         color={disabled ? 'bg60' : 'bg30'}
         height={renderIconSize()}
-      ></Icon>
+      />
       {children}
     </TextButton>
   );

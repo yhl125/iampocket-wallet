@@ -102,7 +102,7 @@ export default function WebAuthn({
           size="small"
           icon="leftArrow"
           onClick={() => setView('default')}
-        ></IconTextButton>
+        />
       </ButtonWrapper>
     </>
   );

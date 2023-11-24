@@ -214,7 +214,7 @@ function TransferTokenForm() {
                   }}
                 />
               }
-            ></Input>
+            />
             <AmountDropDownWrapper>
               <DropDown
                 contents={tokenList}
@@ -223,7 +223,7 @@ function TransferTokenForm() {
                 iconKey="logoUrl"
                 nameKey="name"
                 size="medium"
-              ></DropDown>
+              />
             </AmountDropDownWrapper>
           </AmountInputWrapper>
         </AmountWrapper>
@@ -238,7 +238,7 @@ function TransferTokenForm() {
                 <CheckBox
                   checkState={isCheckedPM}
                   setCheckState={setIsCheckedPM}
-                ></CheckBox>
+                />
               </PaymasterCheckBoxWrapper>
               {/* TODO : <PaymasterDropDownWrapper isCheckedPM={isCheckedPM}>
                 <DropDown
@@ -248,7 +248,7 @@ function TransferTokenForm() {
                   iconKey="logoUrl"
                   nameKey="name"
                   size="small"
-                ></DropDown>
+                />
               </PaymasterDropDownWrapper> */}
             </PaymasterWrapper>
           )}
@@ -257,7 +257,7 @@ function TransferTokenForm() {
               <Text size="body2" color="bg40">
                 Estimated GAS
               </Text>
-              <Icon type="gas" color="bg40" height="title3"></Icon>
+              <Icon type="gas" color="bg40" height="title3" />
             </EstimatedGasTextWrapper>
             <Text $thin>0.000000001</Text>
           </EstimatedGasBoxWrapper>

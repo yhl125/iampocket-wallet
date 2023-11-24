@@ -48,7 +48,7 @@ function SearchRecipientAddress({
             ? { message: '' }
             : { message: 'Invalid Address' }
         }
-      ></Input>
+      />
     </Container>
   );
 }

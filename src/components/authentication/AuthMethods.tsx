@@ -27,14 +27,14 @@ export default function AuthMethods({
             size="large"
             type="primary"
             onClick={handleGoogleLogin}
-          ></IconButton>
+          />
           <IconButton
             text="Discord"
             icon="discord"
             size="large"
             type="primary"
             onClick={handleDiscordLogin}
-          ></IconButton>
+          />
         </SocialLoginWrapper>
         <IconButton
           text="Webauthn"
@@ -43,7 +43,7 @@ export default function AuthMethods({
           type="primary"
           onClick={() => setView('webauthn')}
         >
-          <Icon type="faceid" height={24}></Icon>
+          <Icon type="faceid" height={24} />
         </IconButton>
       </Top>
       <DividerWrapper>
@@ -62,7 +62,7 @@ export default function AuthMethods({
             type="secondary"
             disabled
             onClick={() => setView('phone')}
-          ></IconButton>
+          />
           <IconButton
             text="E-mail"
             icon="mail"
@@ -70,7 +70,7 @@ export default function AuthMethods({
             type="secondary"
             disabled
             onClick={() => setView('email')}
-          ></IconButton>
+          />
         </OtherLoginWrapper>
       </Bottom>
     </Container>

@@ -27,7 +27,7 @@ const AuthMethods = ({
                   alt="Google logo"
                   fill
                   sizes="1x"
-                ></Image>
+                />
               </div>
             </div>
             Google
@@ -42,7 +42,7 @@ const AuthMethods = ({
                   src="/login-logos/discord-square-color-icon.svg"
                   alt="Discord logo"
                   fill
-                ></Image>
+                />
               </div>
             </div>
             Discord
@@ -104,7 +104,7 @@ const AuthMethods = ({
                 src="/login-logos/icons8-touch-id.svg"
                 alt="Fingerprint logo"
                 fill
-              ></Image>
+              />
             </div>
           </div>
           <div className="avatar">
@@ -113,7 +113,7 @@ const AuthMethods = ({
                 src="/login-logos/Face_ID_logo.svg"
                 alt="Face id logo"
                 fill
-              ></Image>
+              />
             </div>
           </div>
           Continue with Webauthn

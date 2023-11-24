@@ -30,16 +30,11 @@ function TokenList() {
                           height={20}
                           alt={'chain logo'}
                           className="mask mask-circle"
-                        ></Image>
+                        />
                       </span>
                       <div className="avatar placeholder">
                         <div className="relative w-12 rounded-full border-2 bg-neutral-focus text-neutral-content">
-                          <Image
-                            src={token.logoUrl}
-                            alt=""
-                            fill
-                            sizes="1x"
-                          ></Image>
+                          <Image src={token.logoUrl} alt="" fill sizes="1x" />
                         </div>
                       </div>
                     </div>
