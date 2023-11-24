@@ -1,40 +1,60 @@
-import { Dispatch, SetStateAction } from "react";
-import { isAddress } from "viem";
+'use client';
+
+import { Dispatch, SetStateAction, useState } from 'react';
+import { isAddress } from 'viem';
+import styled from 'styled-components';
+
+import theme from '@/styles/theme';
+import Text from '../commons/Text';
+import Input from '../commons/Input';
 
 interface Props {
-  setVerifyAddress: Dispatch<SetStateAction<Boolean>>;
+  isVerifiedAddress: boolean;
+  setIsVerifiedAddress: Dispatch<SetStateAction<boolean>>;
   setRecipientAddressOrEns: Dispatch<SetStateAction<string>>;
 }
 
 function SearchRecipientAddress({
-  setVerifyAddress,
+  isVerifiedAddress,
+  setIsVerifiedAddress,
   setRecipientAddressOrEns,
 }: Props) {
-  const checkRecipientAddress = (recipientAddress: string): Boolean => {
+  const [recipientAddress, setRecipientAddress] = useState<string>('');
+
+  const checkRecipientAddress = (recipientAddress: string): boolean => {
     if (recipientAddress != '') {
       const isAddressVerified = isAddress(recipientAddress);
+      setRecipientAddress(recipientAddress);
       return isAddressVerified;
     } else return false;
   };
 
   return (
-    <div className="p-2 mt-2">
-      <div className="form-control w-full max-w-xs">
-        <label className="label">
-          <span className="label-text">Send to</span>
-        </label>
-        <input
-          onChange={(e: any) => {
-            setVerifyAddress(checkRecipientAddress(e.target.value));
-            setRecipientAddressOrEns(e.target.value);
-          }}
-          type="text"
-          placeholder="Address(0x),ENS"
-          className="input input-bordered w-full max-w-xs"
-        />
-      </div>
-    </div>
+    <Container>
+      <Text size="title3" color="bg40">
+        To
+      </Text>
+      <Input
+        value={recipientAddress}
+        onChange={(e: any) => {
+          setIsVerifiedAddress(checkRecipientAddress(e.target.value));
+          setRecipientAddressOrEns(e.target.value);
+        }}
+        size="medium"
+        type="text"
+        placeholder="Address(0x),ENS"
+        error={
+          isVerifiedAddress || recipientAddress === ''
+            ? { message: '' }
+            : { message: 'Invalid Address' }
+        }
+      />
+    </Container>
   );
-};
+}
+
+const Container = styled.div`
+  gap: ${theme.space.xTiny};
+`;
 
 export default SearchRecipientAddress;

@@ -7,16 +7,62 @@ import Text from '@/components/commons/Text';
 import CardButton from '@/components/main/CardButton';
 import theme from '@/styles/theme';
 import Button from '@/components/commons/Button';
+import CheckBox from '@/components/commons/CheckBox';
 import Icon from '@/components/commons/Icon';
-import IconButton from '@/components/commons/IconButton';
 import Input from '@/components/commons/Input';
 import { useState } from 'react';
+import DropDown from '@/components/commons/DropDown';
+import TokenList from '@/components/wallet/tokenList';
+import { useSnapshot } from 'valtio';
+import TokenStore from '@/store/TokenStore';
 
 function MainPage() {
   const router = useRouter();
 
   const [inputTestValue, setInputTestValue] = useState('');
 
+  const tokenList: any[] = [
+    {
+      name: 'janf',
+      symbol: 'Token',
+      logoUrl: '',
+    },
+    {
+      name: 'janwe',
+      symbol: 'Token',
+      logoUrl: '/images/none.png',
+    },
+    {
+      name: 'qweqwe',
+      symbol: 'Token',
+      logoUrl:
+        'https://bin.bnbstatic.com/image/admin_mgs_image_upload/20201110/3a8c9fe6-2a76-4ace-aa07-415d994de6f0.png',
+    },
+    {
+      name: 'gkfke',
+      symbol: 'Token',
+      logoUrl:
+        'https://bin.bnbstatic.com/image/admin_mgs_image_upload/20201110/87496d50-2408-43e1-ad4c-78b47b448a6a.png',
+    },
+    {
+      name: 'gkfke',
+      symbol: 'Token',
+      logoUrl:
+        'https://bin.bnbstatic.com/image/admin_mgs_image_upload/20201110/87496d50-2408-43e1-ad4c-78b47b448a6a.png',
+    },
+  ];
+
+  const [dropDownTestValue, setDropDownTestValue] = useState(() =>
+    tokenList.length === 0
+      ? {
+          name: 'You dont have any Token',
+          logoUrl:
+            'https://bin.bnbstatic.com/image/admin_mgs_image_upload/20201110/87496d50-2408-43e1-ad4c-78b47b448a6a.png',
+        }
+      : tokenList[0],
+  );
+
+  console.log(dropDownTestValue);
   return (
     <Container>
       <Row>
@@ -52,6 +98,16 @@ function MainPage() {
             message: 'not enough balance',
           }}
         />
+        <DropDown
+          contents={tokenList}
+          selectContentState={dropDownTestValue}
+          setSelectContentState={setDropDownTestValue}
+          iconKey="logoUrl"
+          nameKey="name"
+          size="medium"
+        />
+        <Text>{dropDownTestValue.name}</Text>
+        {/* <CheckBox/>*/}
       </Row>
     </Container>
   );

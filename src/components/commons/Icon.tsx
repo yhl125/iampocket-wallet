@@ -16,6 +16,9 @@ import TradeIcon from '@/assets/icons/trade.svg';
 import ChatIcon from '@/assets/icons/chat.svg';
 import SettingIcon from '@/assets/icons/setting.svg';
 import LeftArrowIcon from '@/assets/icons/leftarrow.svg';
+import DownArrowIcon from '@/assets/icons/downarrow.svg';
+import CheckIcon from '@/assets/icons/check.svg';
+import GasIcon from '@/assets/icons/gas.svg';
 
 import theme, { ColorType, SizeType } from '@/styles/theme';
 
@@ -34,7 +37,10 @@ export type IconTypes =
   | 'trade'
   | 'chat'
   | 'setting'
-  | 'leftarrow';
+  | 'leftArrow'
+  | 'downArrow'
+  | 'check'
+  | 'gas';
 
 interface IProps {
   type: IconTypes;
@@ -73,8 +79,14 @@ const Icon = ({ type, height = 'body3', color = 'bg0' }: IProps) => {
         return <ChatIcon />;
       case 'setting':
         return <SettingIcon />;
-      case 'leftarrow':
+      case 'leftArrow':
         return <LeftArrowIcon />;
+      case 'downArrow':
+        return <DownArrowIcon />;
+      case 'check':
+        return <CheckIcon />;
+      case 'gas':
+        return <GasIcon />;
     }
   };
 
@@ -95,6 +107,10 @@ const Container = styled.div<{
     height: ${({ height }) =>
       typeof height === 'number' ? `${height}px` : theme.fontSize[height]};
     path {
+      fill: ${({ color }) => theme.color[color]};
+      object-fit: contain;
+    }
+    circle {
       fill: ${({ color }) => theme.color[color]};
       object-fit: contain;
     }

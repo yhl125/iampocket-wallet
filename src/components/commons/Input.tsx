@@ -50,13 +50,15 @@ const Input = ({
         <SuffixContent>{suffixComponent}</SuffixContent>
       </InputWrapper>
       {(error?.message || info?.message) && (
-        <Text
-          $thin
-          size={size === 'medium' ? 'body3' : 'body4'}
-          color={error?.message ? 'systemRed' : 'systemGreen'}
-        >
-          {error?.message ? error?.message : info?.message}
-        </Text>
+        <TextWrapper size={size}>
+          <Text
+            $thin
+            size={size === 'medium' ? 'body3' : 'body4'}
+            color={error?.message ? 'systemRed' : 'systemGreen'}
+          >
+            {error?.message ? error?.message : info?.message}
+          </Text>
+        </TextWrapper>
       )}
     </Container>
   );
@@ -65,7 +67,7 @@ const Input = ({
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-
+  position: relative;
   row-gap: ${theme.space.xTiny};
 
   width: 100%;
@@ -106,6 +108,11 @@ const StyledInput = styled.input<{ size: 'small' | 'medium' }>`
   &::placeholder {
     color: ${theme.color.bg20};
   }
+`;
+
+const TextWrapper = styled.div<{ size: 'small' | 'medium' }>`
+  position: absolute;
+  top: ${({ size }) => (size === 'medium' ? '55px' : '44px')};
 `;
 
 export default Input;
