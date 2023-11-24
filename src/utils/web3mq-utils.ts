@@ -45,3 +45,9 @@ export function dateFormat(time: number, format?: string) {
     return rt >= 10 || isAddZero(o) ? rt : `0${rt}`;
   });
 }
+
+export type MainKeysType = {
+  publicKey: string;
+  privateKey: string;
+  walletAddress: string;
+};
