@@ -16,6 +16,7 @@ import {
   zeroDevTestnetChainIds,
 } from '@/data/EIP155Data';
 import SelectWallet from './selectWallet';
+import DepositModal from './depositModal';
 
 function Wallet() {
   useWalletWithPKP();
@@ -105,7 +106,7 @@ function Wallet() {
                   >
                     Send
                   </button>
-                  <button className="btn btn-sm">Deposit</button>
+                  <DepositModal address={getCurrentAddress(selectedWallet)} />
                 </div>
               </div>
               <FetchTokens

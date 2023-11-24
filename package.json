@@ -50,9 +50,10 @@
     "react": "^18.2.0",
     "react-code-blocks": "^0.1.5",
     "react-dom": "^18.2.0",
+    "react-qr-code": "^2.0.12",
     "react-responsive": "^9.0.2",
-    "styled-components": "^6.0.8",
     "react-select": "^5.8.0",
+    "styled-components": "^6.0.8",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.6",
     "typescript": "^5.2.2",
@@ -65,13 +66,16 @@
     "@types/lodash": "^4.14.201",
     "@walletconnect/types": "2.10.2",
     "autoprefixer": "^10.4.14",
+    "aws-cdk-lib": "2.101.1",
+    "constructs": "10.2.69",
     "eslint-config-prettier": "^9.0.0",
     "postcss": "^8.4.27",
     "prettier": "^3.0.1",
     "prettier-plugin-tailwindcss": "^0.4.1",
-    "tailwindcss": "^3.3.3",
     "sst": "^2.36.1",
-    "aws-cdk-lib": "2.101.1",
-    "constructs": "10.2.69"
+    "tailwindcss": "^3.3.3"
+  },
+  "resolutions": {
+    "node-gyp-build": "^4.7.1"
   }
 }
