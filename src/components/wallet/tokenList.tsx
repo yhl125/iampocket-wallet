@@ -3,6 +3,7 @@ import TokenStore, { IResponseToken } from '@/store/TokenStore';
 import { erc20BalanceToReadable } from '@/utils/ERC20Util';
 import Image from 'next/image';
 import { useSnapshot } from 'valtio';
+import TokenLogo from './tokenLogo';
 
 function TokenList() {
   const { tokenList } = useSnapshot(TokenStore.tokenListState);
@@ -34,7 +35,10 @@ function TokenList() {
                       </span>
                       <div className="avatar placeholder">
                         <div className="relative w-12 rounded-full border-2 bg-neutral-focus text-neutral-content">
-                          <Image src={token.logoUrl} alt="" fill sizes="1x" />
+                          <TokenLogo
+                            logoUrl={token.logoUrl}
+                            address={token.address}
+                          />
                         </div>
                       </div>
                     </div>
