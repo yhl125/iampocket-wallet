@@ -18,6 +18,7 @@ import Input from '../commons/Input';
 import styled from 'styled-components';
 import theme from '@/styles/theme';
 import Button from '../commons/Button';
+import SelectChain from './SelectChain';
 
 //No ChainId check since there are no whole swap token list
 
@@ -27,40 +28,28 @@ export default function PriceView({
   setFinalize,
   setSellToken,
   buyToken,
+  sellToken,
   setBuyToken,
   walletState,
   pkpState,
   chainId,
   setChainId,
+  psudoToken,
 }: {
   price: IPrice | undefined;
   setPrice: (price: IPrice | undefined) => void;
   setFinalize: (finalize: boolean) => void;
   setSellToken: (sellToken: IResponseToken) => void;
+  sellToken: IResponseToken | undefined;
   buyToken: IBuyTokenInfo | undefined;
   setBuyToken: (buyToken: IBuyTokenInfo) => void;
   walletState: WalletState;
   pkpState: PKPState;
   chainId: number;
   setChainId: (chainId: number) => void;
+  psudoToken: IResponseToken;
 }) {
-  const psudoToken: IResponseToken = {
-    address: '',
-    name: 'Token',
-    symbol: 'Token',
-    decimals: 18,
-    logoUrl: '',
-    nativeToken: false,
-    type: '',
-    balance: '0',
-    quote: 0,
-    prettyQuote: '0',
-    quoteRate: 0,
-    quoteRate24hAgo: 0,
-    chainId: 80001,
-  };
-
-  const { tokenList } = useSnapshot(TokenStore.tokenListState);
+  const { tokenList } = useSnapshot<any>(TokenStore.tokenListState);
 
   const [sellAmount, setSellAmount] = useState('');
   const [buyAmount, setBuyAmount] = useState('');
@@ -74,9 +63,9 @@ export default function PriceView({
 
   const [sellTokenSymbol, setSellTokenSymbol] = useState('');
 
-  const [selectedChain, setSelectedChain] = useState(() =>
-    tokenList.length == 0 ? psudoToken : tokenList[0],
-  );
+  /////------//////
+
+  console.log(chainId);
 
   const parsedSellAmount =
     sellAmount && tradeDirection === 'sell'
@@ -107,7 +96,7 @@ export default function PriceView({
 
   function isBalanceSufficient() {
     const selectedToken = tokenList.find(
-      (token) => token.address === sellTokenAddress,
+      (token: any) => token.address === sellTokenAddress,
     );
     const isSelectedSellTokenHasSufficientBalance =
       selectedToken && sellAmount
@@ -178,7 +167,7 @@ export default function PriceView({
   useEffect(() => {
     if (isAddress(sellTokenAddress) && isAddress(buyTokenAddress)) {
       const selectedToken = tokenList.find(
-        (token) => token.address === sellTokenAddress,
+        (token: any) => token.address === sellTokenAddress,
       );
       if (selectedToken) {
         setSellToken(selectedToken);
@@ -263,38 +252,14 @@ export default function PriceView({
 
   return (
     <Container>
-      <ChainWrapper>
-        <Text size="body1" color="bg40">
-          Select Chain
-        </Text>
-        <DropDownWrapper>
-          <DropDown
-            contents={tokenList}
-            selectContentState={selectedChain}
-            setSelectContentState={setSelectedChain}
-            iconKey="logoUrl"
-            nameKey="name"
-            size="medium"
-          />
-        </DropDownWrapper>
-      </ChainWrapper>
-      {/* <div>
-        Chain ID:
-        <input
-          type="text"
-          value={chainId}
-          onChange={(e) => {
-            setChainId(Number(e.target.value));
-          }}
-        ></input>
-      </div> */}
+      <SelectChain setChainId={setChainId} />
 
       <InputWrapper>
         <DropDownWrapper>
           <DropDown
             contents={tokenList}
-            selectContentState={selectedChain}
-            setSelectContentState={setSelectedChain}
+            selectContentState={sellTokenAddress}
+            setSelectContentState={setSellTokenAddress}
             iconKey="logoUrl"
             nameKey="name"
             size="medium"
@@ -303,36 +268,15 @@ export default function PriceView({
         <StyledInput
           type="text"
           dir="rtl"
-          value={sellTokenAddress}
-          onChange={(e) => {
-            setSellTokenAddress(e.target.value);
+          value={sellAmount}
+          onChange={(e: any) => {
+            setTradeDirection('sell');
+            setSellAmount(e.target.value);
           }}
           placeholder="0"
         />
       </InputWrapper>
 
-      {/* <div>
-        Sell Token:
-        <input
-          type="text"
-          value={sellTokenAddress}
-          onChange={(e) => {
-            setSellTokenAddress(e.target.value);
-          }}
-        ></input>
-      </div> */}
-      {/* <div>
-        Sell Amount:
-        <input
-          type="text"
-          value={sellAmount}
-          onChange={(e) => {
-            setTradeDirection('sell');
-            setSellAmount(e.target.value);
-          }}
-        ></input>
-        {sellTokenSymbol}
-      </div> */}
       <DividerWrapper>
         <Divider />
         <IconWrapper>
@@ -344,8 +288,8 @@ export default function PriceView({
         <DropDownWrapper>
           <DropDown
             contents={tokenList}
-            selectContentState={selectedChain}
-            setSelectContentState={setSelectedChain}
+            selectContentState={buyTokenAddress}
+            setSelectContentState={setBuyTokenAddress}
             iconKey="logoUrl"
             nameKey="name"
             size="medium"
@@ -355,37 +299,13 @@ export default function PriceView({
           type="text"
           dir="rtl"
           value={buyAmount}
-          onChange={(e) => {
+          onChange={(e: any) => {
             setTradeDirection('buy');
             setBuyAmount(e.target.value);
           }}
           placeholder="0"
         />
       </InputWrapper>
-
-      {/* 
-      <div>
-        Buy Token:
-        <input
-          type="text"
-          value={buyTokenAddress}
-          onChange={(e) => {
-            setBuyTokenAddress(e.target.value);
-          }}
-        ></input>
-      </div> */}
-      {/* <div>
-        Buy Amount:
-        <input
-          type="text"
-          value={buyAmount}
-          onChange={(e) => {
-            setTradeDirection('buy');
-            setBuyAmount(e.target.value);
-          }}
-        ></input>
-        {buyToken ? buyToken.symbol : null}
-      </div> */}
 
       {walletState.selectedWallet === 'zeroDev' ? (
         <ReviewButton4337
@@ -419,7 +339,7 @@ const ChainWrapper = styled.div`
   flex-direction: column;
   align-items: flex-end;
   width: 100%;
-  row-gap : ${theme.space.xTiny};
+  row-gap: ${theme.space.xTiny};
 `;
 
 const InputWrapper = styled.div`
@@ -447,7 +367,7 @@ const DividerWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin : 30px 0px;
+  margin: 30px 0px;
 `;
 const IconWrapper = styled.div`
   background-color: ${theme.color.bg50};
@@ -539,22 +459,24 @@ function ApporveOrReviewButtonEOA({
     price !== undefined
   ) {
     return isBalanceSufficient() ? (
-      <div>
-        <Button
-          size="large"
-          type="primary"
-          onClick={async (e) => {
-            e.preventDefault();
-            await setSellTokenApprove();
-          }}
-        >
-          {isApproveLoading ? '...Approving' : 'Approve'}
-        </Button>
-      </div>
+      <Button
+        text={isApproveLoading ? 'Approving...' : 'Approve'}
+        size="large"
+        type="primary"
+        disabled={isApproveLoading ? true : false}
+        onClick={async (e: any) => {
+          e.preventDefault();
+          await setSellTokenApprove();
+        }}
+      />
     ) : (
-      <div>
-        <button>InSufficient Balance</button>
-      </div>
+      <Button
+        text="InSufficient Balance"
+        size="large"
+        type="primary"
+        disabled
+        onClick={onClick}
+      />
     );
   } else {
     return isBalanceSufficient() ? (
@@ -572,6 +494,7 @@ function ApporveOrReviewButtonEOA({
           text="InSufficient Balance"
           size="large"
           type="primary"
+          disabled
           onClick={onClick}
         />
       </div>
@@ -605,6 +528,7 @@ function ReviewButton4337({
         text="InSufficient Balance"
         size="large"
         type="primary"
+        disabled
         onClick={onClick}
       />
     </div>
