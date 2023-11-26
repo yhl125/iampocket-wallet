@@ -56,8 +56,8 @@ export default function PriceView({
 
   const [tradeDirection, setTradeDirection] = useState('');
 
-  const [sellTokenAddress, setSellTokenAddress] = useState('0x');
-  const [buyTokenAddress, setBuyTokenAddress] = useState('0x');
+  const [sellTokenAddress, setSellTokenAddress] = useState<any>('0x');
+  const [buyTokenAddress, setBuyTokenAddress] = useState<any>('0x');
 
   const [sellTokenDecimals, setSellTokenDecimals] = useState(1);
 
@@ -82,9 +82,9 @@ export default function PriceView({
     {
       variables: {
         chainId: +chainId,
-        sellToken: sellTokenAddress,
+        sellToken: sellTokenAddress.address,
         sellAmount: parsedSellAmount,
-        buyToken: buyTokenAddress,
+        buyToken: buyTokenAddress.address,
         buyAmount: parsedBuyAmount,
         takerAddress:
           walletState.selectedWallet === 'zeroDev'
@@ -96,7 +96,7 @@ export default function PriceView({
 
   function isBalanceSufficient() {
     const selectedToken = tokenList.find(
-      (token: any) => token.address === sellTokenAddress,
+      (token: any) => token.address === sellTokenAddress.address,
     );
     const isSelectedSellTokenHasSufficientBalance =
       selectedToken && sellAmount
@@ -113,61 +113,61 @@ export default function PriceView({
   // Use if token does not exist in user's tokenList
   const getSellTokenSymbolAndDecimals = useCallback(async () => {
     const publicClient = publicClientOf(chainId);
-    if (sellTokenAddress === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+    if (sellTokenAddress.address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
       setSellTokenDecimals(18);
       return;
     }
     const [symbol, decimals] = await Promise.all([
       publicClient.readContract({
-        address: sellTokenAddress as `0x${string}`,
+        address: sellTokenAddress.address as `0x${string}`,
         abi: ERC20_ABI,
         functionName: 'symbol',
       }) as Promise<string>,
       publicClient.readContract({
-        address: sellTokenAddress as `0x${string}`,
+        address: sellTokenAddress.address as `0x${string}`,
         abi: ERC20_ABI,
         functionName: 'decimals',
       }) as Promise<number>,
     ]);
     setSellTokenSymbol(symbol);
     setSellTokenDecimals(decimals);
-  }, [chainId, sellTokenAddress]);
+  }, [chainId, sellTokenAddress.address]);
 
   const getBuyTokenSymbolAndDecimalsAndName = useCallback(async () => {
     const publicClient = publicClientOf(chainId);
-    if (buyTokenAddress === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+    if (buyTokenAddress.address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
       setSellTokenDecimals(18);
       return;
     }
     const [symbol, decimals, name] = await Promise.all([
       publicClient.readContract({
-        address: buyTokenAddress as `0x${string}`,
+        address: buyTokenAddress.address as `0x${string}`,
         abi: ERC20_ABI,
         functionName: 'symbol',
       }) as Promise<string>,
       publicClient.readContract({
-        address: buyTokenAddress as `0x${string}`,
+        address: buyTokenAddress.address as `0x${string}`,
         abi: ERC20_ABI,
         functionName: 'decimals',
       }) as Promise<number>,
       publicClient.readContract({
-        address: buyTokenAddress as `0x${string}`,
+        address: buyTokenAddress.address as `0x${string}`,
         abi: ERC20_ABI,
         functionName: 'name',
       }) as Promise<string>,
     ]);
     setBuyToken({ name: name, decimals: decimals, symbol: symbol });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [buyTokenAddress, chainId]);
+  }, [buyTokenAddress.address, chainId]);
 
   useEffect(() => {
     setPrice(priceData ? priceData.findSwapPrice : undefined);
   }, [priceData, setPrice]);
 
   useEffect(() => {
-    if (isAddress(sellTokenAddress) && isAddress(buyTokenAddress)) {
+    if (isAddress(sellTokenAddress.address) && isAddress(buyTokenAddress.address)) {
       const selectedToken = tokenList.find(
-        (token: any) => token.address === sellTokenAddress,
+        (token: any) => token.address === sellTokenAddress.address,
       );
       if (selectedToken) {
         setSellToken(selectedToken);
@@ -178,7 +178,7 @@ export default function PriceView({
       getBuyTokenSymbolAndDecimalsAndName();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [buyTokenAddress, sellTokenAddress]);
+  }, [buyTokenAddress.address, sellTokenAddress.address]);
 
   /**
    * Query Price if user finished interacting with sellTokenAddress,buyTokenAddress and sellAmount,buyAmount
@@ -186,8 +186,8 @@ export default function PriceView({
    */
   useEffect(() => {
     if (
-      isAddress(sellTokenAddress) &&
-      isAddress(buyTokenAddress) &&
+      isAddress(sellTokenAddress.address) &&
+      isAddress(buyTokenAddress.address) &&
       (sellAmount || buyAmount)
     ) {
       if (
@@ -239,9 +239,9 @@ export default function PriceView({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     sellAmount,
-    sellTokenAddress,
+    sellTokenAddress.address,
     buyAmount,
-    buyTokenAddress,
+    buyTokenAddress.address,
     getPrice,
     tradeDirection,
     parsedSellAmount,
@@ -250,6 +250,8 @@ export default function PriceView({
     buyToken,
   ]);
 
+
+console.log(buyTokenAddress.address)
   return (
     <Container>
       <SelectChain setChainId={setChainId} />
@@ -408,7 +410,7 @@ function ApporveOrReviewButtonEOA({
   const checkAllowance = useCallback(async () => {
     const publicClient = publicClientOf(chainId);
     const allowance = (await publicClient.readContract({
-      address: price!.sellTokenAddress,
+      address: price!.sellTokenAddress.address,
       abi: ERC20_ABI,
       functionName: 'allowance',
       args: [takerAddress, price!.AllownaceTarget],
@@ -438,7 +440,7 @@ function ApporveOrReviewButtonEOA({
     });
     pkpWalletClient
       .sendTransaction({
-        to: price!.sellTokenAddress,
+        to: price!.sellTokenAddress.address,
         account: pkpWalletClient.account!,
         chain: pkpWalletClient.chain,
         data: approveData,
@@ -516,7 +518,7 @@ function ReviewButton4337({
     price !== undefined ? (
     <div>
       <Button
-        text=" Review Trade"
+        text="Review Trade"
         size="large"
         type="primary"
         onClick={onClick}
