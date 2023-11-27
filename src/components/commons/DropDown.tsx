@@ -66,17 +66,6 @@ const DropDown = ({
             logoUrl={selectContentState[iconKey]}
             address={selectContentState.address}
           />
-          {/* <Image
-            src={
-              selectContentState[iconKey] === ''
-                ? defaultImage
-                : selectContentState[iconKey]
-            }
-            width={20}
-            height={20}
-            alt={'chain logo'}
-            className="mask mask-circle"
-          /> */}
           <Text
             color={renderFontColor()}
             size={size === 'medium' ? 'body2' : 'body3'}

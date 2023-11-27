@@ -19,6 +19,7 @@ import styled from 'styled-components';
 import theme from '@/styles/theme';
 import Button from '../commons/Button';
 import SelectChain from './SelectChain';
+import { useIsMounted } from '@/hooks/useIsMounted';
 
 //No ChainId check since there are no whole swap token list
 
@@ -63,9 +64,7 @@ export default function PriceView({
 
   const [sellTokenSymbol, setSellTokenSymbol] = useState('');
 
-  /////------//////
-
-  console.log(chainId);
+  const mounted = useIsMounted();
 
   const parsedSellAmount =
     sellAmount && tradeDirection === 'sell'
@@ -113,7 +112,9 @@ export default function PriceView({
   // Use if token does not exist in user's tokenList
   const getSellTokenSymbolAndDecimals = useCallback(async () => {
     const publicClient = publicClientOf(chainId);
-    if (sellTokenAddress.address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+    if (
+      sellTokenAddress.address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+    ) {
       setSellTokenDecimals(18);
       return;
     }
@@ -135,7 +136,9 @@ export default function PriceView({
 
   const getBuyTokenSymbolAndDecimalsAndName = useCallback(async () => {
     const publicClient = publicClientOf(chainId);
-    if (buyTokenAddress.address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+    if (
+      buyTokenAddress.address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+    ) {
       setSellTokenDecimals(18);
       return;
     }
@@ -165,7 +168,10 @@ export default function PriceView({
   }, [priceData, setPrice]);
 
   useEffect(() => {
-    if (isAddress(sellTokenAddress.address) && isAddress(buyTokenAddress.address)) {
+    if (
+      isAddress(sellTokenAddress.address) &&
+      isAddress(buyTokenAddress.address)
+    ) {
       const selectedToken = tokenList.find(
         (token: any) => token.address === sellTokenAddress.address,
       );
@@ -250,82 +256,85 @@ export default function PriceView({
     buyToken,
   ]);
 
-
-console.log(buyTokenAddress.address)
+  console.log(buyTokenAddress.address);
   return (
-    <Container>
-      <SelectChain setChainId={setChainId} />
+    <>
+      {mounted && (
+        <Container>
+          <SelectChain setChainId={setChainId} />
 
-      <InputWrapper>
-        <DropDownWrapper>
-          <DropDown
-            contents={tokenList}
-            selectContentState={sellTokenAddress}
-            setSelectContentState={setSellTokenAddress}
-            iconKey="logoUrl"
-            nameKey="name"
-            size="medium"
-          />
-        </DropDownWrapper>
-        <StyledInput
-          type="text"
-          dir="rtl"
-          value={sellAmount}
-          onChange={(e: any) => {
-            setTradeDirection('sell');
-            setSellAmount(e.target.value);
-          }}
-          placeholder="0"
-        />
-      </InputWrapper>
+          <InputWrapper>
+            <DropDownWrapper>
+              <DropDown
+                contents={tokenList}
+                selectContentState={sellTokenAddress}
+                setSelectContentState={setSellTokenAddress}
+                iconKey="logoUrl"
+                nameKey="name"
+                size="medium"
+              />
+            </DropDownWrapper>
+            <StyledInput
+              type="text"
+              dir="rtl"
+              value={sellAmount}
+              onChange={(e: any) => {
+                setTradeDirection('sell');
+                setSellAmount(e.target.value);
+              }}
+              placeholder="0"
+            />
+          </InputWrapper>
 
-      <DividerWrapper>
-        <Divider />
-        <IconWrapper>
-          <Icon type="swap" height={40} />
-        </IconWrapper>
-      </DividerWrapper>
+          <DividerWrapper>
+            <Divider />
+            <IconWrapper>
+              <Icon type="swap" height={40} />
+            </IconWrapper>
+          </DividerWrapper>
 
-      <InputWrapper>
-        <DropDownWrapper>
-          <DropDown
-            contents={tokenList}
-            selectContentState={buyTokenAddress}
-            setSelectContentState={setBuyTokenAddress}
-            iconKey="logoUrl"
-            nameKey="name"
-            size="medium"
-          />
-        </DropDownWrapper>
-        <StyledInput
-          type="text"
-          dir="rtl"
-          value={buyAmount}
-          onChange={(e: any) => {
-            setTradeDirection('buy');
-            setBuyAmount(e.target.value);
-          }}
-          placeholder="0"
-        />
-      </InputWrapper>
+          <InputWrapper>
+            <DropDownWrapper>
+              <DropDown
+                contents={tokenList}
+                selectContentState={buyTokenAddress}
+                setSelectContentState={setBuyTokenAddress}
+                iconKey="logoUrl"
+                nameKey="name"
+                size="medium"
+              />
+            </DropDownWrapper>
+            <StyledInput
+              type="text"
+              dir="rtl"
+              value={buyAmount}
+              onChange={(e: any) => {
+                setTradeDirection('buy');
+                setBuyAmount(e.target.value);
+              }}
+              placeholder="0"
+            />
+          </InputWrapper>
 
-      {walletState.selectedWallet === 'zeroDev' ? (
-        <ReviewButton4337
-          price={price}
-          isBalanceSufficient={isBalanceSufficient}
-          onClick={() => setFinalize(true)}
-        ></ReviewButton4337>
-      ) : (
-        <ApporveOrReviewButtonEOA
-          onClick={() => setFinalize(true)}
-          isBalanceSufficient={isBalanceSufficient}
-          pkpState={pkpState}
-          price={price}
-          chainId={chainId}
-          takerAddress={walletState.pkpViemAddress}
-        />
+          {walletState.selectedWallet === 'zeroDev' ? (
+            <ReviewButton4337
+              price={price}
+              isBalanceSufficient={isBalanceSufficient}
+              onClick={() => setFinalize(true)}
+            ></ReviewButton4337>
+          ) : (
+            <ApporveOrReviewButtonEOA
+              onClick={() => setFinalize(true)}
+              isBalanceSufficient={isBalanceSufficient}
+              pkpState={pkpState}
+              price={price}
+              chainId={chainId}
+              takerAddress={walletState.pkpViemAddress}
+            />
+          )}
+        </Container>
       )}
-    </Container>
+    </>
   );
 }
 
@@ -452,6 +461,15 @@ function ApporveOrReviewButtonEOA({
         return res;
       });
   }
+
+  const checkDisable = () => {
+    if (isBalanceSufficient()) {
+      if (isApproveLoading) return true;
+      else return false;
+    } else {
+      return false;
+    }
+  };
   useEffect(() => {
     checkAllowance();
   }, [checkAllowance, price]);
@@ -460,43 +478,34 @@ function ApporveOrReviewButtonEOA({
     price?.AllownaceTarget !== '0x0000000000000000000000000000000000000000' &&
     price !== undefined
   ) {
-    return isBalanceSufficient() ? (
+    return (
       <Button
-        text={isApproveLoading ? 'Approving...' : 'Approve'}
+        text={
+          isBalanceSufficient()
+            ? 'InSufficient Balance'
+            : isApproveLoading
+              ? 'Approving...'
+              : 'Approve'
+        }
         size="large"
         type="primary"
-        disabled={isApproveLoading ? true : false}
+        disabled={
+          isBalanceSufficient() ? true : isApproveLoading ? true : false
+        }
         onClick={async (e: any) => {
           e.preventDefault();
           await setSellTokenApprove();
         }}
       />
-    ) : (
-      <Button
-        text="InSufficient Balance"
-        size="large"
-        type="primary"
-        disabled
-        onClick={onClick}
-      />
     );
   } else {
-    return isBalanceSufficient() ? (
+    return (
       <div>
         <Button
-          text="Review Trade"
+          text={isBalanceSufficient() ? 'Review Trade' : 'InSufficient Balance'}
           size="large"
           type="primary"
-          onClick={onClick}
-        />
-      </div>
-    ) : (
-      <div>
-        <Button
-          text="InSufficient Balance"
-          size="large"
-          type="primary"
-          disabled
+          disabled={isBalanceSufficient() ? false : true}
           onClick={onClick}
         />
       </div>
@@ -513,26 +522,18 @@ function ReviewButton4337({
   isBalanceSufficient: () => boolean;
   onClick: () => void;
 }) {
-  return isBalanceSufficient() &&
-    price?.AllownaceTarget !== '0x0000000000000000000000000000000000000000' &&
-    price !== undefined ? (
-    <div>
-      <Button
-        text="Review Trade"
-        size="large"
-        type="primary"
-        onClick={onClick}
-      />
-    </div>
-  ) : (
-    <div>
-      <Button
-        text="InSufficient Balance"
-        size="large"
-        type="primary"
-        disabled
-        onClick={onClick}
-      />
-    </div>
+  return (
+    isBalanceSufficient() &&
+    price?.AllownaceTarget !== '0x0000000000000000000000000000000000000000' && (
+      <div>
+        <Button
+          text={price !== undefined ? 'Review Trade' : 'InSufficient Balance'}
+          size="large"
+          type="primary"
+          disabled={price !== undefined ? false : true}
+          onClick={onClick}
+        />
+      </div>
+    )
   );
 }
