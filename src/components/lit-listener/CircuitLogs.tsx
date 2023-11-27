@@ -6,6 +6,7 @@ import { Circuit } from '@/utils/lit-listener';
 import styled from 'styled-components';
 import theme from '@/styles/theme';
 import { AuthSig, SessionSigs } from '@lit-protocol/types';
+import Button from '../commons/Button';
 
 export default function CircuitLogs() {
   const { currentPKP, sessionSigs } = useSnapshot(PKPStore.state);
@@ -79,18 +80,54 @@ export default function CircuitLogs() {
   function circuitToComponent(circuit: Circuit) {
     return (
       <div key={circuit._id}>
-        <TitleWrapper>
-          <Text>id: {circuit._id}</Text>
-          <Text>name: {circuit.name}</Text>
-          <Text>description: {circuit.description}</Text>
-          <Text>type: {circuit.type}</Text>
-        </TitleWrapper>
+        <ProgressWrapper>
+          <Text size="title3" $bold>
+            Circuit
+          </Text>
+          <DetailWrapper>
+            <Text size="body4" color="bg20">
+              ID
+            </Text>
+            <Text $thin> {circuit._id}</Text>
+          </DetailWrapper>
+          <DetailWrapper>
+            <Text size="body4" color="bg20">
+              Name
+            </Text>
+            <Text>{circuit.name}</Text>
+          </DetailWrapper>
+          <DetailWrapper>
+            <Text size="body4" color="bg20">
+              Description
+            </Text>
+            <Text>{circuit.description}</Text>
+          </DetailWrapper>
+          <DetailWrapper>
+            <Text size="body4" color="bg20">
+              Type
+            </Text>
+            <Text>{circuit.type}</Text>
+          </DetailWrapper>
+        </ProgressWrapper>
         {circuit.transactionLogs.map((log) => {
           return (
-            <TitleWrapper key={log.transactionHash}>
-              <Text>transactionHash: {log.transactionHash}</Text>
-              <Text>date: {log.isoDate}</Text>
-            </TitleWrapper>
+            <ResultWrapper key={log.transactionHash}>
+              <Text size="title3" $bold>
+                TX Result
+              </Text>
+              <DetailWrapper>
+                <Text size="body3" color="bg20">
+                  TransactionHash
+                </Text>
+                <Text>{log.transactionHash}</Text>{' '}
+              </DetailWrapper>
+              <DetailWrapper>
+                <Text size="body3" color="bg20">
+                  Date
+                </Text>
+                <Text> {log.isoDate}</Text>
+              </DetailWrapper>
+            </ResultWrapper>
           );
         })}
       </div>
@@ -100,26 +137,63 @@ export default function CircuitLogs() {
   function runningCircuitToComponent(circuit: Circuit) {
     return (
       <div key={circuit._id}>
-        <TitleWrapper>
-          <Text>id: {circuit._id}</Text>
-          <Text>name: {circuit.name}</Text>
-          <Text>description: {circuit.description}</Text>
-          <Text>type: {circuit.type}</Text>
-        </TitleWrapper>
+        <ProgressWrapper>
+          <Text size="title3" $bold>
+            Circuit
+          </Text>
+          <DetailWrapper>
+            <Text size="body4" color="bg20">
+              ID
+            </Text>
+            <Text $thin> {circuit._id}</Text>
+          </DetailWrapper>
+          <DetailWrapper>
+            <Text size="body4" color="bg20">
+              Name
+            </Text>
+            <Text>{circuit.name}</Text>
+          </DetailWrapper>
+          <DetailWrapper>
+            <Text size="body4" color="bg20">
+              Description
+            </Text>
+            <Text>{circuit.description}</Text>
+          </DetailWrapper>
+          <DetailWrapper>
+            <Text size="body4" color="bg20">
+              Type
+            </Text>
+            <Text>{circuit.type}</Text>
+          </DetailWrapper>
+        </ProgressWrapper>
         {circuit.transactionLogs.map((log) => {
           return (
-            <TitleWrapper key={log.transactionHash}>
-              <Text>transactionHash: {log.transactionHash}</Text>
-              <Text>date: {log.isoDate}</Text>
-            </TitleWrapper>
+            <ResultWrapper key={log.transactionHash}>
+              <Text size="title3" $bold>
+                TX Result
+              </Text>
+              <DetailWrapper>
+                <Text size="body3" color="bg20">
+                  TransactionHash
+                </Text>
+                <Text>{log.transactionHash}</Text>{' '}
+              </DetailWrapper>
+              <DetailWrapper>
+                <Text size="body3" color="bg20">
+                  Date
+                </Text>
+                <Text> {log.isoDate}</Text>
+              </DetailWrapper>
+            </ResultWrapper>
           );
         })}
-        <button
-          className="btn btn-primary"
+
+        <Button
+          text="STOP"
+          size="large"
+          type="primary"
           onClick={() => stopCircuit(circuit._id, circuit.type)}
-        >
-          Stop
-        </button>
+        />
       </div>
     );
   }
@@ -153,35 +227,74 @@ export default function CircuitLogs() {
   }
 
   return (
-    <div>
-      <div>
-        <Text>Running circuits: {runningCircuitCount}</Text>
-        <div>
+    <Container>
+      <CircuitBox>
+        <Text size="title3" $bold>
+          Running circuits: {runningCircuitCount}
+        </Text>
+        <CircuitWrapper>
           {runningCircuits.map((circuit) => runningCircuitToComponent(circuit))}
-        </div>
-      </div>
-      <div>
-        <Text>Stopped circuits: {stoppedCircuitCount}</Text>
-        <div>
+        </CircuitWrapper>
+      </CircuitBox>
+      <CircuitBox>
+        <Text size="title3" $bold>
+          Stopped circuits: {stoppedCircuitCount}
+        </Text>
+        <CircuitWrapper>
           {stoppedCircuits.map((circuit) => circuitToComponent(circuit))}
-        </div>
-      </div>
-      <div>
-        <Text>
+        </CircuitWrapper>
+      </CircuitBox>
+      <CircuitBox>
+        <Text size="title3" $bold>
           Server-down-stopped circuits: {serverDownStoppedCircuitCount}
         </Text>
-        <div>
+        <CircuitWrapper>
           {serverDownStoppedCircuits.map((circuit) =>
             circuitToComponent(circuit),
           )}
-        </div>
-      </div>
-    </div>
+        </CircuitWrapper>
+      </CircuitBox>
+    </Container>
   );
 }
 
-const TitleWrapper = styled.div`
+const Container = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+`;
+
+const CircuitBox = styled.div`
+  display: flex;
+  width: 33%;
+  height: 600px;
+  border: 1px solid ${theme.color.bg40};
+  border-radius: 5px;
+  flex-direction: column;
+  padding: ${theme.space.base};
+  row-gap: ${theme.space.base};
+  overflow-y: auto;
+`;
+
+const CircuitWrapper = styled.div``;
+
+const ProgressWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  word-break: break-all;
+  padding: ${theme.space.small};
+  border: 1px solid ${theme.color.bg40};
   margin-bottom: ${theme.space.xSmall};
+  border-radius: 5px;
+  row-gap: ${theme.space.xSmall};
+`;
+
+const ResultWrapper = styled(ProgressWrapper)`
+  border: none;
+  background-color: ${theme.color.bg80};
+`;
+
+const DetailWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
