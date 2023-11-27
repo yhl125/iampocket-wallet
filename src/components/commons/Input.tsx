@@ -5,7 +5,7 @@ import theme from '@/styles/theme';
 import Button from './Button';
 
 interface IInputProps {
-  value: string;
+  value: string | number;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   type?: React.HTMLInputTypeAttribute;
   size?: 'small' | 'medium';
