@@ -345,7 +345,7 @@ function ApporveOrReviewButtonEOA({
       console.log(allowance);
       setNeedApprove(false);
     }
-  }, [price]);
+  }, [chainId, price, takerAddress]);
   async function setSellTokenApprove() {
     setIsApproveLoading(true);
     const pkpWalletClient = createPkpViemWalletClient(
