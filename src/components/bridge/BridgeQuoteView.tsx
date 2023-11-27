@@ -8,6 +8,7 @@ import {
   SocketQuote,
   SortOptions,
   Token,
+  TokenList,
 } from '@socket.tech/socket-v2-sdk';
 import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
@@ -20,6 +21,7 @@ import {
   zeroDevSignerWithERC20Gas,
 } from '@/utils/ERC4337WalletUtil';
 import { createPkpViemWalletClient } from '@/utils/EOAWalletUtil';
+import Image from 'next/image';
 
 export default function BridgeQuote({
   sourceNetwork,
@@ -58,7 +60,7 @@ export default function BridgeQuote({
   setDestToken: (sourceToken: BridgeCurrency) => void;
   setSourceTokenList: (sourceToken: BridgeCurrency[]) => void;
   setDestTokenList: (sourceToken: BridgeCurrency[]) => void;
-  setSelectedRoute: (route: BridgeRoute) => void;
+  setSelectedRoute: (route: BridgeRoute | undefined) => void;
   setRoutes: (route: BridgeRoute) => void;
 }) {
   const { tokenList } = useSnapshot(TokenStore.tokenListState);
@@ -70,12 +72,7 @@ export default function BridgeQuote({
   const setDebouncedInputAmount = useDebouncedCallback((inputAmount) => {
     setInputAmount(inputAmount);
   }, 1000);
-  const setDebouncedSourceToken = useDebouncedCallback((sourceToken) => {
-    setSourceToken(sourceToken);
-  }, 500);
-  const setDebouncedDestToken = useDebouncedCallback((destToken) => {
-    setDestToken(destToken);
-  }, 500);
+
   const [bridgeExecuteStatus, setBridgeExecuteStatus] = useState('');
   const [inputAmount, setInputAmount] = useState('0');
   const [outputAmount, setOutputAmount] = useState('0');
@@ -88,7 +85,7 @@ export default function BridgeQuote({
     ? parseUnits(inputAmount, sourceToken.decimals).toString()
     : undefined;
   const [needApprove, setNeedApprove] = useState(false);
-  const [withPM, setWithPM] = useState(true);
+  const [withPM, setWithPM] = useState(false);
 
   function isBalanceSufficient() {
     const selectedToken = tokenList.find(
@@ -143,6 +140,7 @@ export default function BridgeQuote({
   }
   // Execute Bridge
   async function handleExecuteBridgeClick4337() {
+    console.log(withPM);
     const signer = withPM
       ? await zeroDevSignerWithERC20Gas(
           'USDC',
@@ -168,6 +166,7 @@ export default function BridgeQuote({
             `Need Allowance Setting Up Allowance for ${sourceToken.name}`,
           );
           const _sendTxData = await tx.getSendTransaction();
+          console.log(_sendTxData);
           const sendTx = await signer.sendUserOperation([
             {
               target: approvalTxData.to as `0x${string}`,
@@ -179,6 +178,7 @@ export default function BridgeQuote({
               value: BigInt(_sendTxData.value),
             },
           ]);
+          console.log(sendTx);
           setBridgeExecuteStatus(
             `UserOperation Hash: ${sendTx.hash} \n UserOperation Request: ${sendTx.request} `,
           );
@@ -191,6 +191,7 @@ export default function BridgeQuote({
             data: _sendTxData.data as `0x${string}`,
             value: BigInt(_sendTxData.value),
           });
+          console.log(sendTx);
           setBridgeExecuteStatus(
             `UserOperation Hash: ${sendTx.hash} \n UserOperation Request: ${sendTx.request} `,
           );
@@ -203,55 +204,32 @@ export default function BridgeQuote({
       setIsDisabled(false);
     }
   }
+  function fallbackToUSDC(tokenList: Token[]) {
+    return (
+      tokenList.filter(
+        (token) =>
+          (token?.chainAgnosticId?.toLowerCase() ||
+            token.symbol.toLowerCase()) === 'usdc',
+      )?.[0] ?? tokenList[0]
+    );
+  }
+  async function getBridgeTokenListAndSetTokens(
+    sourceNetworkChainId: number,
+    destNetworkChainId: number,
+  ) {
+    const _tokenList = await socket.getTokenList({
+      fromChainId: sourceNetworkChainId,
+      toChainId: destNetworkChainId,
+      isShortList: true,
+    });
+    setSourceToken(fallbackToUSDC(_tokenList.from.tokens) as BridgeCurrency);
+    setSourceTokenList(_tokenList.from.tokens as BridgeCurrency[]);
+    setDestToken(fallbackToUSDC(_tokenList.to.tokens) as BridgeCurrency);
+    setDestTokenList(_tokenList.to.tokens as BridgeCurrency[]);
+    return _tokenList;
+  }
 
-  //Change networkList on source and dest network changes
-  useEffect(() => {
-    if (socket) {
-      async function getBridgeTokenList() {
-        const _tokenList = await socket.getTokenList({
-          toChainId: sourceNetwork.chainId,
-          fromChainId: destNetwork.chainId,
-          isShortList: true,
-        });
-        return _tokenList;
-      }
-      if (sourceNetwork && destNetwork) {
-        getBridgeTokenList().then((res) => {
-          setSourceTokenList(res.from.tokens as BridgeCurrency[]);
-          setDestTokenList(res.to.tokens as BridgeCurrency[]);
-        });
-      } else if (sourceNetwork && destNetwork && inputAmount) {
-        if (parsedInputAmount && parsedInputAmount !== '0') {
-          const path = new Path({
-            fromToken: sourceToken as Token,
-            toToken: destToken as Token,
-          });
-          socket
-            .getBestQuote(
-              {
-                path,
-                amount: parsedInputAmount,
-                address:
-                  selectedWallet === 'zeroDev'
-                    ? zeroDevAddress
-                    : pkpViemAddress,
-              },
-              {
-                isContractCall: selectedWallet === 'zeroDev' ? true : false,
-                sort: SortOptions.Time,
-              },
-            )
-            .then((res) => {
-              setBridgeQuote(res);
-              setSelectedRoute(res.route);
-              setOutputAmount(res.route.toAmount);
-            });
-        }
-      }
-    }
-  }, [destNetwork, sourceNetwork]);
-
-  // set selected tokens
+  // // set selected tokens
   useEffect(() => {
     if (sourceToken && destToken) {
       const _selectedSourceToken = tokenList.find(
@@ -261,28 +239,13 @@ export default function BridgeQuote({
         (token) => token.address === destToken.address,
       );
       if (_selectedSourceToken) {
-        const _sourceToken: BridgeCurrency = {
-          address: _selectedSourceToken.address,
-          decimals: _selectedSourceToken.decimals,
-          name: _selectedSourceToken.name,
-          symbol: _selectedSourceToken.symbol,
-          logoURI: _selectedSourceToken.logoUrl,
-        };
-        setSourceToken(_sourceToken);
         setSelectedSourceTokenBalance(_selectedSourceToken.balance);
-      } else if (_selectedDestToken) {
-        const _destToken: BridgeCurrency = {
-          address: _selectedDestToken.address,
-          decimals: _selectedDestToken.decimals,
-          name: _selectedDestToken.name,
-          symbol: _selectedDestToken.symbol,
-          logoURI: _selectedDestToken.logoUrl,
-        };
-        setDestToken(_destToken);
+      }
+      if (_selectedDestToken) {
         setSelectedDestTokenBalance(_selectedDestToken.balance);
       }
     }
-  }, [destToken, sourceToken]);
+  }, [destToken, sourceToken, tokenList]);
 
   useEffect(() => {
     if (sourceToken && destToken && inputAmount) {
@@ -305,14 +268,19 @@ export default function BridgeQuote({
             },
           )
           .then((res) => {
-            setBridgeQuote(res);
-            setSelectedRoute(res.route);
-            setOutputAmount(res.route.toAmount);
+            if (res?.route) {
+              setBridgeQuote(res);
+              setSelectedRoute(res.route);
+              setOutputAmount(res.route.toAmount);
+            } else {
+              setBridgeQuote(undefined);
+              setSelectedRoute(undefined);
+              setOutputAmount('0');
+            }
           });
       }
     }
-  }, [sourceToken, destToken, inputAmount, parsedInputAmount, sourceToken]);
-
+  }, [sourceToken, destToken, inputAmount]);
   return (
     <div className="bg-white">
       <div className="dropdown">
@@ -325,7 +293,16 @@ export default function BridgeQuote({
         >
           {sourceNetworkList !== undefined
             ? sourceNetworkList.map((sourceNetwork, idx) => (
-                <li key={idx} onClick={() => setSourceNetwork(sourceNetwork)}>
+                <li
+                  key={idx}
+                  onClick={() => {
+                    setSourceNetwork(sourceNetwork);
+                    getBridgeTokenListAndSetTokens(
+                      sourceNetwork.chainId,
+                      destNetwork.chainId,
+                    );
+                  }}
+                >
                   <a>{sourceNetwork.name} </a>
                 </li>
               ))
@@ -334,7 +311,13 @@ export default function BridgeQuote({
       </div>
       <div className="dropdown">
         <label tabIndex={0} className="btn m-1">
-          {sourceNetwork.name}
+          {sourceToken.symbol}
+          <Image
+            src={sourceToken.logoURI}
+            alt="source token image"
+            width={20}
+            height={20}
+          ></Image>
         </label>
         <ul
           tabIndex={0}
@@ -342,16 +325,25 @@ export default function BridgeQuote({
         >
           {sourceTokenList !== undefined
             ? sourceTokenList.map((sourceToken, idx) => (
-                <li
-                  key={idx}
-                  onClick={() => setDebouncedSourceToken(sourceToken)}
-                >
-                  <span>{sourceToken.logoURI}</span>
-                  <a>{sourceToken.name}</a>
+                <li key={idx} onClick={() => setSourceToken(sourceToken)}>
+                  <label tabIndex={0} className="btn m-1">
+                    {sourceToken.name}
+                    <Image
+                      src={sourceToken.logoURI}
+                      alt="source token image"
+                      width={20}
+                      height={20}
+                    ></Image>
+                  </label>
                 </li>
               ))
             : null}
         </ul>
+        <span>
+          Balance:
+          {''}
+          {selectedSourceTokenBalance} {sourceToken.symbol}
+        </span>
       </div>
       <div className="form-control">
         <label className="input-group">
@@ -374,7 +366,16 @@ export default function BridgeQuote({
         >
           {destNetworkList !== undefined
             ? destNetworkList.map((destNetwork, idx) => (
-                <li key={idx} onClick={() => setDestNetwork(destNetwork)}>
+                <li
+                  key={idx}
+                  onClick={() => {
+                    setDestNetwork(destNetwork);
+                    getBridgeTokenListAndSetTokens(
+                      sourceNetwork.chainId,
+                      destNetwork.chainId,
+                    );
+                  }}
+                >
                   <a>{destNetwork.name} </a>
                 </li>
               ))
@@ -383,7 +384,13 @@ export default function BridgeQuote({
       </div>
       <div className="dropdown">
         <label tabIndex={0} className="btn m-1">
-          {destToken.name}
+          {destToken.symbol}
+          <Image
+            src={destToken.logoURI}
+            alt="dset token image"
+            width={20}
+            height={20}
+          ></Image>
         </label>
         <ul
           tabIndex={0}
@@ -392,25 +399,57 @@ export default function BridgeQuote({
           {destTokenList !== undefined
             ? destTokenList.map((destToken, idx) => (
                 <li key={idx} onClick={() => setDestToken(destToken)}>
-                  <span>{destToken.logoURI}</span>
-                  <a>{destToken.name} </a>
+                  <label tabIndex={0} className="btn m-1">
+                    {destToken.name}
+                    <Image
+                      src={destToken.logoURI}
+                      alt="dest token image"
+                      width={20}
+                      height={20}
+                    ></Image>
+                  </label>
                 </li>
               ))
             : null}
         </ul>
+        <span>
+          Balance: {selectedDestTokenBalance} {destToken.symbol}
+        </span>
       </div>
       <div>
         {erc20BalanceToReadable(outputAmount, destToken.decimals)}{' '}
         {destToken.symbol}
       </div>
-      <div>Send With Pay Master</div>
-      <input
-        type="checkbox"
-        checked={withPM}
-        onChange={() => setWithPM(true)}
-        className="checkbox ml-0.5"
-      />
-      {isBalanceSufficient() && isDisabled && selectedRoute ? (
+
+      <div className="form-control bg-base-100">
+        {selectedWallet === 'pkpViem' ? null : (
+          <label className="label cursor-pointer">
+            <span className="label-text">With Pay Master</span>
+            <input
+              type="checkbox"
+              checked={withPM}
+              onChange={(e) => setWithPM(e.target.checked)}
+              className="checkbox"
+            />
+          </label>
+        )}
+      </div>
+      <div>
+        <div>
+          Bridge Name:{' '}
+          <span>
+            <ul>
+              {selectedRoute?.usedBridgeNames.map((bridgeName, idx) => (
+                <li key={idx}>{bridgeName}</li>
+              ))}
+            </ul>
+          </span>
+        </div>
+        <div>Est output Value: {selectedRoute?.outputValueInUsd} USD</div>
+        <div>Est Time: {selectedRoute?.serviceTime} Seconds</div>
+        <div>Gas Fee: {selectedRoute?.totalGasFeesInUsd} USD</div>
+      </div>
+      {isBalanceSufficient() && selectedRoute ? (
         <div
           className="btn m-1"
           onClick={() =>
