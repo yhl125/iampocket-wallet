@@ -19,6 +19,7 @@ export default function SwapPriceView({
   setFinalize,
   setSellToken,
   buyToken,
+  sellToken,
   setBuyToken,
   walletState,
   pkpState,
@@ -30,6 +31,7 @@ export default function SwapPriceView({
   setFinalize: (finalize: boolean) => void;
   setSellToken: (sellToken: IResponseToken) => void;
   buyToken: IBuyTokenInfo | undefined;
+  sellToken: IBuyTokenInfo | undefined;
   setBuyToken: (buyToken: IBuyTokenInfo) => void;
   walletState: WalletState;
   pkpState: PKPState;

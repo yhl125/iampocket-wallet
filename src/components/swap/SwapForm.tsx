@@ -13,7 +13,6 @@ import SwapPriceView from './SwapPriceView';
 import { useIsMounted } from '@/hooks/useIsMounted';
 
 function SwapForm() {
-
   const psudoToken: IResponseToken = {
     address: '',
     name: 'Token',
@@ -29,7 +28,7 @@ function SwapForm() {
     quoteRate24hAgo: 0,
     chainId: 80001,
   };
- 
+
   const walletState = useSnapshot(AddressStore.state);
   const pkpState = useSnapshot(PKPStore.state);
   const { tokenList } = useSnapshot(TokenStore.tokenListState);
@@ -43,11 +42,11 @@ function SwapForm() {
   const [quote, setQuote] = useState<IQuote | undefined>();
 
   const [sellToken, setSellToken] = useState<IResponseToken | undefined>(() =>
-  tokenList.length == 0 ? psudoToken : tokenList[0],
-);;
+    tokenList.length == 0 ? psudoToken : tokenList[0],
+  );
   const [buyToken, setBuyToken] = useState<IBuyTokenInfo | undefined>(() =>
-  tokenList.length == 0 ? psudoToken : tokenList[0],
-);;
+    tokenList.length == 0 ? psudoToken : tokenList[0],
+  );
 
   return (
     <>
@@ -75,12 +74,10 @@ function SwapForm() {
           pkpState={pkpState}
           chainId={chainId}
           setChainId={setChainId}
-          psudoToken={psudoToken}
         />
       )}
     </>
   );
 }
-
 
 export default SwapForm;
