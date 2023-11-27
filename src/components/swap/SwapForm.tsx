@@ -7,13 +7,12 @@ import styled from 'styled-components';
 import AddressStore from '@/store/AddressStore';
 import PKPStore from '@/store/PKPStore';
 import TokenStore, { IResponseToken } from '@/store/TokenStore';
-import { IBuyTokenInfo, IPrice, IQuote } from '@/utils/swapUtil';
-import QuoteView from './QuoteView';
-import PriceView from './PriceView';
+import { IBuyTokenInfo, IPrice, IQuote } from '@/utils/SwapUtil';
+import SwapQuoteView from './SwapQuoteView';
+import SwapPriceView from './SwapPriceView';
 import { useIsMounted } from '@/hooks/useIsMounted';
 
 function SwapForm() {
-
   const psudoToken: IResponseToken = {
     address: '',
     name: 'Token',
@@ -29,7 +28,7 @@ function SwapForm() {
     quoteRate24hAgo: 0,
     chainId: 80001,
   };
- 
+
   const walletState = useSnapshot(AddressStore.state);
   const pkpState = useSnapshot(PKPStore.state);
   const { tokenList } = useSnapshot(TokenStore.tokenListState);
@@ -43,16 +42,16 @@ function SwapForm() {
   const [quote, setQuote] = useState<IQuote | undefined>();
 
   const [sellToken, setSellToken] = useState<IResponseToken | undefined>(() =>
-  tokenList.length == 0 ? psudoToken : tokenList[0],
-);;
+    tokenList.length == 0 ? psudoToken : tokenList[0],
+  );
   const [buyToken, setBuyToken] = useState<IBuyTokenInfo | undefined>(() =>
-  tokenList.length == 0 ? psudoToken : tokenList[0],
-);;
+    tokenList.length == 0 ? psudoToken : tokenList[0],
+  );
 
   return (
     <>
       {mounted && finalize && price ? (
-        <QuoteView
+        <SwapQuoteView
           price={price}
           quote={quote}
           setQuote={setQuote}
@@ -63,7 +62,7 @@ function SwapForm() {
           chainId={chainId}
         />
       ) : (
-        <PriceView
+        <SwapPriceView
           price={price}
           setPrice={setPrice}
           setFinalize={setFinalize}
@@ -75,12 +74,10 @@ function SwapForm() {
           pkpState={pkpState}
           chainId={chainId}
           setChainId={setChainId}
-          psudoToken={psudoToken}
         />
       )}
     </>
   );
 }
-
 
 export default SwapForm;
