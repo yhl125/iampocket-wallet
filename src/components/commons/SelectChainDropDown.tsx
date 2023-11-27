@@ -5,9 +5,9 @@ import { isAddress } from 'viem';
 import styled from 'styled-components';
 
 import theme from '@/styles/theme';
-import Text from '../commons/Text';
-import Input from '../commons/Input';
-import DropDown from '../commons/DropDown';
+import Text from './Text';
+import Input from './Input';
+import DropDown from './DropDown';
 import TokenStore, { IResponseToken } from '@/store/TokenStore';
 import { useSnapshot } from 'valtio';
 
@@ -15,7 +15,7 @@ interface Props {
   setChainId: (chainId: number) => void;
 }
 
-function SelectChain({ setChainId }: Props) {
+function SelectChainDropDown({ setChainId }: Props) {
   const { tokenList } = useSnapshot<any>(TokenStore.tokenListState);
   const psudoToken: IResponseToken = {
     address: '',
@@ -51,41 +51,22 @@ function SelectChain({ setChainId }: Props) {
     }, []);
   };
 
-  const uniqueChainIdList =getChainId(tokenList, 'chainId');
+  const uniqueChainIdList = getChainId(tokenList, 'chainId');
 
   useEffect(() => {
     setChainId(selectedChain.chainId);
   }, [selectedChain, setChainId]);
 
   return (
-    <Container>
-      <Text size="body1" color="bg40">
-        Select Chain
-      </Text>
-      <DropDownWrapper>
-        <DropDown
-          contents={uniqueChainIdList}
-          selectContentState={selectedChain}
-          setSelectContentState={setSelectedChain}
-          iconKey="logoUrl"
-          nameKey="chainId"
-          size="medium"
-        />
-      </DropDownWrapper>
-    </Container>
+    <DropDown
+      contents={uniqueChainIdList}
+      selectContentState={selectedChain}
+      setSelectContentState={setSelectedChain}
+      iconKey="logoUrl"
+      nameKey="chainId"
+      size="medium"
+    />
   );
 }
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  width: 100%;
-  row-gap: ${theme.space.xTiny};
-`;
-
-const DropDownWrapper = styled.div`
-  width: 30%;
-`;
-
-export default SelectChain;
+export default SelectChainDropDown;

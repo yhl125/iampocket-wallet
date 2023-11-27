@@ -9,6 +9,10 @@ import { useState } from 'react';
 import { useSnapshot } from 'valtio';
 import Input from '../commons/Input';
 import { useRouter } from 'next/navigation';
+import SelectChainDropDown from '../commons/SelectChainDropDown';
+import Button from '../commons/Button';
+import theme from '@/styles/theme';
+import styled from 'styled-components';
 
 export default function CreateCircuit() {
   const { currentPKP, sessionSigs } = useSnapshot(PKPStore.state);
@@ -101,25 +105,44 @@ export default function CreateCircuit() {
   }
 
   return (
-    <>
-      <Input
-        value={chainId.toString()}
-        onChange={(e) => setChainId(parseInt(e.target.value))}
-        size="medium"
-        placeholder="Chain ID"
-      />
-      <button onClick={viemCircuit} className="btn btn-primary">
-        Viem circuit
-      </button>
-      <button onClick={zeroDevCircuit} className="btn btn-primary">
-        ZeroDev circuit
-      </button>
-      <button
-        onClick={() => router.push('/lit-listener/create')}
-        className="btn btn-primary"
-      >
-        Custom circuit
-      </button>
-    </>
+    <Container>
+      <SelectChainDropDown setChainId={setChainId} />
+      <ButtonWrapper>
+        <Button
+          text="Viem circuit"
+          size="medium"
+          type="primary"
+          onClick={viemCircuit}
+        />
+
+        <Button
+          text="ZeroDev circuit"
+          size="medium"
+          type="primary"
+          onClick={zeroDevCircuit}
+        />
+
+        <Button
+          text="Custom circuit"
+          size="medium"
+          type="primary"
+          onClick={() => router.push('/lit-listener/create')}
+        />
+      </ButtonWrapper>
+    </Container>
   );
 }
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  row-gap: ${theme.space.small};
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+
+  width: 100%;
+  gap: ${theme.space.xTiny};
+`;

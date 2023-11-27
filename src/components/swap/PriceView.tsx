@@ -18,7 +18,7 @@ import Input from '../commons/Input';
 import styled from 'styled-components';
 import theme from '@/styles/theme';
 import Button from '../commons/Button';
-import SelectChain from './SelectChain';
+import SelectChainDropDown from '../commons/SelectChainDropDown';
 import { useIsMounted } from '@/hooks/useIsMounted';
 
 //No ChainId check since there are no whole swap token list
@@ -405,7 +405,14 @@ export default function PriceView({
     <>
       {mounted && (
         <Container>
-          <SelectChain setChainId={setChainId} />
+          <SelectChainWrapper>
+            <Text size="body1" color="bg40">
+              Select Chain
+            </Text>
+            <ChainDropDownWrapper>
+              <SelectChainDropDown setChainId={setChainId} />
+            </ChainDropDownWrapper>
+          </SelectChainWrapper>
 
           <InputWrapper>
             <DropDownWrapper>
@@ -489,12 +496,16 @@ const Container = styled.div`
   width: 100%;
 `;
 
-const ChainWrapper = styled.div`
+const SelectChainWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   width: 100%;
   row-gap: ${theme.space.xTiny};
+`;
+
+const ChainDropDownWrapper = styled.div`
+  width: 30%;
 `;
 
 const InputWrapper = styled.div`
