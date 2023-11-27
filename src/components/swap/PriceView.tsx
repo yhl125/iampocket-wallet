@@ -256,7 +256,151 @@ export default function PriceView({
     buyToken,
   ]);
 
-  console.log(buyTokenAddress.address);
+  //========button========//
+
+  function ApporveOrReviewButtonEOA({
+    onClick,
+    isBalanceSufficient,
+    pkpState,
+    price,
+    chainId,
+    takerAddress,
+  }: {
+    onClick: () => void;
+    isBalanceSufficient: () => boolean;
+    pkpState: PKPState;
+    price?: IPrice;
+    chainId: number;
+    takerAddress: string;
+  }) {
+    const [isApproveLoading, setIsApproveLoading] = useState(false);
+    const [needApprove, setNeedApprove] = useState(true);
+
+    const checkAllowance = useCallback(async () => {
+      const publicClient = publicClientOf(chainId);
+      const allowance = (await publicClient.readContract({
+        address: price!.sellTokenAddress.address,
+        abi: ERC20_ABI,
+        functionName: 'allowance',
+        args: [takerAddress, price!.AllownaceTarget],
+      })) as bigint;
+      if (allowance === 0n || allowance < BigInt(price!.sellAmount)) {
+        console.log(allowance);
+        setNeedApprove(true);
+      } else if (
+        allowance === BigInt(price!.sellAmount) ||
+        allowance > BigInt(price!.sellAmount)
+      ) {
+        console.log(allowance);
+        setNeedApprove(false);
+      }
+    }, [price]);
+    async function setSellTokenApprove() {
+      setIsApproveLoading(true);
+      const pkpWalletClient = createPkpViemWalletClient(
+        pkpState.currentPKP!.publicKey,
+        pkpState.sessionSigs!,
+        chainId,
+      );
+      const approveData = encodeFunctionData({
+        abi: ERC20_ABI,
+        functionName: 'approve',
+        args: [price!.AllownaceTarget, price!.sellAmount],
+      });
+      pkpWalletClient
+        .sendTransaction({
+          to: price!.sellTokenAddress.address,
+          account: pkpWalletClient.account!,
+          chain: pkpWalletClient.chain,
+          data: approveData,
+        })
+        .then((res) => {
+          setIsApproveLoading(false);
+          setNeedApprove(false);
+          console.log(res);
+          return res;
+        });
+    }
+
+    const checkDisable = () => {
+      if (isBalanceSufficient()) {
+        if (isApproveLoading) return true;
+        else return false;
+      } else {
+        return false;
+      }
+    };
+    useEffect(() => {
+      checkAllowance();
+    }, [checkAllowance, price]);
+    if (
+      needApprove &&
+      price?.AllownaceTarget !== '0x0000000000000000000000000000000000000000' &&
+      price !== undefined
+    ) {
+      return (
+        <Button
+          text={
+            isBalanceSufficient()
+              ? 'InSufficient Balance'
+              : isApproveLoading
+                ? 'Approving...'
+                : 'Approve'
+          }
+          size="large"
+          type="primary"
+          disabled={
+            isBalanceSufficient() ? true : isApproveLoading ? true : false
+          }
+          onClick={async (e: any) => {
+            e.preventDefault();
+            await setSellTokenApprove();
+          }}
+        />
+      );
+    } else {
+      return (
+        <div>
+          <Button
+            text={
+              isBalanceSufficient() ? 'Review Trade' : 'InSufficient Balance'
+            }
+            size="large"
+            type="primary"
+            disabled={isBalanceSufficient() ? false : true}
+            onClick={onClick}
+          />
+        </div>
+      );
+    }
+  }
+
+  function ReviewButton4337({
+    price,
+    isBalanceSufficient,
+    onClick,
+  }: {
+    price?: IPrice;
+    isBalanceSufficient: () => boolean;
+    onClick: () => void;
+  }) {
+    return (
+      isBalanceSufficient() &&
+      price?.AllownaceTarget !==
+        '0x0000000000000000000000000000000000000000' && (
+        <div>
+          <Button
+            text={price !== undefined ? 'Review Trade' : 'InSufficient Balance'}
+            size="large"
+            type="primary"
+            disabled={price !== undefined ? false : true}
+            onClick={onClick}
+          />
+        </div>
+      )
+    );
+  }
+
   return (
     <>
       {mounted && (
@@ -397,143 +541,3 @@ const Divider = styled.div`
   width: 100%;
   position: relative;
 `;
-
-function ApporveOrReviewButtonEOA({
-  onClick,
-  isBalanceSufficient,
-  pkpState,
-  price,
-  chainId,
-  takerAddress,
-}: {
-  onClick: () => void;
-  isBalanceSufficient: () => boolean;
-  pkpState: PKPState;
-  price?: IPrice;
-  chainId: number;
-  takerAddress: string;
-}) {
-  const [isApproveLoading, setIsApproveLoading] = useState(false);
-  const [needApprove, setNeedApprove] = useState(true);
-
-  const checkAllowance = useCallback(async () => {
-    const publicClient = publicClientOf(chainId);
-    const allowance = (await publicClient.readContract({
-      address: price!.sellTokenAddress.address,
-      abi: ERC20_ABI,
-      functionName: 'allowance',
-      args: [takerAddress, price!.AllownaceTarget],
-    })) as bigint;
-    if (allowance === 0n || allowance < BigInt(price!.sellAmount)) {
-      console.log(allowance);
-      setNeedApprove(true);
-    } else if (
-      allowance === BigInt(price!.sellAmount) ||
-      allowance > BigInt(price!.sellAmount)
-    ) {
-      console.log(allowance);
-      setNeedApprove(false);
-    }
-  }, [price]);
-  async function setSellTokenApprove() {
-    setIsApproveLoading(true);
-    const pkpWalletClient = createPkpViemWalletClient(
-      pkpState.currentPKP!.publicKey,
-      pkpState.sessionSigs!,
-      chainId,
-    );
-    const approveData = encodeFunctionData({
-      abi: ERC20_ABI,
-      functionName: 'approve',
-      args: [price!.AllownaceTarget, price!.sellAmount],
-    });
-    pkpWalletClient
-      .sendTransaction({
-        to: price!.sellTokenAddress.address,
-        account: pkpWalletClient.account!,
-        chain: pkpWalletClient.chain,
-        data: approveData,
-      })
-      .then((res) => {
-        setIsApproveLoading(false);
-        setNeedApprove(false);
-        console.log(res);
-        return res;
-      });
-  }
-
-  const checkDisable = () => {
-    if (isBalanceSufficient()) {
-      if (isApproveLoading) return true;
-      else return false;
-    } else {
-      return false;
-    }
-  };
-  useEffect(() => {
-    checkAllowance();
-  }, [checkAllowance, price]);
-  if (
-    needApprove &&
-    price?.AllownaceTarget !== '0x0000000000000000000000000000000000000000' &&
-    price !== undefined
-  ) {
-    return (
-      <Button
-        text={
-          isBalanceSufficient()
-            ? 'InSufficient Balance'
-            : isApproveLoading
-              ? 'Approving...'
-              : 'Approve'
-        }
-        size="large"
-        type="primary"
-        disabled={
-          isBalanceSufficient() ? true : isApproveLoading ? true : false
-        }
-        onClick={async (e: any) => {
-          e.preventDefault();
-          await setSellTokenApprove();
-        }}
-      />
-    );
-  } else {
-    return (
-      <div>
-        <Button
-          text={isBalanceSufficient() ? 'Review Trade' : 'InSufficient Balance'}
-          size="large"
-          type="primary"
-          disabled={isBalanceSufficient() ? false : true}
-          onClick={onClick}
-        />
-      </div>
-    );
-  }
-}
-
-function ReviewButton4337({
-  price,
-  isBalanceSufficient,
-  onClick,
-}: {
-  price?: IPrice;
-  isBalanceSufficient: () => boolean;
-  onClick: () => void;
-}) {
-  return (
-    isBalanceSufficient() &&
-    price?.AllownaceTarget !== '0x0000000000000000000000000000000000000000' && (
-      <div>
-        <Button
-          text={price !== undefined ? 'Review Trade' : 'InSufficient Balance'}
-          size="large"
-          type="primary"
-          disabled={price !== undefined ? false : true}
-          onClick={onClick}
-        />
-      </div>
-    )
-  );
-}
