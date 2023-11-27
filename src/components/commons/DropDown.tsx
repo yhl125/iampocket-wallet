@@ -7,11 +7,12 @@ import Image from 'next/image';
 import theme, { ColorType } from '@/styles/theme';
 import Text from './Text';
 import Icon from './Icon';
+import TokenImage from './TokenImage';
 
 interface IProps {
   size?: 'medium' | 'small';
   disabled?: boolean;
-  selectContentState: any;
+  selectContentState: any | undefined;
   setSelectContentState: React.Dispatch<React.SetStateAction<any>>;
   iconKey: string;
   nameKey: string;
@@ -61,22 +62,15 @@ const DropDown = ({
         }}
       >
         <ContentWrapper>
-          <Image
-            src={
-              selectContentState[iconKey] === ''
-                ? defaultImage
-                : selectContentState[iconKey]
-            }
-            width={20}
-            height={20}
-            alt={'chain logo'}
-            className="mask mask-circle"
+          <TokenImage
+            logoUrl={selectContentState[iconKey]}
+            address={selectContentState.address}
           />
           <Text
             color={renderFontColor()}
             size={size === 'medium' ? 'body2' : 'body3'}
           >
-            {selectContentState.name}
+            {selectContentState[nameKey]}
           </Text>
         </ContentWrapper>
 
@@ -94,12 +88,9 @@ const DropDown = ({
             onClick={() => handleContentClick(content)}
           >
             <ContentWrapper>
-              <Image
-                src={content[iconKey] === '' ? defaultImage : content[iconKey]}
-                width={20}
-                height={20}
-                alt={'chain logo'}
-                className="mask mask-circle"
+              <TokenImage
+                logoUrl={content[iconKey]}
+                address={content.address}
               />
               <Text
                 color={renderFontColor()}
@@ -165,6 +156,7 @@ const DropDownContents = styled.div<{
   top: 59px;
   width: 100%;
   border-radius: 5px;
+  z-index : 1;
 `;
 
 const DropDownContent = styled.div<{ size: 'small' | 'medium' }>`

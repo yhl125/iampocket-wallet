@@ -10,6 +10,16 @@ import { useLazyQuery } from '@apollo/client';
 import { useCallback, useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { encodeFunctionData, isAddress, parseUnits } from 'viem';
+import DropDown from '../commons/DropDown';
+
+import Text from '@/components/commons/Text';
+import Icon from '@/components/commons/Icon';
+import Input from '../commons/Input';
+import styled from 'styled-components';
+import theme from '@/styles/theme';
+import Button from '../commons/Button';
+import SelectChain from './SelectChain';
+import { useIsMounted } from '@/hooks/useIsMounted';
 
 //No ChainId check since there are no whole swap token list
 
@@ -19,36 +29,42 @@ export default function PriceView({
   setFinalize,
   setSellToken,
   buyToken,
+  sellToken,
   setBuyToken,
   walletState,
   pkpState,
   chainId,
   setChainId,
+  psudoToken,
 }: {
   price: IPrice | undefined;
   setPrice: (price: IPrice | undefined) => void;
   setFinalize: (finalize: boolean) => void;
   setSellToken: (sellToken: IResponseToken) => void;
+  sellToken: IResponseToken | undefined;
   buyToken: IBuyTokenInfo | undefined;
   setBuyToken: (buyToken: IBuyTokenInfo) => void;
   walletState: WalletState;
   pkpState: PKPState;
   chainId: number;
   setChainId: (chainId: number) => void;
+  psudoToken: IResponseToken;
 }) {
-  const { tokenList } = useSnapshot(TokenStore.tokenListState);
+  const { tokenList } = useSnapshot<any>(TokenStore.tokenListState);
 
   const [sellAmount, setSellAmount] = useState('');
   const [buyAmount, setBuyAmount] = useState('');
 
   const [tradeDirection, setTradeDirection] = useState('');
 
-  const [sellTokenAddress, setSellTokenAddress] = useState('0x');
-  const [buyTokenAddress, setBuyTokenAddress] = useState('0x');
+  const [sellTokenAddress, setSellTokenAddress] = useState<any>('0x');
+  const [buyTokenAddress, setBuyTokenAddress] = useState<any>('0x');
 
   const [sellTokenDecimals, setSellTokenDecimals] = useState(1);
 
   const [sellTokenSymbol, setSellTokenSymbol] = useState('');
+
+  const mounted = useIsMounted();
 
   const parsedSellAmount =
     sellAmount && tradeDirection === 'sell'
@@ -65,9 +81,9 @@ export default function PriceView({
     {
       variables: {
         chainId: +chainId,
-        sellToken: sellTokenAddress,
+        sellToken: sellTokenAddress.address,
         sellAmount: parsedSellAmount,
-        buyToken: buyTokenAddress,
+        buyToken: buyTokenAddress.address,
         buyAmount: parsedBuyAmount,
         takerAddress:
           walletState.selectedWallet === 'zeroDev'
@@ -79,7 +95,7 @@ export default function PriceView({
 
   function isBalanceSufficient() {
     const selectedToken = tokenList.find(
-      (token) => token.address === sellTokenAddress,
+      (token: any) => token.address === sellTokenAddress.address,
     );
     const isSelectedSellTokenHasSufficientBalance =
       selectedToken && sellAmount
@@ -96,61 +112,68 @@ export default function PriceView({
   // Use if token does not exist in user's tokenList
   const getSellTokenSymbolAndDecimals = useCallback(async () => {
     const publicClient = publicClientOf(chainId);
-    if (sellTokenAddress === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+    if (
+      sellTokenAddress.address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+    ) {
       setSellTokenDecimals(18);
       return;
     }
     const [symbol, decimals] = await Promise.all([
       publicClient.readContract({
-        address: sellTokenAddress as `0x${string}`,
+        address: sellTokenAddress.address as `0x${string}`,
         abi: ERC20_ABI,
         functionName: 'symbol',
       }) as Promise<string>,
       publicClient.readContract({
-        address: sellTokenAddress as `0x${string}`,
+        address: sellTokenAddress.address as `0x${string}`,
         abi: ERC20_ABI,
         functionName: 'decimals',
       }) as Promise<number>,
     ]);
     setSellTokenSymbol(symbol);
     setSellTokenDecimals(decimals);
-  }, [chainId, sellTokenAddress]);
+  }, [chainId, sellTokenAddress.address]);
 
   const getBuyTokenSymbolAndDecimalsAndName = useCallback(async () => {
     const publicClient = publicClientOf(chainId);
-    if (buyTokenAddress === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+    if (
+      buyTokenAddress.address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+    ) {
       setSellTokenDecimals(18);
       return;
     }
     const [symbol, decimals, name] = await Promise.all([
       publicClient.readContract({
-        address: buyTokenAddress as `0x${string}`,
+        address: buyTokenAddress.address as `0x${string}`,
         abi: ERC20_ABI,
         functionName: 'symbol',
       }) as Promise<string>,
       publicClient.readContract({
-        address: buyTokenAddress as `0x${string}`,
+        address: buyTokenAddress.address as `0x${string}`,
         abi: ERC20_ABI,
         functionName: 'decimals',
       }) as Promise<number>,
       publicClient.readContract({
-        address: buyTokenAddress as `0x${string}`,
+        address: buyTokenAddress.address as `0x${string}`,
         abi: ERC20_ABI,
         functionName: 'name',
       }) as Promise<string>,
     ]);
     setBuyToken({ name: name, decimals: decimals, symbol: symbol });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [buyTokenAddress, chainId]);
+  }, [buyTokenAddress.address, chainId]);
 
   useEffect(() => {
     setPrice(priceData ? priceData.findSwapPrice : undefined);
   }, [priceData, setPrice]);
 
   useEffect(() => {
-    if (isAddress(sellTokenAddress) && isAddress(buyTokenAddress)) {
+    if (
+      isAddress(sellTokenAddress.address) &&
+      isAddress(buyTokenAddress.address)
+    ) {
       const selectedToken = tokenList.find(
-        (token) => token.address === sellTokenAddress,
+        (token: any) => token.address === sellTokenAddress.address,
       );
       if (selectedToken) {
         setSellToken(selectedToken);
@@ -161,7 +184,7 @@ export default function PriceView({
       getBuyTokenSymbolAndDecimalsAndName();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [buyTokenAddress, sellTokenAddress]);
+  }, [buyTokenAddress.address, sellTokenAddress.address]);
 
   /**
    * Query Price if user finished interacting with sellTokenAddress,buyTokenAddress and sellAmount,buyAmount
@@ -169,8 +192,8 @@ export default function PriceView({
    */
   useEffect(() => {
     if (
-      isAddress(sellTokenAddress) &&
-      isAddress(buyTokenAddress) &&
+      isAddress(sellTokenAddress.address) &&
+      isAddress(buyTokenAddress.address) &&
       (sellAmount || buyAmount)
     ) {
       if (
@@ -222,9 +245,9 @@ export default function PriceView({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     sellAmount,
-    sellTokenAddress,
+    sellTokenAddress.address,
     buyAmount,
-    buyTokenAddress,
+    buyTokenAddress.address,
     getPrice,
     tradeDirection,
     parsedSellAmount,
@@ -233,200 +256,288 @@ export default function PriceView({
     buyToken,
   ]);
 
-  return (
-    <form>
-      <div>
-        Chain ID:
-        <input
-          type="text"
-          value={chainId}
-          onChange={(e) => {
-            setChainId(Number(e.target.value));
-          }}
-        ></input>
-      </div>
-      <div>
-        Sell Token:
-        <input
-          type="text"
-          value={sellTokenAddress}
-          onChange={(e) => {
-            setSellTokenAddress(e.target.value);
-          }}
-        ></input>
-      </div>
-      <div>
-        Sell Amount:
-        <input
-          type="text"
-          value={sellAmount}
-          onChange={(e) => {
-            setTradeDirection('sell');
-            setSellAmount(e.target.value);
-          }}
-        ></input>
-        {sellTokenSymbol}
-      </div>
-      <div>
-        Buy Token:
-        <input
-          type="text"
-          value={buyTokenAddress}
-          onChange={(e) => {
-            setBuyTokenAddress(e.target.value);
-          }}
-        ></input>
-      </div>
-      <div>
-        Buy Amount:
-        <input
-          type="text"
-          value={buyAmount}
-          onChange={(e) => {
-            setTradeDirection('buy');
-            setBuyAmount(e.target.value);
-          }}
-        ></input>
-        {buyToken ? buyToken.symbol : null}
-      </div>
-      {walletState.selectedWallet === 'zeroDev' ? (
-        <ReviewButton4337
-          price={price}
-          isBalanceSufficient={isBalanceSufficient}
-          onClick={() => setFinalize(true)}
-        ></ReviewButton4337>
-      ) : (
-        <ApporveOrReviewButtonEOA
-          onClick={() => setFinalize(true)}
-          isBalanceSufficient={isBalanceSufficient}
-          pkpState={pkpState}
-          price={price}
-          chainId={chainId}
-          takerAddress={walletState.pkpViemAddress}
-        />
-      )}
-    </form>
-  );
-}
+  //========button========//
 
-function ApporveOrReviewButtonEOA({
-  onClick,
-  isBalanceSufficient,
-  pkpState,
-  price,
-  chainId,
-  takerAddress,
-}: {
-  onClick: () => void;
-  isBalanceSufficient: () => boolean;
-  pkpState: PKPState;
-  price?: IPrice;
-  chainId: number;
-  takerAddress: string;
-}) {
-  const [isApproveLoading, setIsApproveLoading] = useState(false);
-  const [needApprove, setNeedApprove] = useState(true);
+  function ApporveOrReviewButtonEOA({
+    onClick,
+    isBalanceSufficient,
+    pkpState,
+    price,
+    chainId,
+    takerAddress,
+  }: {
+    onClick: () => void;
+    isBalanceSufficient: () => boolean;
+    pkpState: PKPState;
+    price?: IPrice;
+    chainId: number;
+    takerAddress: string;
+  }) {
+    const [isApproveLoading, setIsApproveLoading] = useState(false);
+    const [needApprove, setNeedApprove] = useState(true);
 
-  const checkAllowance = useCallback(async () => {
-    const publicClient = publicClientOf(chainId);
-    const allowance = (await publicClient.readContract({
-      address: price!.sellTokenAddress,
-      abi: ERC20_ABI,
-      functionName: 'allowance',
-      args: [takerAddress, price!.AllownaceTarget],
-    })) as bigint;
-    if (allowance === 0n || allowance < BigInt(price!.sellAmount)) {
-      console.log(allowance);
-      setNeedApprove(true);
-    } else if (
-      allowance === BigInt(price!.sellAmount) ||
-      allowance > BigInt(price!.sellAmount)
-    ) {
-      console.log(allowance);
-      setNeedApprove(false);
-    }
-  }, [price]);
-  async function setSellTokenApprove() {
-    setIsApproveLoading(true);
-    const pkpWalletClient = createPkpViemWalletClient(
-      pkpState.currentPKP!.publicKey,
-      pkpState.sessionSigs!,
-      chainId,
-    );
-    const approveData = encodeFunctionData({
-      abi: ERC20_ABI,
-      functionName: 'approve',
-      args: [price!.AllownaceTarget, price!.sellAmount],
-    });
-    pkpWalletClient
-      .sendTransaction({
-        to: price!.sellTokenAddress,
-        account: pkpWalletClient.account!,
-        chain: pkpWalletClient.chain,
-        data: approveData,
-      })
-      .then((res) => {
-        setIsApproveLoading(false);
+    const checkAllowance = useCallback(async () => {
+      const publicClient = publicClientOf(chainId);
+      const allowance = (await publicClient.readContract({
+        address: price!.sellTokenAddress.address,
+        abi: ERC20_ABI,
+        functionName: 'allowance',
+        args: [takerAddress, price!.AllownaceTarget],
+      })) as bigint;
+      if (allowance === 0n || allowance < BigInt(price!.sellAmount)) {
+        console.log(allowance);
+        setNeedApprove(true);
+      } else if (
+        allowance === BigInt(price!.sellAmount) ||
+        allowance > BigInt(price!.sellAmount)
+      ) {
+        console.log(allowance);
         setNeedApprove(false);
-        console.log(res);
-        return res;
+      }
+    }, [price]);
+    async function setSellTokenApprove() {
+      setIsApproveLoading(true);
+      const pkpWalletClient = createPkpViemWalletClient(
+        pkpState.currentPKP!.publicKey,
+        pkpState.sessionSigs!,
+        chainId,
+      );
+      const approveData = encodeFunctionData({
+        abi: ERC20_ABI,
+        functionName: 'approve',
+        args: [price!.AllownaceTarget, price!.sellAmount],
       });
-  }
-  useEffect(() => {
-    checkAllowance();
-  }, [checkAllowance, price]);
-  if (
-    needApprove &&
-    price?.AllownaceTarget !== '0x0000000000000000000000000000000000000000' &&
-    price !== undefined
-  ) {
-    return isBalanceSufficient() ? (
-      <div>
-        <button
-          onClick={async (e) => {
+      pkpWalletClient
+        .sendTransaction({
+          to: price!.sellTokenAddress.address,
+          account: pkpWalletClient.account!,
+          chain: pkpWalletClient.chain,
+          data: approveData,
+        })
+        .then((res) => {
+          setIsApproveLoading(false);
+          setNeedApprove(false);
+          console.log(res);
+          return res;
+        });
+    }
+
+    const checkDisable = () => {
+      if (isBalanceSufficient()) {
+        if (isApproveLoading) return true;
+        else return false;
+      } else {
+        return false;
+      }
+    };
+    useEffect(() => {
+      checkAllowance();
+    }, [checkAllowance, price]);
+    if (
+      needApprove &&
+      price?.AllownaceTarget !== '0x0000000000000000000000000000000000000000' &&
+      price !== undefined
+    ) {
+      return (
+        <Button
+          text={
+            isBalanceSufficient()
+              ? 'InSufficient Balance'
+              : isApproveLoading
+                ? 'Approving...'
+                : 'Approve'
+          }
+          size="large"
+          type="primary"
+          disabled={
+            isBalanceSufficient() ? true : isApproveLoading ? true : false
+          }
+          onClick={async (e: any) => {
             e.preventDefault();
             await setSellTokenApprove();
           }}
-        >
-          {isApproveLoading ? '...Approving' : 'Approve'}
-        </button>
-      </div>
-    ) : (
-      <div>
-        <button>InSufficient Balance</button>
-      </div>
-    );
-  } else {
-    return isBalanceSufficient() ? (
-      <div>
-        <button onClick={onClick}>Review Trade</button>
-      </div>
-    ) : (
-      <div>
-        <button>InSufficient Balance</button>
-      </div>
+        />
+      );
+    } else {
+      return (
+        <div>
+          <Button
+            text={
+              isBalanceSufficient() ? 'Review Trade' : 'InSufficient Balance'
+            }
+            size="large"
+            type="primary"
+            disabled={isBalanceSufficient() ? false : true}
+            onClick={onClick}
+          />
+        </div>
+      );
+    }
+  }
+
+  function ReviewButton4337({
+    price,
+    isBalanceSufficient,
+    onClick,
+  }: {
+    price?: IPrice;
+    isBalanceSufficient: () => boolean;
+    onClick: () => void;
+  }) {
+    return (
+      isBalanceSufficient() &&
+      price?.AllownaceTarget !==
+        '0x0000000000000000000000000000000000000000' && (
+        <div>
+          <Button
+            text={price !== undefined ? 'Review Trade' : 'InSufficient Balance'}
+            size="large"
+            type="primary"
+            disabled={price !== undefined ? false : true}
+            onClick={onClick}
+          />
+        </div>
+      )
     );
   }
-}
 
-function ReviewButton4337({
-  price,
-  isBalanceSufficient,
-  onClick,
-}: {
-  price?: IPrice;
-  isBalanceSufficient: () => boolean;
-  onClick: () => void;
-}) {
-  return isBalanceSufficient() &&
-    price?.AllownaceTarget !== '0x0000000000000000000000000000000000000000' &&
-    price !== undefined ? (
-    <div>
-      <button onClick={onClick}>Review Trade</button>
-    </div>
-  ) : (
-    <div>
-      <button>InSufficient Balance</button>
-    </div>
+  return (
+    <>
+      {mounted && (
+        <Container>
+          <SelectChain setChainId={setChainId} />
+
+          <InputWrapper>
+            <DropDownWrapper>
+              <DropDown
+                contents={tokenList}
+                selectContentState={sellTokenAddress}
+                setSelectContentState={setSellTokenAddress}
+                iconKey="logoUrl"
+                nameKey="name"
+                size="medium"
+              />
+            </DropDownWrapper>
+            <StyledInput
+              type="text"
+              dir="rtl"
+              value={sellAmount}
+              onChange={(e: any) => {
+                setTradeDirection('sell');
+                setSellAmount(e.target.value);
+              }}
+              placeholder="0"
+            />
+          </InputWrapper>
+
+          <DividerWrapper>
+            <Divider />
+            <IconWrapper>
+              <Icon type="swap" height={40} />
+            </IconWrapper>
+          </DividerWrapper>
+
+          <InputWrapper>
+            <DropDownWrapper>
+              <DropDown
+                contents={tokenList}
+                selectContentState={buyTokenAddress}
+                setSelectContentState={setBuyTokenAddress}
+                iconKey="logoUrl"
+                nameKey="name"
+                size="medium"
+              />
+            </DropDownWrapper>
+            <StyledInput
+              type="text"
+              dir="rtl"
+              value={buyAmount}
+              onChange={(e: any) => {
+                setTradeDirection('buy');
+                setBuyAmount(e.target.value);
+              }}
+              placeholder="0"
+            />
+          </InputWrapper>
+
+          {walletState.selectedWallet === 'zeroDev' ? (
+            <ReviewButton4337
+              price={price}
+              isBalanceSufficient={isBalanceSufficient}
+              onClick={() => setFinalize(true)}
+            ></ReviewButton4337>
+          ) : (
+            <ApporveOrReviewButtonEOA
+              onClick={() => setFinalize(true)}
+              isBalanceSufficient={isBalanceSufficient}
+              pkpState={pkpState}
+              price={price}
+              chainId={chainId}
+              takerAddress={walletState.pkpViemAddress}
+            />
+          )}
+        </Container>
+      )}
+    </>
   );
 }
+
+const Container = styled.div`
+  row-gap: ${theme.space.medium};
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+const ChainWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 100%;
+  row-gap: ${theme.space.xTiny};
+`;
+
+const InputWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const DropDownWrapper = styled.div`
+  width: 30%;
+`;
+const StyledInput = styled.input`
+  width: 100%;
+  color: ${theme.color.bg0};
+  font-size: ${theme.fontSize.title1};
+  line-height: ${theme.lineHeight.title1};
+  font-weight: 700;
+  &::placeholder {
+    color: ${theme.color.bg30};
+  }
+`;
+
+const DividerWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 30px 0px;
+`;
+const IconWrapper = styled.div`
+  background-color: ${theme.color.bg50};
+  border-radius: 50%;
+  padding: 10px;
+  transform: rotate(-90deg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+`;
+
+const Divider = styled.div`
+  background-color: ${theme.color.bg50};
+  height: 1px;
+  width: 100%;
+  position: relative;
+`;
