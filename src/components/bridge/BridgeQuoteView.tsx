@@ -22,6 +22,13 @@ import {
 } from '@/utils/ERC4337WalletUtil';
 import { createPkpViemWalletClient } from '@/utils/EOAWalletUtil';
 import Image from 'next/image';
+import styled from 'styled-components';
+import theme from '@/styles/theme';
+import Button from '../commons/Button';
+import Text from '@/components/commons/Text';
+import DropDown from '../commons/DropDown';
+import Icon from '../commons/Icon';
+import CheckBox from '../commons/CheckBox';
 
 export default function BridgeQuote({
   sourceNetwork,
@@ -281,9 +288,25 @@ export default function BridgeQuote({
       }
     }
   }, [sourceToken, destToken, inputAmount]);
+
+ 
+
+  useEffect(()=>{
+    setSourceNetwork(sourceNetwork);
+    getBridgeTokenListAndSetTokens(
+      sourceNetwork.chainId,
+      destNetwork.chainId,
+    );
+    setDestNetwork(destNetwork);
+    getBridgeTokenListAndSetTokens(
+      sourceNetwork.chainId,
+      destNetwork.chainId,
+    );
+  },[destNetwork,sourceNetwork])
+  
   return (
-    <div className="bg-white">
-      <div className="dropdown">
+    <Container>
+      {/* <div className="dropdown">
         <label tabIndex={0} className="btn m-1">
           From: {sourceNetwork.name}
         </label>
@@ -355,8 +378,96 @@ export default function BridgeQuote({
           />
           <span className="bg-white">{sourceToken.symbol}</span>
         </label>
-      </div>
-      <div className="dropdown">
+      </div> */}
+
+      <InputWrapper>
+        <SelectWrapper>
+          <DropDownWrapper>
+            <Text size="body3" color="bg40">
+              {' '}
+              Network
+            </Text>
+            <DropDown
+              contents={sourceNetworkList}
+              selectContentState={sourceNetwork}
+              setSelectContentState={setSourceNetwork}
+              iconKey="logoURI"
+              nameKey="name"
+              size="small"
+            />
+          </DropDownWrapper>
+          <DropDownWrapper>
+            <Text size="body3" color="bg40">
+              {' '}
+              Token
+            </Text>
+            <DropDown
+              contents={sourceTokenList}
+              selectContentState={sourceToken}
+              setSelectContentState={setSourceToken}
+              iconKey="logoURI"
+              nameKey="name"
+              size="small"
+            />
+          </DropDownWrapper>
+        </SelectWrapper>
+
+        <StyledInput
+          type="text"
+          dir="rtl"
+          onChange={(e: any) => setDebouncedInputAmount(e.target.value)}
+          placeholder="0"
+        />
+      </InputWrapper>
+
+      <DividerWrapper>
+        <Divider />
+        <IconWrapper>
+          <Icon type="bridge" height={40} />
+        </IconWrapper>
+      </DividerWrapper>
+
+      <InputWrapper>
+        {/* <Text size="title2" color="bg40">
+              To
+            </Text> */}
+        <SelectWrapper>
+          <DropDownWrapper>
+            <Text size="body3" color="bg40">
+              Network
+            </Text>
+            <DropDown
+              contents={destNetworkList}
+              selectContentState={destNetwork}
+              setSelectContentState={setDestNetwork}
+              iconKey="logoURI"
+              nameKey="name"
+              size="small"
+            />
+          </DropDownWrapper>
+          <DropDownWrapper>
+            <Text size="body3" color="bg40">
+              Token
+            </Text>
+            <DropDown
+              contents={destTokenList}
+              selectContentState={destToken}
+              setSelectContentState={setDestToken}
+              iconKey="logoURI"
+              nameKey="name"
+              size="small"
+            />
+          </DropDownWrapper>
+        </SelectWrapper>
+        <ResultAmountTextWrapper>
+          <Text size="title1">
+            {erc20BalanceToReadable(outputAmount, destToken.decimals)}{' '}
+            {destToken.symbol}
+          </Text>
+        </ResultAmountTextWrapper>
+      </InputWrapper>
+
+      {/* <div className="dropdown">
         <label tabIndex={0} className="btn m-1">
           TO: {destNetwork.name}
         </label>
@@ -415,57 +526,179 @@ export default function BridgeQuote({
         <span>
           Balance: {selectedDestTokenBalance} {destToken.symbol}
         </span>
-      </div>
-      <div>
-        {erc20BalanceToReadable(outputAmount, destToken.decimals)}{' '}
-        {destToken.symbol}
-      </div>
+      </div> */}
 
-      <div className="form-control bg-base-100">
+
+
+
+
+
+      <InfoWrapper>
+        <DetailWrapper>
+          <Text size="body4" color="bg40">
+            Bridge Name
+          </Text>
+          <Text size="body2">
+            {selectedRoute?.usedBridgeNames.map((bridgeName, idx) => (
+              <span key={idx}>{bridgeName}</span>
+            ))}
+          </Text>
+        </DetailWrapper>
+        <DetailWrapper>
+          <Text size="body4" color="bg40">
+            Estimated output Value (USD)
+          </Text>
+          <Text size="body2"> {selectedRoute?.outputValueInUsd}</Text>
+        </DetailWrapper>
+        <DetailWrapper>
+          <Text size="body4" color="bg40">
+            Estimated Time (Seconds)
+          </Text>
+          <Text size="body2">{selectedRoute?.serviceTime}</Text>
+        </DetailWrapper>
+        <DetailWrapper>
+          <Text size="body4" color="bg40">
+            Gas Fee (USD)
+          </Text>
+          <Text size="body2"> {selectedRoute?.totalGasFeesInUsd}</Text>
+        </DetailWrapper>
+      </InfoWrapper>
+
+
+
+
+
+
+
+
+
+      <ExecuteWrapper>
         {selectedWallet === 'pkpViem' ? null : (
-          <label className="label cursor-pointer">
-            <span className="label-text">With Pay Master</span>
-            <input
-              type="checkbox"
-              checked={withPM}
-              onChange={(e) => setWithPM(e.target.checked)}
-              className="checkbox"
-            />
-          </label>
+          <PaymasterWrapper>
+            <Text size="title3" color={withPM ? 'bg0' : 'bg40'}>
+            Execute with Paymaster
+            </Text>
+            <CheckBox checkState={withPM} setCheckState={setWithPM} />
+          </PaymasterWrapper>
         )}
-      </div>
-      <div>
-        <div>
-          Bridge Name:{' '}
-          <span>
-            <ul>
-              {selectedRoute?.usedBridgeNames.map((bridgeName, idx) => (
-                <li key={idx}>{bridgeName}</li>
-              ))}
-            </ul>
-          </span>
-        </div>
-        <div>Est output Value: {selectedRoute?.outputValueInUsd} USD</div>
-        <div>Est Time: {selectedRoute?.serviceTime} Seconds</div>
-        <div>Gas Fee: {selectedRoute?.totalGasFeesInUsd} USD</div>
-      </div>
-      {isBalanceSufficient() && selectedRoute ? (
-        <div
-          className="btn m-1"
-          onClick={() =>
-            selectedWallet === 'zeroDev'
-              ? handleExecuteBridgeClick4337()
-              : handleExecuteBridgeClickEOA()
-          }
-        >
-          Execute Bridge Route
-        </div>
-      ) : (
-        <button className="btn btn-disabled m-1">InSufficient Balance</button>
-      )}
-      <div>
-        <h1>{bridgeExecuteStatus}</h1>
-      </div>
-    </div>
+
+        {bridgeExecuteStatus === '' ? (
+          <Button
+            text={
+              isBalanceSufficient() && selectedRoute
+                ? 'Execute Bridge Route'
+                : 'InSufficient Balance'
+            }
+            size="large"
+            type="primary"
+            disabled={isBalanceSufficient() && selectedRoute ? false : true}
+            onClick={() =>
+              selectedWallet === 'zeroDev'
+                ? handleExecuteBridgeClick4337()
+                : handleExecuteBridgeClickEOA()
+            }
+          />
+        ) : (
+          <Text size="body1" color="systemOrange" $thin>
+            No Allowance needed Sending UserOperation No Allowance needed
+            Sending UserOperation
+            {/* {bridgeExecuteStatus} */}
+          </Text>
+        )}
+      </ExecuteWrapper>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  row-gap: ${theme.space.medium};
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+const InfoWrapper = styled.div`
+  row-gap: ${theme.space.small};
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+  border: 1px solid ${theme.color.bg40};
+  padding: ${theme.space.base};
+  width: 100%;
+`;
+
+const DetailWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const SelectWrapper = styled.div`
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+
+  row-gap: ${theme.space.tiny};
+`;
+const DropDownWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: ${theme.space.xTiny};
+`;
+const StyledInput = styled.input`
+  width: 100%;
+  color: ${theme.color.bg0};
+  font-size: ${theme.fontSize.title1};
+  line-height: ${theme.lineHeight.title1};
+  font-weight: 700;
+  &::placeholder {
+    color: ${theme.color.bg30};
+  }
+`;
+
+const InputWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const DividerWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 30px 0px;
+`;
+const IconWrapper = styled.div`
+  background-color: ${theme.color.bg50};
+  border-radius: 50%;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+`;
+
+const Divider = styled.div`
+  background-color: ${theme.color.bg50};
+  height: 1px;
+  width: 100%;
+  position: relative;
+`;
+
+const ExecuteWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ${theme.space.xSmall};
+`;
+const PaymasterWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  gap: ${theme.space.xSmall};
+`;
+
+const ResultAmountTextWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+`;

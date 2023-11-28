@@ -146,7 +146,8 @@ const DropDownContents = styled.div<{
   isDropDownShowed: boolean;
 }>`
   background-color: ${theme.color.bg80};
-
+  max-height : 150px;
+  overflow-y :auto;
   transition: opacity 0.4s ease;
   opacity: ${({ isDropDownShowed }) => (isDropDownShowed ? 1 : 0)};
   flex: ${({ isDropDownShowed }) => (isDropDownShowed ? `flex` : `none`)};

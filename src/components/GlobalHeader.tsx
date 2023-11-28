@@ -42,7 +42,7 @@ const Header = () => {
                 router.push('/lit-listener');
               }}
             />
-            <IconTextButton
+            {/* <IconTextButton
               text="Chatting"
               size="large"
               icon="chat"
@@ -57,7 +57,7 @@ const Header = () => {
               onClick={() => {
                 return;
               }}
-            />
+            /> */}
           </HeaderButtonWrapper>
         )}
       </Left>
@@ -81,8 +81,9 @@ const Header = () => {
 const Container = styled.header<{ $isPc: boolean }>`
   width: 100%;
   display: flex;
-
+  background-color: #121312;
   justify-content: space-between;
+  z-index : 1;
   align-items: center;
   position: fixed;
   padding: ${(props) =>
