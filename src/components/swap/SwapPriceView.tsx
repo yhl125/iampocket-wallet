@@ -41,7 +41,7 @@ export default function SwapPriceView({
   setFinalize: (finalize: boolean) => void;
   setSellToken: (sellToken: IResponseToken) => void;
   buyToken: IBuyTokenInfo | undefined;
-  sellToken: IBuyTokenInfo | undefined;
+  sellToken: IResponseToken | undefined;
   setBuyToken: (buyToken: IBuyTokenInfo) => void;
   walletState: WalletState;
   pkpState: PKPState;
@@ -292,7 +292,9 @@ export default function SwapPriceView({
         console.log(allowance);
         setNeedApprove(false);
       }
-    }, [price]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [price, chainId]);
+
     async function setSellTokenApprove() {
       setIsApproveLoading(true);
       const pkpWalletClient = createPkpViemWalletClient(
@@ -389,7 +391,7 @@ export default function SwapPriceView({
       )
     );
   }
-
+  
   return (
     <>
       {mounted && (
@@ -402,7 +404,21 @@ export default function SwapPriceView({
               <SelectChainDropDown setChainId={setChainId} />
             </ChainDropDownWrapper>
           </SelectChainWrapper>
-
+          <SellAmountTextWrapper>
+            <Text size="title3" color="bg40">
+              {''}
+            </Text>
+            <BalanceTextWrapper>
+              <Text size="body3">Balance: </Text>
+              <Text size="body3" $thin>
+                {erc20BalanceToReadable(
+                  sellToken!.balance,
+                  sellToken!.decimals,
+                )}{' '}
+                {sellToken!.symbol}
+              </Text>
+            </BalanceTextWrapper>
+          </SellAmountTextWrapper>
           <InputWrapper>
             <DropDownWrapper>
               <DropDown
@@ -540,4 +556,16 @@ const Divider = styled.div`
   height: 1px;
   width: 100%;
   position: relative;
+`;
+
+const SellAmountTextWrapper = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+`;
+
+const BalanceTextWrapper = styled.div`
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
 `;

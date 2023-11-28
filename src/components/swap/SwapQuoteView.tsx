@@ -22,6 +22,7 @@ import theme from '@/styles/theme';
 import Button from '../commons/Button';
 import TokenImage from '../commons/TokenImage';
 import { useState } from 'react';
+import CheckBox from '../commons/CheckBox';
 
 export default function SwapQuoteView({
   price,
@@ -182,37 +183,51 @@ export default function SwapQuoteView({
                 )}
               </Text>
               <TokenWrapper>
-                <TokenImage logoUrl={'/PlaceHolder'} address={price!.buyTokenAddress!} />
+                <TokenImage
+                  logoUrl={'/PlaceHolder'}
+                  address={price!.buyTokenAddress!}
+                />
                 <Text size="title2">{buyTokenInfo?.name}</Text>
               </TokenWrapper>
             </AmountWrapper>
           </TokenAmountWrapper>
         </ReviewWrapper>
       </ReviewBox>
-      {walletState.selectedWallet === 'zeroDev' ? (
-        <Button
-          text="Place Order"
-          size="large"
-          type="primary"
-          onClick={(e: any) => {
-            e.preventDefault();
-            findQuoteAndSwap4337();
-          }}
-        />
-      ) : (
-        <Button
-          text="Place Order"
-          size="large"
-          type="primary"
-          onClick={(e: any) => {
-            e.preventDefault();
-            findQuoteAndSwapEOA();
-          }}
-        />
-      )}
+      <PaymasterCheckBoxWrapper>
+        {walletState.selectedWallet === 'zeroDev' ? (
+          <Button
+            text="Place Order"
+            size="large"
+            type="primary"
+            onClick={(e: any) => {
+              e.preventDefault();
+              findQuoteAndSwap4337();
+            }}
+          />
+        ) : (
+          <Button
+            text="Place Order"
+            size="large"
+            type="primary"
+            onClick={(e: any) => {
+              e.preventDefault();
+              findQuoteAndSwapEOA();
+            }}
+          />
+        )}
+        <Text size="title3" color={withPM ? 'bg0' : 'bg40'}>
+          Place Order With Paymaster
+        </Text>
+        <CheckBox checkState={withPM} setCheckState={setWithPM} />
+      </PaymasterCheckBoxWrapper>
     </Container>
   );
 }
+const PaymasterCheckBoxWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.space.xSmall};
+`;
 
 const Container = styled.div`
   display: flex;

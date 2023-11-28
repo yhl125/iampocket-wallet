@@ -7,24 +7,31 @@ import Text from '@/components/commons/Text';
 import IconTextButton from '@/components/commons/IconTextButton';
 import SwapForm from '@/components/swap/SwapForm';
 import theme from '@/styles/theme';
+import { useIsMounted } from '@/hooks/useIsMounted';
 
 function Swap() {
+  const mounted = useIsMounted();
+
   const router = useRouter();
   return (
-    <Container>
-      <Text size="title1" $bold>
-        Swap
-      </Text>
-      <SwapForm />
-      <ButtonWrapper>
-        <IconTextButton
-          text="Back"
-          size="small"
-          icon="leftArrow"
-          onClick={() => router.back()}
-        />
-      </ButtonWrapper>
-    </Container>
+    <>{mounted && (
+      <Container>
+        <Text size="title1" $bold>
+          Swap
+        </Text>
+        <SwapForm />
+        <ButtonWrapper>
+          <IconTextButton
+            text="Back"
+            size="small"
+            icon="leftArrow"
+            onClick={() => router.back()}
+          />
+        </ButtonWrapper>
+      </Container>
+    )}
+      
+    </>
   );
 }
 
