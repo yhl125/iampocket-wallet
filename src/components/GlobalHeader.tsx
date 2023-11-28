@@ -2,7 +2,7 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import theme from '@/styles/theme';
 import { usePc } from '@/hooks/usePc';
 import IconButton from './commons/IconButton';
@@ -13,6 +13,9 @@ import IconTextButton from './commons/IconTextButton';
 const Header = () => {
   const isPc = usePc();
   const pathName = usePathname();
+
+  const router = useRouter();
+
   return (
     <Container $isPc={isPc}>
       <Left>
@@ -28,7 +31,7 @@ const Header = () => {
               size="large"
               icon="wallet"
               onClick={() => {
-                return;
+                router.push('/wallet');
               }}
             />
             <IconTextButton
@@ -36,7 +39,7 @@ const Header = () => {
               size="large"
               icon="trade"
               onClick={() => {
-                return;
+                router.push('/lit-listener');
               }}
             />
             <IconTextButton

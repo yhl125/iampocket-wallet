@@ -1,5 +1,7 @@
 import { ERC20_ABI } from '@/abi/abi';
+import Button from '@/components/commons/Button';
 import PKPStore from '@/store/PKPStore';
+import theme from '@/styles/theme';
 import { projectIdOf } from '@/utils/ClientUtil';
 import {
   IFetchActionViemTransaction,
@@ -10,10 +12,13 @@ import {
 } from '@lit-listener-sdk/types';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import styled from 'styled-components';
 import { useSnapshot } from 'valtio';
 import { Address, encodeFunctionData } from 'viem';
+import Text from '@/components/commons/Text';
+import Input from '@/components/commons/Input';
 
-export default function CreateCustomCircuit() {
+function CreateCustomCircuit() {
   const { currentPKP, sessionSigs } = useSnapshot(PKPStore.state);
   const router = useRouter();
   const serverUrl =
@@ -52,7 +57,9 @@ export default function CreateCustomCircuit() {
   }
 
   function createCircuit() {
-    if (conditionInterval < 1000) { throw new Error('Interval must be at least 1 s'); }
+    if (conditionInterval < 1000) {
+      throw new Error('Interval must be at least 1 s');
+    }
     if (type === 'Viem') {
       createViemCircuit();
     } else {
@@ -233,17 +240,18 @@ export default function CreateCustomCircuit() {
 
   return (
     <>
-      <body className="bg-white text-gray-800">
-        <div className="mx-auto max-w-4xl p-5">
-          <h1 className="mb-6 text-2xl font-bold">Create Circuit Page</h1>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            <div>
-              <label
-                htmlFor="circuitType"
-                className="block text-sm font-medium text-gray-700"
-              >
+      <Container>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          <CircuitInputWrapper>
+            <Text size="title2" color="bg0">
+              Circuit Info
+            </Text>
+
+            <DetailWrapper>
+              <Text size="body3" color="bg40">
                 Circuit Type
-              </label>
+              </Text>
+
               <select
                 id="circuitType"
                 name="circuitType"
@@ -253,48 +261,41 @@ export default function CreateCustomCircuit() {
                 <option>ZeroDev</option>
                 <option>Viem</option>
               </select>
-              <label
-                htmlFor="name"
-                className="mt-4 block text-sm font-medium text-gray-700"
-              >
+            </DetailWrapper>
+            <DetailWrapper>
+              <Text size="body3" color="bg40">
                 Name
-              </label>
-              <input
+              </Text>
+              <Input
+                value={circuitName}
                 type="text"
-                id="name"
-                name="name"
-                className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                size="small"
                 placeholder="Circuit Name"
                 onChange={(e) => setCircuitName(e.target.value)}
               />
-              <label
-                htmlFor="description"
-                className="mt-4 block text-sm font-medium text-gray-700"
-              >
+            </DetailWrapper>
+            <DetailWrapper>
+              <Text size="body3" color="bg40">
                 Description
-              </label>
-              <input
+              </Text>
+              <Input
+                value={circuitDescription}
                 type="text"
-                id="description"
-                name="description"
-                className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                size="small"
                 placeholder="Circuit Description"
-                onChange={(e) => setCircuitDescription(e.target.value)}
+                onChange={(e) => setCircuitName(e.target.value)}
               />
-            </div>
-            <div>
-              <label
-                htmlFor="condition"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Condition
-              </label>
-              <label
-                htmlFor="conditionPosition"
-                className="mt-4 block text-sm font-medium text-gray-700"
-              >
+            </DetailWrapper>
+          </CircuitInputWrapper>
+          <CircuitInputWrapper>
+            <Text size="title2" color="bg0">
+              Condition
+            </Text>
+            <DetailWrapper>
+              <Text size="body3" color="bg40">
                 Coingecko Price
-              </label>
+              </Text>
+
               <select
                 id="condition"
                 name="condition"
@@ -304,12 +305,12 @@ export default function CreateCustomCircuit() {
                 <option value={'ethereum'}>Ethereum</option>
                 <option value={'bitcoin'}>Bitcoin</option>
               </select>
-              <label
-                htmlFor="conditionPosition"
-                className="mt-4 block text-sm font-medium text-gray-700"
-              >
+            </DetailWrapper>
+            <DetailWrapper>
+              <Text size="body3" color="bg40">
                 Position
-              </label>
+              </Text>
+
               <select
                 id="conditionPosition"
                 name="conditionPosition"
@@ -321,137 +322,138 @@ export default function CreateCustomCircuit() {
                 <option>Above</option>
                 <option>Below</option>
               </select>
-              <label
-                htmlFor="conditionValue"
-                className="mt-4 block text-sm font-medium text-gray-700"
-              >
+            </DetailWrapper>
+            <DetailWrapper>
+              <Text size="body3" color="bg40">
                 Value
-              </label>
-              <input
-                type="text"
-                id="conditionValue"
-                name="conditionValue"
-                className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              </Text>
+              <Input
                 value={conditionValue}
+                type="text"
+                size="small"
                 onChange={(e) => setConditionValue(parseInt(e.target.value))}
               />
-              <label
-                htmlFor="conditionInterval"
-                className="mt-4 block text-sm font-medium text-gray-700"
-              >
+            </DetailWrapper>
+
+            <DetailWrapper>
+              <Text size="body3" color="bg40">
                 Interval (ms)
-              </label>
-              <input
-                type="text"
-                id="conditionInterval"
-                name="conditionInterval"
-                className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              </Text>
+              <Input
                 value={conditionInterval}
+                type="text"
+                size="small"
                 onChange={(e) => setConditionInterval(parseInt(e.target.value))}
               />
-            </div>
-            <div>
-              <label
-                htmlFor="action"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Action
-              </label>
-              <select
-                id="action"
-                name="action"
-                className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                onChange={(e) => setActionTypeAndChainId(e.target.value)}
-              >
-                <option value="transfer">Transfer</option>
-                <option value="wrap eth">Goerli Wrap eth</option>
-              </select>
-              <label
-                htmlFor="actionChainId"
-                className="mt-4 block text-sm font-medium text-gray-700"
-              >
+            </DetailWrapper>
+          </CircuitInputWrapper>
+          <CircuitInputWrapper>
+            <Text size="title2" color="bg0">
+              Action
+            </Text>
+            <select
+              id="action"
+              name="action"
+              className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              onChange={(e) => setActionTypeAndChainId(e.target.value)}
+            >
+              <option value="transfer">Transfer</option>
+              <option value="wrap eth">Goerli Wrap eth</option>
+            </select>
+            <DetailWrapper>
+              <Text size="body3" color="bg40">
                 Chain ID
-              </label>
-              <input
-                type="text"
-                id="actionChainId"
-                name="actionChainId"
-                className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              </Text>
+              <Input
                 value={actionChainId}
+                type="text"
+                size="small"
                 onChange={(e) => setActionChainId(parseInt(e.target.value))}
               />
-              {actionType === 'transfer' && (
-                <>
-                  <label
-                    htmlFor="tokenInput"
-                    className="block text-sm font-medium text-gray-700"
-                  >
+            </DetailWrapper>
+            {actionType === 'transfer' && (
+              <>
+                <DetailWrapper>
+                  <Text size="body3" color="bg40">
                     Token address
-                  </label>
-                  <input
+                  </Text>
+                  <Input
                     type="text"
-                    id="tokenInput"
-                    name="tokenInput"
-                    className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                    size="small"
                     value={transferToken}
                     onChange={(e) =>
                       setTransferToken(e.target.value as Address)
                     }
                   />
-                  <label
-                    htmlFor="toInput"
-                    className="block text-sm font-medium text-gray-700"
-                  >
+                </DetailWrapper>
+
+                <DetailWrapper>
+                  <Text size="body3" color="bg40">
                     Send To
-                  </label>
-                  <input
+                  </Text>
+                  <Input
                     type="text"
-                    id="toInput"
-                    name="toInput"
-                    className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                    size="small"
                     value={transferTo}
                     onChange={(e) => setTransferTo(e.target.value as Address)}
                   />
-                </>
-              )}
-              <label
-                htmlFor="valueInput"
-                className="mt-4 block text-sm font-medium text-gray-700"
-              >
+                </DetailWrapper>
+              </>
+            )}
+            <DetailWrapper>
+              <Text size="body3" color="bg40">
                 Value
-              </label>
-              <input
+              </Text>
+              <Input
                 type="text"
-                id="valueInput"
-                name="valueInput"
-                className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                size="small"
                 value={actionValue}
                 onChange={(e) => setActionValue(parseInt(e.target.value))}
               />
-              <label
-                htmlFor="maxActionRun"
-                className="mt-4 block text-sm font-medium text-gray-700"
-              >
+            </DetailWrapper>
+            <DetailWrapper>
+              <Text size="body3" color="bg40">
                 Max Action Run
-              </label>
-              <input
+              </Text>
+              <Input
                 type="text"
-                id="maxActionRun"
-                name="maxActionRun"
-                className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                size="small"
                 value={maxActionRun}
                 onChange={(e) => setMaxActionRun(parseInt(e.target.value))}
               />
-            </div>
-          </div>
-          <button
-            className="mt-6 rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
-            onClick={createCircuit}
-          >
-            Create Circuit
-          </button>
+            </DetailWrapper>
+          </CircuitInputWrapper>
         </div>
-      </body>
+
+        <Button
+          text="Create Circuit"
+          size="large"
+          type="primary"
+          onClick={createCircuit}
+        />
+      </Container>
     </>
   );
 }
+
+const Container = styled.div`
+  row-gap: ${theme.space.large};
+  flex-direction: column;
+  display: flex;
+  width: 100%;
+`;
+
+const DetailWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: ${theme.space.xTiny};
+`;
+
+const CircuitInputWrapper = styled.div`
+  row-gap: ${theme.space.base};
+  flex-direction: column;
+  display: flex;
+  width: 100%;
+`;
+
+export default CreateCustomCircuit;
