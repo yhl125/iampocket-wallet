@@ -36,8 +36,6 @@ function SwapForm() {
 
   const [finalize, setFinalize] = useState(false);
 
-  const mounted = useIsMounted();
-
   const [price, setPrice] = useState<IPrice | undefined>();
   const [quote, setQuote] = useState<IQuote | undefined>();
 
@@ -50,7 +48,7 @@ function SwapForm() {
 
   return (
     <>
-      {mounted && finalize && price ? (
+      {finalize && price ? (
         <SwapQuoteView
           price={price}
           quote={quote}
