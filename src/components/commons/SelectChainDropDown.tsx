@@ -13,9 +13,10 @@ import { useSnapshot } from 'valtio';
 
 interface Props {
   setChainId: (chainId: number) => void;
+  size?: 'medium' | 'small';
 }
 
-function SelectChainDropDown({ setChainId }: Props) {
+function SelectChainDropDown({ setChainId, size = 'medium' }: Props) {
   const { tokenList } = useSnapshot<any>(TokenStore.tokenListState);
   const psudoToken: IResponseToken = {
     address: '',
@@ -64,7 +65,7 @@ function SelectChainDropDown({ setChainId }: Props) {
       setSelectContentState={setSelectedChain}
       iconKey="logoUrl"
       nameKey="chainId"
-      size="medium"
+      size={size}
     />
   );
 }
