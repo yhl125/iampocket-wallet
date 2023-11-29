@@ -232,30 +232,30 @@ export default function CircuitLogs() {
   return (
     <Container isPc={isPc}>
       <CircuitBox isPc={isPc}>
-      <TextWrapper>
-        <Text size="title3" $bold>
-          Running circuits: {runningCircuitCount}
-        </Text>
-          </TextWrapper>
+        <TextWrapper>
+          <Text size="title3" $bold>
+            Running circuits: {runningCircuitCount}
+          </Text>
+        </TextWrapper>
         <CircuitWrapper>
           {runningCircuits.map((circuit) => runningCircuitToComponent(circuit))}
         </CircuitWrapper>
       </CircuitBox>
       <CircuitBox isPc={isPc}>
         <TextWrapper>
-        <Text size="title3" $bold>
-          Stopped circuits: {stoppedCircuitCount}
-        </Text>
+          <Text size="title3" $bold>
+            Stopped circuits: {stoppedCircuitCount}
+          </Text>
         </TextWrapper>
         <CircuitWrapper>
           {stoppedCircuits.map((circuit) => circuitToComponent(circuit))}
         </CircuitWrapper>
       </CircuitBox>
       <CircuitBox isPc={isPc}>
-          <TextWrapper>
-        <Text size="title3" $bold>
-          Server-down-stopped circuits: {serverDownStoppedCircuitCount}
-        </Text>
+        <TextWrapper>
+          <Text size="title3" $bold>
+            Server-down-stopped circuits: {serverDownStoppedCircuitCount}
+          </Text>
         </TextWrapper>
         <CircuitWrapper>
           {serverDownStoppedCircuits.map((circuit) =>
@@ -305,9 +305,7 @@ const ResultWrapper = styled(ProgressWrapper)`
   background-color: ${theme.color.bg80};
 `;
 
-const TextWrapper = styled.div`
-  
-`;
+const TextWrapper = styled.div``;
 const DetailWrapper = styled.div`
   display: flex;
   flex-direction: column;

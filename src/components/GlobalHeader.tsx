@@ -17,13 +17,19 @@ const Header = () => {
   const router = useRouter();
 
   return (
-    <Container $isPc={isPc}>
+    <Container $isPc={isPc} pathName={pathName}>
       <Left>
-        <Icon
-          type="logo"
-          color="brandBlue50"
-          height={isPc ? 'display' : 'title1'}
-        />
+        <LogoWrapper
+          onClick={() => {
+            router.push('/wallet');
+          }}
+        >
+          <Icon
+            type="logo"
+            color="brandBlue50"
+            height={isPc ? 'display' : 'title1'}
+          />
+        </LogoWrapper>
         {pathName != `/login` && pathName != `/signup` && isPc && (
           <HeaderButtonWrapper>
             <IconTextButton
@@ -78,12 +84,19 @@ const Header = () => {
   );
 };
 
-const Container = styled.header<{ $isPc: boolean }>`
+const LogoWrapper = styled.span`
+  width: fit-content;
+  height: fit-content;
+  cursor: pointer;
+`;
+
+const Container = styled.header<{ $isPc: boolean; pathName: string }>`
   width: 100%;
   display: flex;
-  background-color: #121312;
+  background-color: ${({ pathName }) =>
+    pathName != `/login` && pathName != `/signup` ? '#121312' : 'transparent'};
   justify-content: space-between;
-  z-index : 1;
+  z-index: 1;
   align-items: center;
   position: fixed;
   padding: ${(props) =>
