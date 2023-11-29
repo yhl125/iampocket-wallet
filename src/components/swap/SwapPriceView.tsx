@@ -1,3 +1,8 @@
+import styled from 'styled-components';
+import { useCallback, useEffect, useState } from 'react';
+import { useSnapshot } from 'valtio';
+import { encodeFunctionData, isAddress, parseUnits } from 'viem';
+
 import { ERC20_ABI } from '@/abi/abi';
 import { WalletState } from '@/store/AddressStore';
 import { PKPState } from '@/store/PKPStore';
@@ -7,15 +12,11 @@ import { createPkpViemWalletClient } from '@/utils/EOAWalletUtil';
 import { erc20BalanceToReadable } from '@/utils/ERC20Util';
 import { IBuyTokenInfo, IPrice, queryPrice } from '@/utils/SwapUtil';
 import { useLazyQuery } from '@apollo/client';
-import { useCallback, useEffect, useState } from 'react';
-import { useSnapshot } from 'valtio';
-import { encodeFunctionData, isAddress, parseUnits } from 'viem';
 import DropDown from '../commons/DropDown';
-
+import { usePc } from '@/hooks/usePc';
 import Text from '@/components/commons/Text';
 import Icon from '@/components/commons/Icon';
 import Input from '../commons/Input';
-import styled from 'styled-components';
 import theme from '@/styles/theme';
 import Button from '../commons/Button';
 import SelectChainDropDown from '../commons/SelectChainDropDown';
@@ -48,6 +49,7 @@ export default function SwapPriceView({
   chainId: number;
   setChainId: (chainId: number) => void;
 }) {
+  const isPc = usePc();
   const { tokenList } = useSnapshot<any>(TokenStore.tokenListState);
 
   const [sellAmount, setSellAmount] = useState('');
@@ -391,7 +393,7 @@ export default function SwapPriceView({
       )
     );
   }
-  
+
   return (
     <>
       {mounted && (
@@ -401,7 +403,10 @@ export default function SwapPriceView({
               Select Chain
             </Text>
             <ChainDropDownWrapper>
-              <SelectChainDropDown setChainId={setChainId} />
+              <SelectChainDropDown
+                setChainId={setChainId}
+                size={isPc ? 'medium' : 'small'}
+              />
             </ChainDropDownWrapper>
           </SelectChainWrapper>
           <SellAmountTextWrapper>
@@ -427,7 +432,7 @@ export default function SwapPriceView({
                 setSelectContentState={setSellTokenAddress}
                 iconKey="logoUrl"
                 nameKey="name"
-                size="medium"
+                size={isPc ? 'medium' : 'small'}
               />
             </DropDownWrapper>
             <StyledInput
@@ -438,6 +443,7 @@ export default function SwapPriceView({
                 setTradeDirection('sell');
                 setSellAmount(e.target.value);
               }}
+              isPc={isPc}
               placeholder="0"
             />
           </InputWrapper>
@@ -457,7 +463,7 @@ export default function SwapPriceView({
                 setSelectContentState={setBuyTokenAddress}
                 iconKey="logoUrl"
                 nameKey="name"
-                size="medium"
+                size={isPc ? 'medium' : 'small'}
               />
             </DropDownWrapper>
             <StyledInput
@@ -468,6 +474,7 @@ export default function SwapPriceView({
                 setTradeDirection('buy');
                 setBuyAmount(e.target.value);
               }}
+              isPc={isPc}
               placeholder="0"
             />
           </InputWrapper>
@@ -509,22 +516,20 @@ const SelectChainWrapper = styled.div`
   row-gap: ${theme.space.xTiny};
 `;
 
-const ChainDropDownWrapper = styled.div`
-  width: 30%;
-`;
+const ChainDropDownWrapper = styled.div``;
 
 const InputWrapper = styled.div`
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 `;
 
 const DropDownWrapper = styled.div`
   width: 30%;
 `;
-const StyledInput = styled.input`
-  width: 100%;
+const StyledInput = styled.input<{ isPc: boolean }>`
+  width: ${({ isPc }) => (isPc ? '100%' : '50%')};
   color: ${theme.color.bg0};
   font-size: ${theme.fontSize.title1};
   line-height: ${theme.lineHeight.title1};

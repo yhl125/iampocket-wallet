@@ -13,8 +13,10 @@ import SelectChainDropDown from '../commons/SelectChainDropDown';
 import Button from '../commons/Button';
 import theme from '@/styles/theme';
 import styled from 'styled-components';
+import { usePc } from '@/hooks/usePc';
 
 export default function CreateCircuit() {
+  const isPc = usePc();
   const { currentPKP, sessionSigs } = useSnapshot(PKPStore.state);
   const serverUrl =
     process.env.NEXT_PUBLIC_LIT_LISTENER_SERVER_URL || 'http://localhost:3001/';
@@ -106,7 +108,10 @@ export default function CreateCircuit() {
 
   return (
     <Container>
-      <SelectChainDropDown setChainId={setChainId} />
+      <SelectChainDropDown
+        setChainId={setChainId}
+        size={isPc ? 'medium' : 'small'}
+      />
       <ButtonWrapper>
         <Button
           text="Viem circuit"

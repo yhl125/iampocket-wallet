@@ -14,23 +14,23 @@ function Swap() {
 
   const router = useRouter();
   return (
-    <>{mounted && (
-      <Container>
-        <Text size="title1" $bold>
-          Swap
-        </Text>
-        <SwapForm />
-        <ButtonWrapper>
-          <IconTextButton
-            text="Back"
-            size="small"
-            icon="leftArrow"
-            onClick={() => router.back()}
-          />
-        </ButtonWrapper>
-      </Container>
-    )}
-      
+    <>
+      {mounted && (
+        <Container>
+          <Text size="title1" $bold>
+            Swap
+          </Text>
+          <SwapForm />
+          <ButtonWrapper>
+            <IconTextButton
+              text="Back"
+              size="small"
+              icon="leftArrow"
+              onClick={() => router.push('/wallet')}
+            />
+          </ButtonWrapper>
+        </Container>
+      )}
     </>
   );
 }

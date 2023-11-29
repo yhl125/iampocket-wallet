@@ -23,7 +23,7 @@ function Bridge() {
           text="Back"
           size="small"
           icon="leftArrow"
-          onClick={() => router.back()}
+          onClick={() => router.push('/wallet')}
         />
       </ButtonWrapper>
     </Container>

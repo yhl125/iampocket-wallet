@@ -1,14 +1,17 @@
-import PKPStore from '@/store/PKPStore';
+import styled from 'styled-components';
 import { useCallback, useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
+
 import Text from '@/components/commons/Text';
 import { Circuit } from '@/utils/lit-listener';
-import styled from 'styled-components';
 import theme from '@/styles/theme';
 import { AuthSig, SessionSigs } from '@lit-protocol/types';
 import Button from '../commons/Button';
+import { usePc } from '@/hooks/usePc';
+import PKPStore from '@/store/PKPStore';
 
 export default function CircuitLogs() {
+  const isPc = usePc();
   const { currentPKP, sessionSigs } = useSnapshot(PKPStore.state);
   const serverUrl =
     process.env.NEXT_PUBLIC_LIT_LISTENER_SERVER_URL || 'http://localhost:3001/';
@@ -227,27 +230,33 @@ export default function CircuitLogs() {
   }
 
   return (
-    <Container>
-      <CircuitBox>
+    <Container isPc={isPc}>
+      <CircuitBox isPc={isPc}>
+      <TextWrapper>
         <Text size="title3" $bold>
           Running circuits: {runningCircuitCount}
         </Text>
+          </TextWrapper>
         <CircuitWrapper>
           {runningCircuits.map((circuit) => runningCircuitToComponent(circuit))}
         </CircuitWrapper>
       </CircuitBox>
-      <CircuitBox>
+      <CircuitBox isPc={isPc}>
+        <TextWrapper>
         <Text size="title3" $bold>
           Stopped circuits: {stoppedCircuitCount}
         </Text>
+        </TextWrapper>
         <CircuitWrapper>
           {stoppedCircuits.map((circuit) => circuitToComponent(circuit))}
         </CircuitWrapper>
       </CircuitBox>
-      <CircuitBox>
+      <CircuitBox isPc={isPc}>
+          <TextWrapper>
         <Text size="title3" $bold>
           Server-down-stopped circuits: {serverDownStoppedCircuitCount}
         </Text>
+        </TextWrapper>
         <CircuitWrapper>
           {serverDownStoppedCircuits.map((circuit) =>
             circuitToComponent(circuit),
@@ -258,16 +267,18 @@ export default function CircuitLogs() {
   );
 }
 
-const Container = styled.div`
+const Container = styled.div<{ isPc: boolean }>`
   display: flex;
+  flex-direction: ${({ isPc }) => (isPc ? 'row' : 'column')};
   width: 100%;
   justify-content: space-between;
+  row-gap: ${theme.space.xSmall};
 `;
 
-const CircuitBox = styled.div`
+const CircuitBox = styled.div<{ isPc: boolean }>`
   display: flex;
-  width: 33%;
-  height: 600px;
+  width: ${({ isPc }) => (isPc ? '33%' : '100%')};
+  height: ${({ isPc }) => (isPc ? '600px' : '250px')};
   border: 1px solid ${theme.color.bg40};
   border-radius: 5px;
   flex-direction: column;
@@ -294,6 +305,9 @@ const ResultWrapper = styled(ProgressWrapper)`
   background-color: ${theme.color.bg80};
 `;
 
+const TextWrapper = styled.div`
+  
+`;
 const DetailWrapper = styled.div`
   display: flex;
   flex-direction: column;

@@ -16,6 +16,7 @@ import AssetList from './AssetList';
 import TokenStore, { IResponseToken } from '@/store/TokenStore';
 import { useQuery } from '@apollo/client';
 import { findEvmTokenBalanceQuery } from '@/utils/ApiUtil';
+import NftList from './NftList';
 
 function Wallet() {
   useWalletWithPKP();
@@ -75,6 +76,7 @@ function Wallet() {
         setActiveItem={setSelectedTabIndex}
       />
       {selectedTabIndex === 0 && <AssetList chainIds={chainIds} />}
+      {selectedTabIndex === 1 && <NftList chainIds={chainIds} />}
     </>
   );
 }
