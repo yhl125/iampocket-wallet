@@ -5,15 +5,15 @@ interface IProps {
   size?: number;
   logoUrl: string;
   address: string;
+  key?: string;
 }
 
-const TokenImage = ({ size = 20, logoUrl, address }: IProps) => {
+const TokenImage = ({ size = 20, logoUrl, address, key = '' }: IProps) => {
   const [src, setSrc] = useState(logoUrl);
-  useEffect(() => {
-    setSrc(logoUrl);
-  }, [logoUrl]);
+
   return (
     <Image
+      key={key}
       src={src}
       alt=""
       width={size}
