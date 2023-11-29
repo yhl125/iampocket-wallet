@@ -283,6 +283,7 @@ export default function BridgeQuote({
               setBridgeQuote(undefined);
               setSelectedRoute(undefined);
               setOutputAmount('0');
+              setBridgeExecuteStatus('No routes have been found');
             }
           });
       }
@@ -513,7 +514,7 @@ const BalanceTextWrapper = styled.div`
 `;
 
 const SelectWrapper = styled.div`
-  width: 30%;
+  width: 50%;
   display: flex;
   flex-direction: column;
 
