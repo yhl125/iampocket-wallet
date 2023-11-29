@@ -40,7 +40,7 @@ function WalletFunctions() {
       <Contents>
         {WALLET_FUNCTIONS.map((item) => {
           return (
-            <Link href={item.link}>
+            <Link key={item.title} href={item.link}>
               <FunctionItem>
                 <CircularButton>{item.icon}</CircularButton>
                 <Text size="body3">{item.title}</Text>

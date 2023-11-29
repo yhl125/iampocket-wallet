@@ -31,7 +31,6 @@
     "@web3mq/client": "^1.0.24",
     "@web3mq/react-components": "^1.0.76",
     "@zerodev/sdk": "^4.0.26",
-    "axios": "^1.5.0",
     "base64url": "^3.0.1",
     "bson": "^6.2.0",
     "class-variance-authority": "^0.7.0",

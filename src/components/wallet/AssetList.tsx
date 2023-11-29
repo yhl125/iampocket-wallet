@@ -94,10 +94,22 @@ function AssetList({ chainIds }: IProps) {
               selectedChain.name !== 'All' &&
               selectedChain.chainId === token.chainId
             ) {
-              return <TokenItem token={token} changePercentage={changeValue} />;
+              return (
+                <TokenItem
+                  key={token.address + token.chainId}
+                  token={token}
+                  changePercentage={changeValue}
+                />
+              );
             }
             if (selectedChain.name === 'All') {
-              return <TokenItem token={token} changePercentage={changeValue} />;
+              return (
+                <TokenItem
+                  key={token.address + token.chainId}
+                  token={token}
+                  changePercentage={changeValue}
+                />
+              );
             }
           })}
         </TableBody>

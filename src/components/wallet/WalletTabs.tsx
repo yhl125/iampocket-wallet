@@ -34,6 +34,7 @@ function WalletTabs({ activeItem, setActiveItem }: IProps) {
           const active = activeItem === item.index;
           return (
             <TabItem
+              key={item.title}
               active={active}
               onClick={() => {
                 setActiveItem(item.index);

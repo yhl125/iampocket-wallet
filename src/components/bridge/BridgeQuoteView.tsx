@@ -277,7 +277,7 @@ export default function BridgeQuote({
           .then((res) => {
             if (res?.route) {
               setBridgeQuote(res);
-              setSelectedRoute(res.route);
+              setSelectedRoute(res.route as BridgeRoute);
               setOutputAmount(res.route.toAmount);
             } else {
               setBridgeQuote(undefined);
