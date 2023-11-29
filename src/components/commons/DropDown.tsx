@@ -16,7 +16,7 @@ interface IProps {
   setSelectContentState: React.Dispatch<React.SetStateAction<any>>;
   iconKey: string;
   nameKey: string;
-  contents: any[];
+  contents: any[] | undefined;
 }
 const DropDown = ({
   size = 'medium',
@@ -146,8 +146,8 @@ const DropDownContents = styled.div<{
   isDropDownShowed: boolean;
 }>`
   background-color: ${theme.color.bg80};
-  max-height : 150px;
-  overflow-y :auto;
+  max-height: 150px;
+  overflow-y: auto;
   transition: opacity 0.4s ease;
   opacity: ${({ isDropDownShowed }) => (isDropDownShowed ? 1 : 0)};
   flex: ${({ isDropDownShowed }) => (isDropDownShowed ? `flex` : `none`)};
@@ -157,7 +157,7 @@ const DropDownContents = styled.div<{
   top: 59px;
   width: 100%;
   border-radius: 5px;
-  z-index : 1;
+  z-index: 1;
 `;
 
 const DropDownContent = styled.div<{ size: 'small' | 'medium' }>`

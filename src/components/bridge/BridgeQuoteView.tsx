@@ -289,97 +289,15 @@ export default function BridgeQuote({
     }
   }, [sourceToken, destToken, inputAmount]);
 
- 
-
-  useEffect(()=>{
+  useEffect(() => {
     setSourceNetwork(sourceNetwork);
-    getBridgeTokenListAndSetTokens(
-      sourceNetwork.chainId,
-      destNetwork.chainId,
-    );
+    getBridgeTokenListAndSetTokens(sourceNetwork.chainId, destNetwork.chainId);
     setDestNetwork(destNetwork);
-    getBridgeTokenListAndSetTokens(
-      sourceNetwork.chainId,
-      destNetwork.chainId,
-    );
-  },[destNetwork,sourceNetwork])
-  
+    getBridgeTokenListAndSetTokens(sourceNetwork.chainId, destNetwork.chainId);
+  }, [destNetwork, sourceNetwork]);
+
   return (
     <Container>
-      {/* <div className="dropdown">
-        <label tabIndex={0} className="btn m-1">
-          From: {sourceNetwork.name}
-        </label>
-        <ul
-          tabIndex={0}
-          className="menu dropdown-content rounded-box z-[1] w-52 bg-white p-2 shadow"
-        >
-          {sourceNetworkList !== undefined
-            ? sourceNetworkList.map((sourceNetwork, idx) => (
-                <li
-                  key={idx}
-                  onClick={() => {
-                    setSourceNetwork(sourceNetwork);
-                    getBridgeTokenListAndSetTokens(
-                      sourceNetwork.chainId,
-                      destNetwork.chainId,
-                    );
-                  }}
-                >
-                  <a>{sourceNetwork.name} </a>
-                </li>
-              ))
-            : null}
-        </ul>
-      </div>
-      <div className="dropdown">
-        <label tabIndex={0} className="btn m-1">
-          {sourceToken.symbol}
-          <Image
-            src={sourceToken.logoURI}
-            alt="source token image"
-            width={20}
-            height={20}
-          ></Image>
-        </label>
-        <ul
-          tabIndex={0}
-          className="menu dropdown-content rounded-box z-[1] w-52 bg-white p-2 shadow"
-        >
-          {sourceTokenList !== undefined
-            ? sourceTokenList.map((sourceToken, idx) => (
-                <li key={idx} onClick={() => setSourceToken(sourceToken)}>
-                  <label tabIndex={0} className="btn m-1">
-                    {sourceToken.name}
-                    <Image
-                      src={sourceToken.logoURI}
-                      alt="source token image"
-                      width={20}
-                      height={20}
-                    ></Image>
-                  </label>
-                </li>
-              ))
-            : null}
-        </ul>
-        <span>
-          Balance:
-          {''}
-          {selectedSourceTokenBalance} {sourceToken.symbol}
-        </span>
-      </div>
-      <div className="form-control">
-        <label className="input-group">
-          <input
-            onChange={(e) => setDebouncedInputAmount(e.target.value)}
-            type="text"
-            placeholder="0.0"
-            className="input input-bordered bg-white"
-          />
-          <span className="bg-white">{sourceToken.symbol}</span>
-        </label>
-      </div> */}
-
       <InputWrapper>
         <SelectWrapper>
           <DropDownWrapper>
@@ -411,13 +329,22 @@ export default function BridgeQuote({
             />
           </DropDownWrapper>
         </SelectWrapper>
-
-        <StyledInput
-          type="text"
-          dir="rtl"
-          onChange={(e: any) => setDebouncedInputAmount(e.target.value)}
-          placeholder="0"
-        />
+        <AmountWrapper>
+          <StyledInput
+            type="text"
+            dir="rtl"
+            onChange={(e: any) => setDebouncedInputAmount(e.target.value)}
+            placeholder="0"
+          />{' '}
+          <BalanceTextWrapper>
+            <Text size="body4" color="bg40">
+              Balance{' '}
+            </Text>{' '}
+            <Text size="body3" color="bg0" $thin>
+              {selectedSourceTokenBalance} {sourceToken.symbol}
+            </Text>
+          </BalanceTextWrapper>
+        </AmountWrapper>
       </InputWrapper>
 
       <DividerWrapper>
@@ -428,9 +355,6 @@ export default function BridgeQuote({
       </DividerWrapper>
 
       <InputWrapper>
-        {/* <Text size="title2" color="bg40">
-              To
-            </Text> */}
         <SelectWrapper>
           <DropDownWrapper>
             <Text size="body3" color="bg40">
@@ -459,79 +383,23 @@ export default function BridgeQuote({
             />
           </DropDownWrapper>
         </SelectWrapper>
-        <ResultAmountTextWrapper>
-          <Text size="title1">
-            {erc20BalanceToReadable(outputAmount, destToken.decimals)}{' '}
-            {destToken.symbol}
-          </Text>
-        </ResultAmountTextWrapper>
+        <AmountWrapper>
+          <ResultAmountTextWrapper>
+            <Text size="title1">
+              {erc20BalanceToReadable(outputAmount, destToken.decimals)}{' '}
+              {destToken.symbol}
+            </Text>
+          </ResultAmountTextWrapper>
+          <BalanceTextWrapper>
+            <Text size="body4" color="bg40">
+              Balance{' '}
+            </Text>{' '}
+            <Text size="body3" color="bg0" $thin>
+              {selectedSourceTokenBalance} {sourceToken.symbol}
+            </Text>
+          </BalanceTextWrapper>
+        </AmountWrapper>
       </InputWrapper>
-
-      {/* <div className="dropdown">
-        <label tabIndex={0} className="btn m-1">
-          TO: {destNetwork.name}
-        </label>
-        <ul
-          tabIndex={0}
-          className="menu dropdown-content rounded-box z-[1] w-52 bg-white p-2 shadow"
-        >
-          {destNetworkList !== undefined
-            ? destNetworkList.map((destNetwork, idx) => (
-                <li
-                  key={idx}
-                  onClick={() => {
-                    setDestNetwork(destNetwork);
-                    getBridgeTokenListAndSetTokens(
-                      sourceNetwork.chainId,
-                      destNetwork.chainId,
-                    );
-                  }}
-                >
-                  <a>{destNetwork.name} </a>
-                </li>
-              ))
-            : null}
-        </ul>
-      </div>
-      <div className="dropdown">
-        <label tabIndex={0} className="btn m-1">
-          {destToken.symbol}
-          <Image
-            src={destToken.logoURI}
-            alt="dset token image"
-            width={20}
-            height={20}
-          ></Image>
-        </label>
-        <ul
-          tabIndex={0}
-          className="menu dropdown-content rounded-box z-[1] w-52 bg-white p-2 shadow"
-        >
-          {destTokenList !== undefined
-            ? destTokenList.map((destToken, idx) => (
-                <li key={idx} onClick={() => setDestToken(destToken)}>
-                  <label tabIndex={0} className="btn m-1">
-                    {destToken.name}
-                    <Image
-                      src={destToken.logoURI}
-                      alt="dest token image"
-                      width={20}
-                      height={20}
-                    ></Image>
-                  </label>
-                </li>
-              ))
-            : null}
-        </ul>
-        <span>
-          Balance: {selectedDestTokenBalance} {destToken.symbol}
-        </span>
-      </div> */}
-
-
-
-
-
 
       <InfoWrapper>
         <DetailWrapper>
@@ -564,19 +432,11 @@ export default function BridgeQuote({
         </DetailWrapper>
       </InfoWrapper>
 
-
-
-
-
-
-
-
-
       <ExecuteWrapper>
         {selectedWallet === 'pkpViem' ? null : (
           <PaymasterWrapper>
             <Text size="title3" color={withPM ? 'bg0' : 'bg40'}>
-            Execute with Paymaster
+              Execute with Paymaster
             </Text>
             <CheckBox checkState={withPM} setCheckState={setWithPM} />
           </PaymasterWrapper>
@@ -599,11 +459,11 @@ export default function BridgeQuote({
             }
           />
         ) : (
-          <Text size="body1" color="systemOrange" $thin>
-            No Allowance needed Sending UserOperation No Allowance needed
-            Sending UserOperation
-            {/* {bridgeExecuteStatus} */}
-          </Text>
+          <ApprovalBox>
+            <Text size="body3" $thin>
+              {bridgeExecuteStatus}
+            </Text>
+          </ApprovalBox>
         )}
       </ExecuteWrapper>
     </Container>
@@ -627,10 +487,24 @@ const InfoWrapper = styled.div`
   width: 100%;
 `;
 
+const ApprovalBox = styled.div`
+  border-radius: 5px;
+  border: 1px solid ${theme.color.systemOrange};
+  padding: ${theme.space.xSmall};
+  width: 100%;
+`;
+
 const DetailWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
+const BalanceTextWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+`;
+
 const SelectWrapper = styled.div`
   width: 30%;
   display: flex;
@@ -658,7 +532,7 @@ const InputWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
 `;
 
 const DividerWrapper = styled.div`
@@ -686,6 +560,7 @@ const Divider = styled.div`
 
 const ExecuteWrapper = styled.div`
   display: flex;
+  width: 100%;
   flex-direction: column;
   align-items: center;
   gap: ${theme.space.xSmall};
@@ -701,4 +576,12 @@ const ResultAmountTextWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
+`;
+
+const AmountWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  row-gap: ${theme.space.xSmall};
 `;
