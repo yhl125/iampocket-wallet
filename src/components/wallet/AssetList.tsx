@@ -6,7 +6,7 @@ import Text from '../commons/Text';
 import theme from '@/styles/theme';
 import { EIP155_CHAINS } from '@/data/EIP155Data';
 import DropDown from '../commons/DropDown';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import TokenItem from './TokenItem';
 
 interface IProps {
@@ -22,7 +22,7 @@ function AssetList({ chainIds }: IProps) {
     logo: '/chain-logos/eip155/42161.svg',
   });
 
-  const generateChainDropdown = () => {
+  const generateChainDropdown = useCallback(() => {
     const result = chainIds.map((id: number) => {
       return {
         name: EIP155_CHAINS[`eip155:${id}`].name,
@@ -32,14 +32,14 @@ function AssetList({ chainIds }: IProps) {
     });
 
     return result;
-  };
+  }, [chainIds]);
 
   useEffect(() => {
     if (tokenList.length !== 0) {
       const result = generateChainDropdown();
       setAllChains([{ name: 'All', chainId: 0, logo: '' }, ...result]);
     }
-  }, []);
+  }, [generateChainDropdown, tokenList.length]);
 
   if (tokenList.length === 0) {
     return (
