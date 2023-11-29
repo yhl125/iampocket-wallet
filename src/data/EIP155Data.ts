@@ -60,6 +60,12 @@ export const EIP155_TEST_CHAINS: IEIP155ChainMap = {
     logo: '/chain-logos/eip155/1.svg',
     rpc: 'https://goerli.infura.io/v3/5687a05736f7476ca572bd1c5a8fde8f',
   },
+  'eip155:11155111': {
+    chainId: 11155111,
+    name: 'Sepolia',
+    logo: '/chain-logos/eip155/1.svg',
+    rpc: 'https://endpoints.omniatech.io/v1/eth/sepolia/public',
+  },
   'eip155:80001': {
     chainId: 80001,
     name: 'Polygon Mumbai',
