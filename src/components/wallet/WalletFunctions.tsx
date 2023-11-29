@@ -14,11 +14,12 @@ const WALLET_FUNCTIONS = [
   {
     title: 'Send',
     icon: <SendIcon />,
-    link: '/send',
+    link: '/transfer',
   },
   {
     title: 'Deposit',
     icon: <DepositIcon />,
+    // TODO: replace to modal
     link: '/deposit',
   },
   {

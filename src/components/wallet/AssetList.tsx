@@ -106,7 +106,9 @@ function AssetList({ chainIds }: IProps) {
   );
 }
 
-const Container = styled.div``;
+const Container = styled.div`
+  margin-bottom: ${theme.space.xLarge};
+`;
 
 const EmptyContent = styled.div`
   display: flex;
