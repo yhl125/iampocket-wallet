@@ -20,6 +20,8 @@ import DownArrowIcon from '@/assets/icons/downarrow.svg';
 import CheckIcon from '@/assets/icons/check.svg';
 import GasIcon from '@/assets/icons/gas.svg';
 import SwapIcon from '@/assets/icons/swap.svg';
+import BridgeIcon from '@/assets/icons/bridge.svg';
+import CopyIcon from '@/assets/icons/copy.svg';
 
 import theme, { ColorType, SizeType } from '@/styles/theme';
 
@@ -42,7 +44,9 @@ export type IconTypes =
   | 'downArrow'
   | 'check'
   | 'gas'
-  | 'swap';
+  | 'swap'
+  | 'bridge'
+  | 'copy';
 
 interface IProps {
   type: IconTypes;
@@ -91,6 +95,10 @@ const Icon = ({ type, height = 'body3', color = 'bg0' }: IProps) => {
         return <GasIcon />;
       case 'swap':
         return <SwapIcon />;
+      case 'bridge':
+        return <BridgeIcon />;
+      case 'copy':
+        return <CopyIcon />;
     }
   };
 

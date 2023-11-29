@@ -17,20 +17,23 @@ const query = gql`
       chainIds: $chainIds
       quoteCurrency: $quoteCurrency
     ) {
-      chainId
-      address
-      name
-      symbol
-      decimals
-      logoUrl
-      nativeToken
-      type
-      balance
-      balance24hAgo
-      quote
-      prettyQuote
-      quoteRate
-      quoteRate24hAgo
+      totalQuote
+      tokenList {
+        chainId
+        address
+        name
+        symbol
+        decimals
+        logoUrl
+        nativeToken
+        type
+        balance
+        balance24hAgo
+        quote
+        prettyQuote
+        quoteRate
+        quoteRate24hAgo
+      }
     }
   }
 `;
@@ -60,9 +63,10 @@ function FetchToken(props: IProps) {
   });
   if (data) {
     TokenStore.addTokens(
-      data.findEvmTokenBalance as IResponseToken[],
+      data.findEvmTokenBalance.tokenList as IResponseToken[],
       props.chainIds,
     );
+    TokenStore.setTotalQuote(data.findEvmTokenBalance.totalQuote);
   }
 }
 

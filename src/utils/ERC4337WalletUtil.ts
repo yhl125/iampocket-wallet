@@ -1,4 +1,8 @@
-import { ECDSAProvider, SupportedGasToken, convertWalletClientToAccountSigner } from '@zerodev/sdk';
+import {
+  ECDSAProvider,
+  SupportedGasToken,
+  convertWalletClientToAccountSigner,
+} from '@zerodev/sdk';
 import { SessionSigs } from '@lit-protocol/types';
 import { projectIdOf } from './ClientUtil';
 import AddressStore from '@/store/AddressStore';
@@ -18,7 +22,7 @@ export async function createOrRestoreERC4337Wallet(
     zeroDevSigner(pkpPubKey, sessionSigs),
     createPkpViemWalletClient(pkpPubKey, sessionSigs),
   ]);
-  
+
   const [zeroDevAddress, eoaPkpViemAddress] = await Promise.all([
     zeroDevWallet.getAddress(),
     eoaPkpViemWallet.account!.address,
@@ -35,7 +39,6 @@ export async function zeroDevSigner(
   chainId: number = 80001,
 ) {
   const account = createPKPViemAccount(pkpPubKey, sessionSigs);
-
   const provider = await ECDSAProvider.init({
     projectId: projectIdOf(chainId),
     owner: convertAccountToSmartAccountSigner(account),

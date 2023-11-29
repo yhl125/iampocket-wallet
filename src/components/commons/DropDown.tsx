@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Image from 'next/image';
 
 import theme, { ColorType } from '@/styles/theme';
 import Text from './Text';
@@ -16,7 +15,7 @@ interface IProps {
   setSelectContentState: React.Dispatch<React.SetStateAction<any>>;
   iconKey: string;
   nameKey: string;
-  contents: any[];
+  contents: any[] | undefined;
 }
 const DropDown = ({
   size = 'medium',
@@ -36,6 +35,7 @@ const DropDown = ({
   }
 
   const handleContentClick = (content: any) => {
+    console.log(content);
     setSelectContentState(content);
     setIsDropDownShowed(!isDropDownShowed);
   };
@@ -63,8 +63,10 @@ const DropDown = ({
       >
         <ContentWrapper>
           <TokenImage
+            key={selectContentState[nameKey]}
             logoUrl={selectContentState[iconKey]}
             address={selectContentState.address}
+            size={size === 'medium' ? 20 : 16}
           />
           <Text
             color={renderFontColor()}
@@ -89,6 +91,7 @@ const DropDown = ({
           >
             <ContentWrapper>
               <TokenImage
+                key={content[nameKey]}
                 logoUrl={content[iconKey]}
                 address={content.address}
               />
@@ -146,7 +149,8 @@ const DropDownContents = styled.div<{
   isDropDownShowed: boolean;
 }>`
   background-color: ${theme.color.bg80};
-
+  max-height: 150px;
+  overflow-y: auto;
   transition: opacity 0.4s ease;
   opacity: ${({ isDropDownShowed }) => (isDropDownShowed ? 1 : 0)};
   flex: ${({ isDropDownShowed }) => (isDropDownShowed ? `flex` : `none`)};
@@ -156,7 +160,7 @@ const DropDownContents = styled.div<{
   top: 59px;
   width: 100%;
   border-radius: 5px;
-  z-index : 1;
+  z-index: 1;
 `;
 
 const DropDownContent = styled.div<{ size: 'small' | 'medium' }>`

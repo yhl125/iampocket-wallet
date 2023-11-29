@@ -193,7 +193,13 @@ export default function SwapQuoteView({
           </TokenAmountWrapper>
         </ReviewWrapper>
       </ReviewBox>
-      <PaymasterCheckBoxWrapper>
+      <PlaceOrderWrapper>
+        <PaymasterWrapper>
+          <Text size="body1" color={withPM ? 'bg0' : 'bg40'}>
+            Place Order With Paymaster
+          </Text>
+          <CheckBox checkState={withPM} setCheckState={setWithPM} />
+        </PaymasterWrapper>
         {walletState.selectedWallet === 'zeroDev' ? (
           <Button
             text="Place Order"
@@ -215,19 +221,10 @@ export default function SwapQuoteView({
             }}
           />
         )}
-        <Text size="title3" color={withPM ? 'bg0' : 'bg40'}>
-          Place Order With Paymaster
-        </Text>
-        <CheckBox checkState={withPM} setCheckState={setWithPM} />
-      </PaymasterCheckBoxWrapper>
+      </PlaceOrderWrapper>
     </Container>
   );
 }
-const PaymasterCheckBoxWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${theme.space.xSmall};
-`;
 
 const Container = styled.div`
   display: flex;
@@ -290,5 +287,16 @@ const TokenWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  gap: ${theme.space.xSmall};
+`;
+const PlaceOrderWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ${theme.space.xSmall};
+`;
+const PaymasterWrapper = styled.div`
+  display: flex;
+  width: 100%;
   gap: ${theme.space.xSmall};
 `;
