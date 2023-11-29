@@ -35,7 +35,7 @@ const Header = () => {
               }}
             />
             <IconTextButton
-              text="Trading"
+              text="Automation"
               size="large"
               icon="trade"
               onClick={() => {
