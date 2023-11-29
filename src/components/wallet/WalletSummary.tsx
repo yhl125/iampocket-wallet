@@ -39,7 +39,7 @@ function WalletSummary({ userAddress, totalBalance }: IProps) {
         </CopyIconButton>
       </Address>
       <TotalAsset>
-        <Text size="display">{`$${setComma(totalBalance)}`}</Text>
+        <Text size="display">{totalBalance}</Text>
       </TotalAsset>
     </Container>
   );

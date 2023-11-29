@@ -18,10 +18,12 @@ export interface IResponseToken {
 
 export interface TokenListState {
   tokenList: IResponseToken[];
+  totalQuote: number;
 }
 
 const tokenListState = proxyWithLocalStorage<TokenListState>('TokenListState', {
   tokenList: [],
+  totalQuote: 0,
 });
 
 const TokenStore = {
@@ -33,6 +35,9 @@ const TokenStore = {
     );
     // add new tokens to tokenListState
     tokenListState.tokenList = tokenListState.tokenList.concat(responseTokens);
+  },
+  setTotalQuote(totalQuote: number) {
+    tokenListState.totalQuote = totalQuote;
   },
 };
 

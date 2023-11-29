@@ -20,6 +20,7 @@ import WalletSummary from './WalletSummary';
 import WalletFunctions from './WalletFunctions';
 import WalletTabs from './WalletTabs';
 import AssetList from './AssetList';
+import TokenStore from '@/store/TokenStore';
 
 function Wallet() {
   useWalletWithPKP();
@@ -29,6 +30,7 @@ function Wallet() {
   const { zeroDevAddress, pkpViemAddress, selectedWallet } = useSnapshot(
     AddressStore.state,
   );
+  const { totalQuote } = useSnapshot(TokenStore.tokenListState);
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   function getCurrentAddress(selectedWallet: selectedWalletType) {
@@ -53,7 +55,7 @@ function Wallet() {
         {/* TODO: add real number */}
         <WalletSummary
           userAddress={getCurrentAddress(selectedWallet)}
-          totalBalance={12425}
+          totalBalance={totalQuote}
         />
         <WalletFunctions />
         <WalletTabs
