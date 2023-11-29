@@ -26,7 +26,6 @@ const DropDown = ({
   nameKey = '',
   contents = [],
 }: IProps) => {
-  const defaultImage: string = '/images/none.png';
 
   const [isDropDownShowed, setIsDropDownShowed] = useState<boolean>(false);
 
@@ -35,7 +34,6 @@ const DropDown = ({
   }
 
   const handleContentClick = (content: any) => {
-    console.log(content);
     setSelectContentState(content);
     setIsDropDownShowed(!isDropDownShowed);
   };

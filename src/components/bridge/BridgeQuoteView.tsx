@@ -224,16 +224,18 @@ export default function BridgeQuote({
     sourceNetworkChainId: number,
     destNetworkChainId: number,
   ) {
-    const _tokenList = await socket.getTokenList({
-      fromChainId: sourceNetworkChainId,
-      toChainId: destNetworkChainId,
-      isShortList: true,
-    });
-    setSourceToken(fallbackToUSDC(_tokenList.from.tokens) as BridgeCurrency);
-    setSourceTokenList(_tokenList.from.tokens as BridgeCurrency[]);
-    setDestToken(fallbackToUSDC(_tokenList.to.tokens) as BridgeCurrency);
-    setDestTokenList(_tokenList.to.tokens as BridgeCurrency[]);
-    return _tokenList;
+    await socket
+      .getTokenList({
+        fromChainId: sourceNetworkChainId,
+        toChainId: destNetworkChainId,
+        isShortList: true,
+      })
+      .then((res) => {
+        setSourceToken(fallbackToUSDC(res.from.tokens) as BridgeCurrency);
+        setSourceTokenList(res.from.tokens as BridgeCurrency[]);
+        setDestToken(fallbackToUSDC(res.to.tokens) as BridgeCurrency);
+        setDestTokenList(res.to.tokens as BridgeCurrency[]);
+      });
   }
 
   // // set selected tokens

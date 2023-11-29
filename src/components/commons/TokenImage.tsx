@@ -8,9 +8,12 @@ interface IProps {
   imageKey?: string;
 }
 
-const TokenImage = ({ size = 20, logoUrl, address, imageKey = '' }: IProps) => {
+const TokenImage = ({ size = 20, logoUrl, address, imageKey }: IProps) => {
   const [src, setSrc] = useState(logoUrl);
-
+  //TODO: Change this pattern
+  useEffect(() => {
+    setSrc(logoUrl);
+  }, [logoUrl]);
   return (
     <Image
       key={imageKey}
