@@ -95,3 +95,13 @@ export function isEIP155Chain(chain: string) {
 export function formatChainName(chainId: string) {
   return EIP155_CHAINS[chainId as TEIP155Chain]?.name ?? chainId;
 }
+
+/**
+ * Sets comma on input value
+ */
+export function setComma(inputValue: number): string {
+  let numStr = inputValue.toString();
+  numStr = numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+  return numStr;
+}

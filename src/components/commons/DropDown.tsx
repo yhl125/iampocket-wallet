@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
 
@@ -36,6 +36,7 @@ const DropDown = ({
   }
 
   const handleContentClick = (content: any) => {
+    console.log(content);
     setSelectContentState(content);
     setIsDropDownShowed(!isDropDownShowed);
   };
@@ -65,6 +66,8 @@ const DropDown = ({
           <TokenImage
             logoUrl={selectContentState[iconKey]}
             address={selectContentState.address}
+            key={selectContentState[nameKey]}
+            size={size === 'medium' ? 20 : 16}
           />
           <Text
             color={renderFontColor()}
@@ -156,7 +159,7 @@ const DropDownContents = styled.div<{
   top: 59px;
   width: 100%;
   border-radius: 5px;
-  z-index : 1;
+  z-index: 1;
 `;
 
 const DropDownContent = styled.div<{ size: 'small' | 'medium' }>`
