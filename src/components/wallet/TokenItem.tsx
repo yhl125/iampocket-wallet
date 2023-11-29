@@ -17,7 +17,7 @@ function TokenItem({ token, changePercentage }: IProps) {
       <TokenInfoWrapper>
         <TokenImageWrapper>
           <ChainImage
-            src={EIP155_CHAINS[`eip155:${token.chainId}`].logo}
+            src={EIP155_CHAINS[`eip155:${token.chainId}`]?.logo ?? ''}
             alt="chain logo"
             width={20}
             height={20}

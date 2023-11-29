@@ -9,7 +9,7 @@ import { truncateAddress } from '@/utils/HelperUtil';
 import { useEffect, useState } from 'react';
 import AddressStore, { selectedWalletType } from '@/store/AddressStore';
 import TokenList from './tokenList';
-import { FetchToken, FetchTokens, query } from './fetchToken';
+import FetchTokens from './fetchToken';
 import useWalletWithPKP from '@/hooks/useWalletWithPKP';
 import {
   zeroDevMainnetChainIds,
