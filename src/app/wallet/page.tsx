@@ -1,5 +1,4 @@
 import TransactionResultModal from '@/components/transfer/TransactionResultModal';
-import WalletSummary from '@/components/wallet/WalletSummary';
 import Wallet from '@/components/wallet/wallet';
 import Modal from '@/components/walletconnect-modal/Modal';
 
