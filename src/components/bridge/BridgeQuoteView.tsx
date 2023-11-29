@@ -213,11 +213,8 @@ export default function BridgeQuote({
   }
   function fallbackToUSDC(tokenList: Token[]) {
     return (
-      tokenList.filter(
-        (token) =>
-          (token?.chainAgnosticId?.toLowerCase() ||
-            token.symbol.toLowerCase()) === 'usdc',
-      )?.[0] ?? tokenList[0]
+      tokenList.filter((token) => token.symbol === 'USDC.E')?.[0] ??
+      tokenList[0]
     );
   }
   async function getBridgeTokenListAndSetTokens(
