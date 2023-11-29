@@ -9,7 +9,7 @@ import { truncateAddress } from '@/utils/HelperUtil';
 import { useEffect, useState } from 'react';
 import AddressStore, { selectedWalletType } from '@/store/AddressStore';
 import TokenList from './tokenList';
-import FetchTokens from './fetchToken';
+import { FetchToken, FetchTokens, query } from './fetchToken';
 import useWalletWithPKP from '@/hooks/useWalletWithPKP';
 import {
   zeroDevMainnetChainIds,
@@ -21,6 +21,7 @@ import WalletFunctions from './WalletFunctions';
 import WalletTabs from './WalletTabs';
 import AssetList from './AssetList';
 import TokenStore from '@/store/TokenStore';
+import { useQuery } from '@apollo/client';
 
 function Wallet() {
   useWalletWithPKP();
@@ -44,27 +45,31 @@ function Wallet() {
     setMounted(true);
   }, []);
 
+  if (!mounted) return <></>;
+
   return (
-    mounted && (
-      <>
-        <FetchTokens
-          address={getCurrentAddress(selectedWallet)}
-          chainIds={chainIds}
-          quoteCurrency={'USD'}
-        />
-        {/* TODO: add real number */}
-        <WalletSummary
-          userAddress={getCurrentAddress(selectedWallet)}
-          totalBalance={totalQuote}
-        />
-        <WalletFunctions />
-        <WalletTabs
-          activeItem={selectedTabIndex}
-          setActiveItem={setSelectedTabIndex}
-        />
-        {selectedTabIndex === 0 && <AssetList chainIds={chainIds} />}
-      </>
-    )
+    <>
+      {/* <FetchTokens
+        address={getCurrentAddress(selectedWallet)}
+        chainIds={chainIds}
+        quoteCurrency={'USD'}
+      /> */}
+      <WalletSummary
+        userAddress={getCurrentAddress(selectedWallet)}
+        totalBalance={totalQuote}
+      />
+      <WalletFunctions />
+      <WalletTabs
+        activeItem={selectedTabIndex}
+        setActiveItem={setSelectedTabIndex}
+      />
+      {selectedTabIndex === 0 && <AssetList chainIds={chainIds} />}
+      <FetchTokens
+        address={getCurrentAddress(selectedWallet)}
+        chainIds={chainIds}
+        quoteCurrency={'USD'}
+      />
+    </>
   );
 }
 
