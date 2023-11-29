@@ -56,7 +56,7 @@ export const EIP155_MAINNET_CHAINS: IEIP155ChainMap = {
 export const EIP155_TEST_CHAINS: IEIP155ChainMap = {
   'eip155:5': {
     chainId: 5,
-    name: 'Ethereum Goerli',
+    name: 'Goerli',
     logo: '/chain-logos/eip155/1.svg',
     rpc: 'https://goerli.infura.io/v3/5687a05736f7476ca572bd1c5a8fde8f',
   },
@@ -117,5 +117,5 @@ export const EIP155_SIGNING_METHODS = {
   ETH_SEND_TRANSACTION: 'eth_sendTransaction',
 };
 
-export const zeroDevMainnetChainIds = [10, 42161]
-export const zeroDevTestnetChainIds = [5, 80001, 421613, 420]
+export const zeroDevMainnetChainIds = [10, 42161];
+export const zeroDevTestnetChainIds = [5, 11155111, 80001];
