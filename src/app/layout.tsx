@@ -1,9 +1,10 @@
 import { Work_Sans } from 'next/font/google';
-
+import { ToastContainer } from 'react-toastify';
 import { ApolloWrapper } from '@/lib/apollo-wrapper';
 import StyledComponentsRegistry from '@/lib/styled-components-registry';
 
 import './globals.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const metadata = {
   title: 'iamPocket',
@@ -21,7 +22,22 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
     <html lang="en" className={workSans.className}>
       <body>
         <ApolloWrapper>
-          <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+          <StyledComponentsRegistry>
+            {children}
+            {/* success, warning, error */}
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
+            />
+          </StyledComponentsRegistry>
         </ApolloWrapper>
       </body>
     </html>

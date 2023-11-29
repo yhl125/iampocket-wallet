@@ -62,7 +62,6 @@ function MainPage() {
       : tokenList[0],
   );
 
-  console.log(dropDownTestValue);
   return (
     <Container>
       <Row>

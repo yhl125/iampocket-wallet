@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
 
@@ -36,6 +36,7 @@ const DropDown = ({
   }
 
   const handleContentClick = (content: any) => {
+    console.log(content);
     setSelectContentState(content);
     setIsDropDownShowed(!isDropDownShowed);
   };
@@ -66,6 +67,8 @@ const DropDown = ({
             key={selectContentState[nameKey]}
             logoUrl={selectContentState[iconKey]}
             address={selectContentState.address}
+            key={selectContentState[nameKey]}
+            size={size === 'medium' ? 20 : 16}
           />
           <Text
             color={renderFontColor()}
