@@ -12,7 +12,7 @@ function ConnectedAppsPage() {
 
   useEffect(() => {
     createWeb3Wallet();
-  });
+  },[]);
 
   useEffect(() => {
     setMounted(true);

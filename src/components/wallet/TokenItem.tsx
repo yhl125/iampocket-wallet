@@ -25,7 +25,7 @@ function TokenItem({ token, changePercentage }: IProps) {
           <TokenImage
             logoUrl={token.logoUrl}
             address={token.address}
-            key={token.address + token.chainId}
+            imageKey={token.address + token.chainId}
             size={30}
           />
         </TokenImageWrapper>

@@ -63,7 +63,7 @@ const DropDown = ({
       >
         <ContentWrapper>
           <TokenImage
-            key={selectContentState[nameKey]}
+            imageKey={selectContentState[nameKey]}
             logoUrl={selectContentState[iconKey]}
             address={selectContentState.address}
             size={size === 'medium' ? 20 : 16}
@@ -91,7 +91,7 @@ const DropDown = ({
           >
             <ContentWrapper>
               <TokenImage
-                key={content[nameKey]}
+                imageKey={content[nameKey]}
                 logoUrl={content[iconKey]}
                 address={content.address}
               />
