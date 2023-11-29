@@ -283,7 +283,7 @@ function CreateCustomCircuit() {
                 type="text"
                 size="small"
                 placeholder="Circuit Description"
-                onChange={(e) => setCircuitName(e.target.value)}
+                onChange={(e) => setCircuitDescription(e.target.value)}
               />
             </DetailWrapper>
           </CircuitInputWrapper>
