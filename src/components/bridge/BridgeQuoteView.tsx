@@ -287,13 +287,12 @@ export default function BridgeQuote({
           });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourceToken, destToken, inputAmount]);
 
   useEffect(() => {
-    setSourceNetwork(sourceNetwork);
     getBridgeTokenListAndSetTokens(sourceNetwork.chainId, destNetwork.chainId);
-    setDestNetwork(destNetwork);
-    getBridgeTokenListAndSetTokens(sourceNetwork.chainId, destNetwork.chainId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destNetwork, sourceNetwork]);
 
   return (
@@ -306,10 +305,10 @@ export default function BridgeQuote({
               Network
             </Text>
             <DropDown
-              contents={sourceNetworkList}
+              contents={sourceNetworkList ? sourceNetworkList : []}
               selectContentState={sourceNetwork}
               setSelectContentState={setSourceNetwork}
-              iconKey="logoURI"
+              iconKey="icon"
               nameKey="name"
               size="small"
             />
@@ -320,7 +319,7 @@ export default function BridgeQuote({
               Token
             </Text>
             <DropDown
-              contents={sourceTokenList}
+              contents={sourceTokenList ? sourceTokenList : []}
               selectContentState={sourceToken}
               setSelectContentState={setSourceToken}
               iconKey="logoURI"
@@ -341,7 +340,11 @@ export default function BridgeQuote({
               Balance{' '}
             </Text>{' '}
             <Text size="body3" color="bg0" $thin>
-              {selectedSourceTokenBalance} {sourceToken.symbol}
+              {erc20BalanceToReadable(
+                selectedSourceTokenBalance,
+                sourceToken.decimals,
+              )}{' '}
+              {sourceToken.symbol}
             </Text>
           </BalanceTextWrapper>
         </AmountWrapper>
@@ -361,10 +364,10 @@ export default function BridgeQuote({
               Network
             </Text>
             <DropDown
-              contents={destNetworkList}
+              contents={destNetworkList ? destNetworkList : []}
               selectContentState={destNetwork}
               setSelectContentState={setDestNetwork}
-              iconKey="logoURI"
+              iconKey="icon"
               nameKey="name"
               size="small"
             />
@@ -374,7 +377,7 @@ export default function BridgeQuote({
               Token
             </Text>
             <DropDown
-              contents={destTokenList}
+              contents={destTokenList ? destTokenList : []}
               selectContentState={destToken}
               setSelectContentState={setDestToken}
               iconKey="logoURI"
@@ -395,7 +398,11 @@ export default function BridgeQuote({
               Balance{' '}
             </Text>{' '}
             <Text size="body3" color="bg0" $thin>
-              {selectedSourceTokenBalance} {sourceToken.symbol}
+              {erc20BalanceToReadable(
+                selectedDestTokenBalance,
+                destToken.decimals,
+              )}{' '}
+              {destToken.symbol}
             </Text>
           </BalanceTextWrapper>
         </AmountWrapper>

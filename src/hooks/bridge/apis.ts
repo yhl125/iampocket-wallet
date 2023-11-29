@@ -25,8 +25,11 @@ export const useBridgeChains = () => {
       const supportedNetworks = await Supported.getAllSupportedChains();
       setAllChains(supportedNetworks);
     }
+    if (allChains) {
+      return;
+    }
     fetchSupportedNetworks();
-  }, []);
+  }, [allChains]);
 
   return allChains;
 };

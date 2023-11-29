@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface IProps {
   size?: number;
@@ -9,6 +9,9 @@ interface IProps {
 
 const TokenImage = ({ size = 20, logoUrl, address }: IProps) => {
   const [src, setSrc] = useState(logoUrl);
+  useEffect(() => {
+    setSrc(logoUrl);
+  }, [logoUrl]);
   return (
     <Image
       src={src}
