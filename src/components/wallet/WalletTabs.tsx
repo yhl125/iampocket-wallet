@@ -35,7 +35,7 @@ function WalletTabs({ activeItem, setActiveItem }: IProps) {
           return (
             <TabItem
               key={item.title}
-              active={active}
+              $active={active}
               onClick={() => {
                 setActiveItem(item.index);
               }}
@@ -62,13 +62,13 @@ const Content = styled.div`
 
   position: relative;
 `;
-const TabItem = styled.div<{ active: boolean }>`
+const TabItem = styled.div<{ $active: boolean }>`
   cursor: pointer;
   padding: ${theme.space.xSmall} ${theme.space.base};
   z-index: 2;
 
-  border-bottom: ${({ active }) =>
-    active && `3px solid ${theme.color.brandBlue50}`};
+  border-bottom: ${({ $active }) =>
+    $active && `3px solid ${theme.color.brandBlue50}`};
 `;
 const Divider = styled.div`
   width: 100%;

@@ -53,7 +53,7 @@ const DropDown = ({
     <Container size={size}>
       <DropDownButton
         size={size}
-        isDropDownShowed={isDropDownShowed}
+        $isDropDownShowed={isDropDownShowed}
         disabled={disabled}
         onClick={() => {
           setIsDropDownShowed(!isDropDownShowed);
@@ -80,7 +80,7 @@ const DropDown = ({
           height={size === 'medium' ? 'body3' : 'body4'}
         />
       </DropDownButton>
-      <DropDownContents isDropDownShowed={isDropDownShowed}>
+      <DropDownContents $isDropDownShowed={isDropDownShowed}>
         {contents.map((content, idx) => (
           <DropDownContent
             size={size}
@@ -117,7 +117,7 @@ const Container = styled.div<{ size: 'small' | 'medium' }>`
 
 const DropDownButton = styled.button<{
   size: 'small' | 'medium';
-  isDropDownShowed: boolean;
+  $isDropDownShowed: boolean;
   disabled: boolean;
 }>`
   padding: ${({ size }) =>
@@ -125,8 +125,8 @@ const DropDownButton = styled.button<{
       ? `14px ${theme.space.sMedium}`
       : `9px ${theme.space.xSmall}`};
 
-  border: ${({ isDropDownShowed }) =>
-    isDropDownShowed
+  border: ${({ $isDropDownShowed }) =>
+    $isDropDownShowed
       ? `1px solid ${theme.color.brandBlue50};`
       : `1px solid ${theme.color.bg50};`};
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
@@ -144,16 +144,16 @@ const ContentWrapper = styled.div`
 `;
 
 const DropDownContents = styled.div<{
-  isDropDownShowed: boolean;
+  $isDropDownShowed: boolean;
 }>`
   background-color: ${theme.color.bg80};
   max-height: 150px;
   overflow-y: auto;
   transition: opacity 0.4s ease;
-  opacity: ${({ isDropDownShowed }) => (isDropDownShowed ? 1 : 0)};
-  flex: ${({ isDropDownShowed }) => (isDropDownShowed ? `flex` : `none`)};
-  pointer-events: ${({ isDropDownShowed }) =>
-    isDropDownShowed ? `auto` : `none`};
+  opacity: ${({ $isDropDownShowed }) => ($isDropDownShowed ? 1 : 0)};
+  flex: ${({ $isDropDownShowed }) => ($isDropDownShowed ? `flex` : `none`)};
+  pointer-events: ${({ $isDropDownShowed }) =>
+    $isDropDownShowed ? `auto` : `none`};
   position: absolute;
   top: 59px;
   width: 100%;
