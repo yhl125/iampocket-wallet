@@ -74,7 +74,7 @@ const Button = ({
       onMouseLeave={() => {
         setHover(false);
       }}
-      fontColor={renderFontColor()}
+      $fontColor={renderFontColor()}
     >
       {children}
       <StyledText text={text} color={renderFontColor()} size={renderFontSize()}>
@@ -88,7 +88,7 @@ const Container = styled.button<{
   color: ColorType;
   disabled: boolean;
   size: ButtonSizeType;
-  fontColor: ColorType;
+  $fontColor: ColorType;
   type: 'primary' | 'secondary';
 }>`
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
@@ -112,7 +112,7 @@ const Container = styled.button<{
   /* MEMO: for the icon button hover effect */
   svg {
     path {
-      fill: ${({ fontColor }) => theme.color[fontColor]};
+      fill: ${({ $fontColor }) => theme.color[$fontColor]};
     }
   }
 
