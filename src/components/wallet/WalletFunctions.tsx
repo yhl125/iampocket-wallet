@@ -1,14 +1,15 @@
 'use client';
 
 import styled from 'styled-components';
+import Link from 'next/link';
+
 import SwapIcon from '@/assets/icons/wallet/swap.svg';
 import DepositIcon from '@/assets/icons/wallet/plus.svg';
 import BridgeIcon from '@/assets/icons/wallet/bridge.svg';
 import SendIcon from '@/assets/icons/wallet/send.svg';
-
 import Text from '../commons/Text';
 import theme from '@/styles/theme';
-import Link from 'next/link';
+import ModalStore from '@/store/ModalStore';
 
 const WALLET_FUNCTIONS = [
   {
@@ -19,8 +20,6 @@ const WALLET_FUNCTIONS = [
   {
     title: 'Deposit',
     icon: <DepositIcon />,
-    // TODO: replace to modal
-    link: '/deposit',
   },
   {
     title: 'Swap',
@@ -39,14 +38,27 @@ function WalletFunctions() {
     <Container>
       <Contents>
         {WALLET_FUNCTIONS.map((item) => {
-          return (
-            <Link key={item.title} href={item.link}>
-              <FunctionItem>
+          if (item?.link) {
+            return (
+              <Link key={item.title} href={item.link}>
+                <FunctionItem>
+                  <CircularButton>{item.icon}</CircularButton>
+                  <Text size="body3">{item.title}</Text>
+                </FunctionItem>
+              </Link>
+            );
+          } else {
+            return (
+              <FunctionItem
+                onClick={() => {
+                  ModalStore.open('Deposit', {});
+                }}
+              >
                 <CircularButton>{item.icon}</CircularButton>
                 <Text size="body3">{item.title}</Text>
               </FunctionItem>
-            </Link>
-          );
+            );
+          }
         })}
       </Contents>
     </Container>

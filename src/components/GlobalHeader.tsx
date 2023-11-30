@@ -3,11 +3,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import { usePathname, useRouter } from 'next/navigation';
+
 import theme from '@/styles/theme';
 import { usePc } from '@/hooks/usePc';
-import IconButton from './commons/IconButton';
 import Icon from './commons/Icon';
 import IconTextButton from './commons/IconTextButton';
+import TextButton from './commons/TextButton';
 
 // MEMO: Global Navigation Header
 const Header = () => {
@@ -30,24 +31,45 @@ const Header = () => {
             height={isPc ? 'display' : 'title1'}
           />
         </LogoWrapper>
-        {pathName != `/login` && pathName != `/signup` && isPc && (
+        {pathName != `/login` && pathName != `/signup` && (
           <HeaderButtonWrapper>
-            <IconTextButton
-              text="wallet"
-              size="large"
-              icon="wallet"
-              onClick={() => {
-                router.push('/wallet');
-              }}
-            />
-            <IconTextButton
-              text="Automation"
-              size="large"
-              icon="trade"
-              onClick={() => {
-                router.push('/lit-listener');
-              }}
-            />
+            {isPc ? (
+              <>
+                <IconTextButton
+                  text="wallet"
+                  size={isPc ? 'large' : 'medium'}
+                  icon="wallet"
+                  onClick={() => {
+                    router.push('/wallet');
+                  }}
+                />
+                <IconTextButton
+                  text="Automation"
+                  size={isPc ? 'large' : 'medium'}
+                  icon="trade"
+                  onClick={() => {
+                    router.push('/lit-listener');
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                <TextButton
+                  size="medium"
+                  text="wallet"
+                  onClick={() => {
+                    router.push('/wallet');
+                  }}
+                />
+                <TextButton
+                  size="medium"
+                  text="Automation"
+                  onClick={() => {
+                    router.push('/lit-listener');
+                  }}
+                />
+              </>
+            )}
             {/* <IconTextButton
               text="Chatting"
               size="large"
@@ -67,19 +89,6 @@ const Header = () => {
           </HeaderButtonWrapper>
         )}
       </Left>
-      <Right>
-        {pathName != `/login` && pathName != `/signup` && !isPc && (
-          <IconButton
-            text=""
-            icon="menu"
-            size="small"
-            type="secondary"
-            onClick={() => {
-              return;
-            }}
-          />
-        )}
-      </Right>
     </Container>
   );
 };
@@ -94,7 +103,9 @@ const Container = styled.header<{ $isPc: boolean; $pathName: string }>`
   width: 100%;
   display: flex;
   background-color: ${({ $pathName }) =>
-    $pathName != `/login` && $pathName != `/signup` ? '#121312' : 'transparent'};
+    $pathName != `/login` && $pathName != `/signup`
+      ? '#121312'
+      : 'transparent'};
   justify-content: space-between;
   z-index: 1;
   align-items: center;
