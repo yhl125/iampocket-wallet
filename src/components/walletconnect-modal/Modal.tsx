@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import { createWeb3Wallet } from '@/utils/WalletConnectUtil';
 import useWalletConnectEventsManager from '@/hooks/useWalletConnectEventsManager';
 import SettingsStore from '@/store/SettingsStore';
+import DepositModal from '../wallet/DepositModal';
 
 function Modal() {
   const { open, view } = useSnapshot(ModalStore.state);
@@ -40,8 +41,9 @@ function Modal() {
         {view === 'SessionUnsuportedMethodModal' && (
           <SessionUnsuportedMethodModal />
         )}
+        {view === 'Deposit' && <DepositModal />}
       </div>
     </>
   );
-};
+}
 export default Modal;

@@ -1,13 +1,18 @@
-import PKPStore from '@/store/PKPStore';
+import styled from 'styled-components';
 import { useCallback, useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
+
 import Text from '@/components/commons/Text';
 import { Circuit } from '@/utils/lit-listener';
-import styled from 'styled-components';
 import theme from '@/styles/theme';
+import { AuthSig, SessionSigs } from '@lit-protocol/types';
+import Button from '../commons/Button';
+import { usePc } from '@/hooks/usePc';
+import PKPStore from '@/store/PKPStore';
 
 export default function CircuitLogs() {
-  const { currentPKP } = useSnapshot(PKPStore.state);
+  const isPc = usePc();
+  const { currentPKP, sessionSigs } = useSnapshot(PKPStore.state);
   const serverUrl =
     process.env.NEXT_PUBLIC_LIT_LISTENER_SERVER_URL || 'http://localhost:3001/';
 
@@ -78,54 +83,230 @@ export default function CircuitLogs() {
   function circuitToComponent(circuit: Circuit) {
     return (
       <div key={circuit._id}>
-        <TitleWrapper>
-          <Text>id: {circuit._id}</Text>
-          <Text>name: {circuit.name}</Text>
-          <Text>description: {circuit.description}</Text>
-          <Text>type: {circuit.type}</Text>
-        </TitleWrapper>
+        <ProgressWrapper>
+          <Text size="title3" $bold>
+            Circuit
+          </Text>
+          <DetailWrapper>
+            <Text size="body4" color="bg20">
+              ID
+            </Text>
+            <Text $thin> {circuit._id}</Text>
+          </DetailWrapper>
+          <DetailWrapper>
+            <Text size="body4" color="bg20">
+              Name
+            </Text>
+            <Text>{circuit.name}</Text>
+          </DetailWrapper>
+          <DetailWrapper>
+            <Text size="body4" color="bg20">
+              Description
+            </Text>
+            <Text>{circuit.description}</Text>
+          </DetailWrapper>
+          <DetailWrapper>
+            <Text size="body4" color="bg20">
+              Type
+            </Text>
+            <Text>{circuit.type}</Text>
+          </DetailWrapper>
+        </ProgressWrapper>
         {circuit.transactionLogs.map((log) => {
           return (
-            <TitleWrapper key={log.transactionHash}>
-              <Text>transactionHash: {log.transactionHash}</Text>
-              <Text>date: {log.isoDate}</Text>
-            </TitleWrapper>
+            <ResultWrapper key={log.transactionHash}>
+              <Text size="title3" $bold>
+                TX Result
+              </Text>
+              <DetailWrapper>
+                <Text size="body3" color="bg20">
+                  TransactionHash
+                </Text>
+                <Text>{log.transactionHash}</Text>{' '}
+              </DetailWrapper>
+              <DetailWrapper>
+                <Text size="body3" color="bg20">
+                  Date
+                </Text>
+                <Text> {log.isoDate}</Text>
+              </DetailWrapper>
+            </ResultWrapper>
           );
         })}
       </div>
     );
   }
 
+  function runningCircuitToComponent(circuit: Circuit) {
+    return (
+      <div key={circuit._id}>
+        <ProgressWrapper>
+          <Text size="title3" $bold>
+            Circuit
+          </Text>
+          <DetailWrapper>
+            <Text size="body4" color="bg20">
+              ID
+            </Text>
+            <Text $thin> {circuit._id}</Text>
+          </DetailWrapper>
+          <DetailWrapper>
+            <Text size="body4" color="bg20">
+              Name
+            </Text>
+            <Text>{circuit.name}</Text>
+          </DetailWrapper>
+          <DetailWrapper>
+            <Text size="body4" color="bg20">
+              Description
+            </Text>
+            <Text>{circuit.description}</Text>
+          </DetailWrapper>
+          <DetailWrapper>
+            <Text size="body4" color="bg20">
+              Type
+            </Text>
+            <Text>{circuit.type}</Text>
+          </DetailWrapper>
+        </ProgressWrapper>
+        {circuit.transactionLogs.map((log) => {
+          return (
+            <ResultWrapper key={log.transactionHash}>
+              <Text size="title3" $bold>
+                TX Result
+              </Text>
+              <DetailWrapper>
+                <Text size="body3" color="bg20">
+                  TransactionHash
+                </Text>
+                <Text>{log.transactionHash}</Text>{' '}
+              </DetailWrapper>
+              <DetailWrapper>
+                <Text size="body3" color="bg20">
+                  Date
+                </Text>
+                <Text> {log.isoDate}</Text>
+              </DetailWrapper>
+            </ResultWrapper>
+          );
+        })}
+
+        <Button
+          text="STOP"
+          size="large"
+          type="primary"
+          onClick={() => stopCircuit(circuit._id, circuit.type)}
+        />
+      </div>
+    );
+  }
+
+  interface ValidateCircuitDto {
+    authSig?: AuthSig;
+    sessionSigs?: SessionSigs;
+  }
+
+  function stopCircuit(circuitId: string, type: 'viem' | 'zerodev') {
+    const body: ValidateCircuitDto = {
+      sessionSigs: sessionSigs,
+    };
+    if (type === 'viem') {
+      fetch(serverUrl + 'circuit-viem/stop/' + circuitId, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+    } else if (type === 'zerodev') {
+      fetch(serverUrl + 'circuit-zerodev/stop/' + circuitId, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+    }
+  }
+
   return (
-    <div>
-      <div>
-        <Text>Running circuits: {runningCircuitCount}</Text>
-        <div>
-          {runningCircuits.map((circuit) => circuitToComponent(circuit))}
-        </div>
-      </div>
-      <div>
-        <Text>Stopped circuits: {stoppedCircuitCount}</Text>
-        <div>
+    <Container isPc={isPc}>
+      <CircuitBox isPc={isPc}>
+        <TextWrapper>
+          <Text size="title3" $bold>
+            Running circuits: {runningCircuitCount}
+          </Text>
+        </TextWrapper>
+        <CircuitWrapper>
+          {runningCircuits.map((circuit) => runningCircuitToComponent(circuit))}
+        </CircuitWrapper>
+      </CircuitBox>
+      <CircuitBox isPc={isPc}>
+        <TextWrapper>
+          <Text size="title3" $bold>
+            Stopped circuits: {stoppedCircuitCount}
+          </Text>
+        </TextWrapper>
+        <CircuitWrapper>
           {stoppedCircuits.map((circuit) => circuitToComponent(circuit))}
-        </div>
-      </div>
-      <div>
-        <Text>
-          Server-down-stopped circuits: {serverDownStoppedCircuitCount}
-        </Text>
-        <div>
+        </CircuitWrapper>
+      </CircuitBox>
+      <CircuitBox isPc={isPc}>
+        <TextWrapper>
+          <Text size="title3" $bold>
+            Server-down-stopped circuits: {serverDownStoppedCircuitCount}
+          </Text>
+        </TextWrapper>
+        <CircuitWrapper>
           {serverDownStoppedCircuits.map((circuit) =>
             circuitToComponent(circuit),
           )}
-        </div>
-      </div>
-    </div>
+        </CircuitWrapper>
+      </CircuitBox>
+    </Container>
   );
 }
 
-const TitleWrapper = styled.div`
+const Container = styled.div<{ isPc: boolean }>`
+  display: flex;
+  flex-direction: ${({ isPc }) => (isPc ? 'row' : 'column')};
+  width: 100%;
+  justify-content: space-between;
+  row-gap: ${theme.space.xSmall};
+`;
+
+const CircuitBox = styled.div<{ isPc: boolean }>`
+  display: flex;
+  width: ${({ isPc }) => (isPc ? '33%' : '100%')};
+  height: ${({ isPc }) => (isPc ? '600px' : '250px')};
+  border: 1px solid ${theme.color.bg40};
+  border-radius: 5px;
+  flex-direction: column;
+  padding: ${theme.space.base};
+  row-gap: ${theme.space.base};
+  overflow-y: auto;
+`;
+
+const CircuitWrapper = styled.div``;
+
+const ProgressWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  word-break: break-all;
+  padding: ${theme.space.small};
+  border: 1px solid ${theme.color.bg40};
   margin-bottom: ${theme.space.xSmall};
+  border-radius: 5px;
+  row-gap: ${theme.space.xSmall};
+`;
+
+const ResultWrapper = styled(ProgressWrapper)`
+  border: none;
+  background-color: ${theme.color.bg80};
+`;
+
+const TextWrapper = styled.div``;
+const DetailWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
 `;

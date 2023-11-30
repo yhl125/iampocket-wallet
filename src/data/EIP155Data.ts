@@ -56,9 +56,15 @@ export const EIP155_MAINNET_CHAINS: IEIP155ChainMap = {
 export const EIP155_TEST_CHAINS: IEIP155ChainMap = {
   'eip155:5': {
     chainId: 5,
-    name: 'Ethereum Goerli',
+    name: 'Goerli',
     logo: '/chain-logos/eip155/1.svg',
     rpc: 'https://goerli.infura.io/v3/5687a05736f7476ca572bd1c5a8fde8f',
+  },
+  'eip155:11155111': {
+    chainId: 11155111,
+    name: 'Sepolia',
+    logo: '/chain-logos/eip155/1.svg',
+    rpc: 'https://endpoints.omniatech.io/v1/eth/sepolia/public',
   },
   'eip155:80001': {
     chainId: 80001,
@@ -66,36 +72,36 @@ export const EIP155_TEST_CHAINS: IEIP155ChainMap = {
     logo: '/chain-logos/eip155/137.svg',
     rpc: 'https://polygon-mumbai.infura.io/v3/5687a05736f7476ca572bd1c5a8fde8f',
   },
-  'eip155:421613': {
-    chainId: 421613,
-    name: 'Arbitrum Goerli',
-    logo: '/chain-logos/eip155/42161.svg',
-    rpc: 'https://arbitrum-goerli.infura.io/v3/5687a05736f7476ca572bd1c5a8fde8f',
-  },
-  'eip155:420': {
-    chainId: 420,
-    name: 'Optimism Goerli',
-    logo: '/chain-logos/eip155/10.svg',
-    rpc: 'https://optimism-mainnet.infura.io/v3/5687a05736f7476ca572bd1c5a8fde8f',
-  },
-  'eip155:43113': {
-    chainId: 43113,
-    name: 'Avalanche Fuji',
-    logo: '/chain-logos/eip155/43114.svg',
-    rpc: 'https://endpoints.omniatech.io/v1/avax/fuji/public',
-  },
-  'eip155:59140': {
-    chainId: 59140,
-    name: 'Linea Goerli',
-    logo: '/chain-logos/eip155/59144.svg',
-    rpc: 'https://linea-goerli.infura.io/v3/5687a05736f7476ca572bd1c5a8fde8f',
-  },
-  'eip155:1442': {
-    chainId: 1442,
-    name: 'Polygon zkEVM Testnet',
-    logo: '/chain-logos/eip155/1101.svg',
-    rpc: 'https://polygonzkevm-testnet.g.alchemy.com/v2/aeNF2qSfp9Asf8t_2EEFvWP2CS-W2bsy',
-  },
+  // 'eip155:421613': {
+  //   chainId: 421613,
+  //   name: 'Arbitrum Goerli',
+  //   logo: '/chain-logos/eip155/42161.svg',
+  //   rpc: 'https://arbitrum-goerli.infura.io/v3/5687a05736f7476ca572bd1c5a8fde8f',
+  // },
+  // 'eip155:420': {
+  //   chainId: 420,
+  //   name: 'Optimism Goerli',
+  //   logo: '/chain-logos/eip155/10.svg',
+  //   rpc: 'https://optimism-mainnet.infura.io/v3/5687a05736f7476ca572bd1c5a8fde8f',
+  // },
+  // 'eip155:43113': {
+  //   chainId: 43113,
+  //   name: 'Avalanche Fuji',
+  //   logo: '/chain-logos/eip155/43114.svg',
+  //   rpc: 'https://endpoints.omniatech.io/v1/avax/fuji/public',
+  // },
+  // 'eip155:59140': {
+  //   chainId: 59140,
+  //   name: 'Linea Goerli',
+  //   logo: '/chain-logos/eip155/59144.svg',
+  //   rpc: 'https://linea-goerli.infura.io/v3/5687a05736f7476ca572bd1c5a8fde8f',
+  // },
+  // 'eip155:1442': {
+  //   chainId: 1442,
+  //   name: 'Polygon zkEVM Testnet',
+  //   logo: '/chain-logos/eip155/1101.svg',
+  //   rpc: 'https://polygonzkevm-testnet.g.alchemy.com/v2/aeNF2qSfp9Asf8t_2EEFvWP2CS-W2bsy',
+  // },
 };
 
 export const EIP155_CHAINS: IEIP155ChainMap = {
@@ -117,5 +123,5 @@ export const EIP155_SIGNING_METHODS = {
   ETH_SEND_TRANSACTION: 'eth_sendTransaction',
 };
 
-export const zeroDevMainnetChainIds = [10, 42161]
-export const zeroDevTestnetChainIds = [5, 80001, 421613, 420]
+export const zeroDevMainnetChainIds = [10, 42161];
+export const zeroDevTestnetChainIds = [5, 11155111, 80001];

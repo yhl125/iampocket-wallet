@@ -112,7 +112,7 @@ const EmailSMSAuth = ({ method, setView, authWithOTP }: EmailSMSAuthProps) => {
       <IconTextButton
         text="Back"
         size="small"
-        icon="leftarrow"
+        icon="leftArrow"
         onClick={() => setView('default')}
       />
     </>

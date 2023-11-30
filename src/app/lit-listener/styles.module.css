@@ -1,0 +1,16 @@
+.main {
+  display: flex;
+  justify-content: center;
+}
+
+.contentWrapper {
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 175px;
+}
+
+@media (max-width: 768px) {
+  .contentWrapper {
+    padding: 18px;
+  }
+}

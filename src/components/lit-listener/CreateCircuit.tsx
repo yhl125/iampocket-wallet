@@ -8,12 +8,20 @@ import {
 import { useState } from 'react';
 import { useSnapshot } from 'valtio';
 import Input from '../commons/Input';
+import { useRouter } from 'next/navigation';
+import SelectChainDropDown from '../commons/SelectChainDropDown';
+import Button from '../commons/Button';
+import theme from '@/styles/theme';
+import styled from 'styled-components';
+import { usePc } from '@/hooks/usePc';
 
 export default function CreateCircuit() {
+  const isPc = usePc();
   const { currentPKP, sessionSigs } = useSnapshot(PKPStore.state);
   const serverUrl =
     process.env.NEXT_PUBLIC_LIT_LISTENER_SERVER_URL || 'http://localhost:3001/';
   const [chainId, setChainId] = useState(80001);
+  const router = useRouter();
 
   function viemCircuit() {
     const transactionAction: IViemTransactionAction = {
@@ -99,19 +107,47 @@ export default function CreateCircuit() {
   }
 
   return (
-    <>
-      <Input
-        value={chainId.toString()}
-        onChange={(e) => setChainId(parseInt(e.target.value))}
-        size="medium"
-        placeholder="Chain ID"
+    <Container>
+      <SelectChainDropDown
+        setChainId={setChainId}
+        size={isPc ? 'medium' : 'small'}
       />
-      <button onClick={viemCircuit} className="btn btn-primary">
-        Viem circuit
-      </button>
-      <button onClick={zeroDevCircuit} className="btn btn-primary">
-        ZeroDev circuit
-      </button>
-    </>
+      <ButtonWrapper>
+        <Button
+          text="Viem circuit"
+          size="medium"
+          type="primary"
+          onClick={viemCircuit}
+        />
+
+        <Button
+          text="ZeroDev circuit"
+          size="medium"
+          type="primary"
+          onClick={zeroDevCircuit}
+        />
+
+        <Button
+          text="Custom circuit"
+          size="medium"
+          type="primary"
+          onClick={() => router.push('/lit-listener/create')}
+        />
+      </ButtonWrapper>
+    </Container>
   );
 }
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  row-gap: ${theme.space.small};
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+
+  width: 100%;
+  gap: ${theme.space.xTiny};
+`;

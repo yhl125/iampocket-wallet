@@ -20,9 +20,9 @@ export function publicClientOf(chainId: number) {
     throw new Error(`No RPC endpoint for chainId ${chainId}`);
   }
   return createPublicClient({
-    chain:getChain(chainId),
-    transport:http(rpc)
-  })
+    chain: getChain(chainId),
+    transport: http(rpc),
+  });
 }
 export function projectIdOf(chainId: number) {
   switch (chainId) {
@@ -34,6 +34,8 @@ export function projectIdOf(chainId: number) {
     // Testnet
     case 5:
       return process.env.NEXT_PUBLIC_GOERLI_PROJECT_ID!;
+    case 11155111:
+      return process.env.NEXT_PUBLIC_SEPOLIA_PROJECT_ID!;
     case 80001:
       return process.env.NEXT_PUBLIC_MUMBAI_PROJECT_ID!;
     case 421613:

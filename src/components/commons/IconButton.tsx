@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+
 import { ColorType, SizeType } from '@/styles/theme';
 import Icon, { IconTypes } from './Icon';
 import Button from './Button';
