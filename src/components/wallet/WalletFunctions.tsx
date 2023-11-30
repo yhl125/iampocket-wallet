@@ -50,6 +50,7 @@ function WalletFunctions() {
           } else {
             return (
               <FunctionItem
+                key={item.title}
                 onClick={() => {
                   ModalStore.open('Deposit', {});
                 }}
