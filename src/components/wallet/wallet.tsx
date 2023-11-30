@@ -3,6 +3,8 @@
 import { useSnapshot } from 'valtio';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
+import styled from 'styled-components';
+
 import AddressStore, { selectedWalletType } from '@/store/AddressStore';
 import useWalletWithPKP from '@/hooks/useWalletWithPKP';
 import {
@@ -65,7 +67,7 @@ function Wallet() {
   if (!mounted) return <></>;
 
   return (
-    <>
+    <Container>
       <WalletSummary
         userAddress={getCurrentAddress(selectedWallet)}
         totalBalance={totalQuote}
@@ -77,8 +79,14 @@ function Wallet() {
       />
       {selectedTabIndex === 0 && <AssetList chainIds={chainIds} />}
       {selectedTabIndex === 1 && <NftList chainIds={chainIds} />}
-    </>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  width: calc(100% - 20px);
+
+  margin: 0 auto;
+`;
 
 export default Wallet;

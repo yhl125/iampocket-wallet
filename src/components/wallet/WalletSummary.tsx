@@ -39,7 +39,7 @@ function WalletSummary({ userAddress, totalBalance }: IProps) {
         </CopyIconButton>
       </Address>
       <TotalAsset>
-        <Text size="display">{totalBalance}</Text>
+        <Text size="display">{`$${totalBalance.toFixed(4)}`}</Text>
       </TotalAsset>
     </Container>
   );

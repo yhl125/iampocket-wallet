@@ -10,8 +10,9 @@ import { erc20BalanceToReadable } from '@/utils/ERC20Util';
 interface IProps {
   token: IResponseToken;
   changePercentage: number;
+  isPc?: boolean;
 }
-function TokenItem({ token, changePercentage }: IProps) {
+function TokenItem({ token, changePercentage, isPc }: IProps) {
   return (
     <Container>
       <TokenInfoWrapper>
@@ -44,17 +45,19 @@ function TokenItem({ token, changePercentage }: IProps) {
       <TokenPriceWrapper>
         <Text size="body3">{token?.quote ? token.prettyQuote : '-'}</Text>
       </TokenPriceWrapper>
-      <TokenChangeWrapper>
-        {token?.quoteRate && token?.quoteRate24hAgo && (
-          <ChangeChip type={changePercentage < 0 ? 'minus' : 'plus'}>
-            <Text
-              size="body3"
-              $thin
-              color={changePercentage < 0 ? 'systemRed' : 'systemGreen'}
-            >{`${changePercentage.toFixed(2)}%`}</Text>
-          </ChangeChip>
-        )}
-      </TokenChangeWrapper>
+      {isPc && (
+        <TokenChangeWrapper>
+          {token?.quoteRate && token?.quoteRate24hAgo && (
+            <ChangeChip type={changePercentage < 0 ? 'minus' : 'plus'}>
+              <Text
+                size="body3"
+                $thin
+                color={changePercentage < 0 ? 'systemRed' : 'systemGreen'}
+              >{`${changePercentage.toFixed(2)}%`}</Text>
+            </ChangeChip>
+          )}
+        </TokenChangeWrapper>
+      )}
     </Container>
   );
 }
@@ -63,6 +66,9 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: auto 100px 74px 70px;
   grid-column-gap: ${theme.space.base};
+  @media (max-width: 768px) {
+    grid-template-columns: 150px auto 70px;
+  }
 `;
 
 const ChainImage = styled(Image)`
@@ -78,18 +84,31 @@ const TokenInfoWrapper = styled.div`
   display: flex;
   margin-left: 10px;
   column-gap: ${theme.space.tiny};
+
+  width: 150px;
 `;
 const TokenImageWrapper = styled.div`
   display: flex;
   position: relative;
+  width: 30px;
+  height: 30px;
 `;
 const TokenNameWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
-const TokenAmountWrapper = styled.div``;
-const TokenPriceWrapper = styled.div``;
-const TokenChangeWrapper = styled.div``;
+const TokenAmountWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+const TokenPriceWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+const TokenChangeWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
 const ChangeChip = styled.div<{ type: 'minus' | 'plus' }>`
   display: inline-flex;
   justify-content: center;

@@ -1,13 +1,14 @@
-import TokenStore, { IResponseToken } from '@/store/TokenStore';
+import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useSnapshot } from 'valtio';
 
 import Text from '../commons/Text';
 import theme from '@/styles/theme';
 import { EIP155_CHAINS } from '@/data/EIP155Data';
+import TokenStore, { IResponseToken } from '@/store/TokenStore';
 import DropDown from '../commons/DropDown';
-import { useCallback, useEffect, useState } from 'react';
 import TokenItem from './TokenItem';
+import { usePc } from '@/hooks/usePc';
 
 interface IProps {
   chainIds: number[];
@@ -15,6 +16,8 @@ interface IProps {
 
 function AssetList({ chainIds }: IProps) {
   const { tokenList } = useSnapshot(TokenStore.tokenListState);
+  const isPc = usePc();
+
   const [allChains, setAllChains] = useState<any>([]);
   const [selectedChain, setSelectedChain] = useState<any>({
     name: 'All',
@@ -77,9 +80,11 @@ function AssetList({ chainIds }: IProps) {
           <Text size="body4" $thin color="bg40">
             Total Price
           </Text>
-          <Text size="body4" $thin color="bg40">
-            Change
-          </Text>
+          {isPc && (
+            <Text size="body4" $thin color="bg40">
+              Change
+            </Text>
+          )}
         </TableHeader>
         <TableBody>
           {tokenList.map((token: IResponseToken, index: number) => {
@@ -96,6 +101,7 @@ function AssetList({ chainIds }: IProps) {
             ) {
               return (
                 <TokenItem
+                  isPc={isPc}
                   key={token.address + token.chainId}
                   token={token}
                   changePercentage={changeValue}
@@ -105,6 +111,7 @@ function AssetList({ chainIds }: IProps) {
             if (selectedChain.name === 'All') {
               return (
                 <TokenItem
+                  isPc={isPc}
                   key={token.address + token.chainId}
                   token={token}
                   changePercentage={changeValue}
@@ -137,20 +144,19 @@ const SearchRow = styled.div`
 const Table = styled.div``;
 const TableHeader = styled.div`
   display: grid;
-  grid-template-columns: auto 100px 74px 70px;
+  grid-template-columns: minmax(150px, auto) 100px 74px 70px;
   grid-column-gap: ${theme.space.base};
   margin-top: ${theme.space.sMedium};
   margin-bottom: ${theme.space.small};
+
+  @media (max-width: 768px) {
+    grid-template-columns: 150px auto 70px;
+  }
 `;
 const TableBody = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: ${theme.space.small};
-`;
-const TableItem = styled.div`
-  display: grid;
-  grid-template-columns: auto 100px 74px 70px;
-  grid-column-gap: ${theme.space.base};
 `;
 
 export default AssetList;
