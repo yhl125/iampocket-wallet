@@ -6,20 +6,12 @@
 
 ## Demo Video
 
----
-
-<br>
-<center>
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=Cvd8r9a9TCs" target="_blank">
- <img src="https://img.youtube.com/vi/Cvd8r9a9TCs/maxresdefault.jpg" alt="Watch the video" width="720" height="405" />
-</a>
-</center>
-<br>
+https://github.com/yhl125/iampocket-wallet/assets/69383768/484a72fa-5d64-4254-9f3b-5967891335df
 
 ## Live Demo
 
 You can checkout the live demo from link down below<br>
-https://iampocket.com
+https://demo-app.iampocket.com
 
 ## About
 
